@@ -1,0 +1,16 @@
+{
+  "name": "qd-hc",
+  "version": "1.0.0",
+  "description": "framework for running quality diversity study",
+  "main": "index.js",
+  "scripts": {
+    "start": "python server.py",
+    "build": "tsc --project ./ ",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nick Osborn + Seth Cooper",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.5.5"
+  }
+}
