@@ -1,3 +1,3 @@
-type Solution = Number[][] | any;
+type Solution = Number[] | any;
 
 export default Solution;

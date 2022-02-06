@@ -1,5 +1,5 @@
-import Problem from "../interfaces/Problem";
-import Solution from "../interfaces/Solution";
+import Problem from "../interfaces/Problem.js";
+import Solution from "../interfaces/Solution.js";
 
 export default interface Task {
     problem: Problem;
@@ -13,7 +13,10 @@ export default interface Task {
     mutateSolution(solution: Solution): Solution;
     crossoverSolution(sol1: Solution, solution: Solution): Solution;
     setProblem(problem: Problem): void;
+    getProblem(): Problem;
     setSolution(solution: Solution): void;
+    getSolution(): Solution;
+    updateSolution(newSol: Solution): void;
     setRandomProblem(): void;
     scoreSolution(solution: Solution): number;
 }

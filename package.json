@@ -2,7 +2,7 @@
   "name": "qd-hc",
   "version": "1.0.0",
   "description": "framework for running quality diversity study",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "start": "python server.py",
     "build": "tsc --project ./ ",
@@ -12,5 +12,8 @@
   "license": "ISC",
   "devDependencies": {
     "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "express": "^4.17.2"
   }
 }
