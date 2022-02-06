@@ -4,9 +4,9 @@ import Solution from "../interfaces/Solution";
 export default interface TaskView {
     context: CanvasRenderingContext2D;
     render: Function;
-    canvasWidth: Number;
-    canvasHeight: Number;
-    scale: Number;
+    canvasWidth: number;
+    canvasHeight: number;
+    scale: number;
 
     draw(solution: Solution, problem: Problem): void;
 

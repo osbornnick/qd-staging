@@ -13,6 +13,7 @@ export default interface Task {
     mutateSolution(solution: Solution): Solution;
     crossoverSolution(sol1: Solution, solution: Solution): Solution;
     setProblem(problem: Problem): void;
+    setSolution(solution: Solution): void;
     setRandomProblem(): void;
-    scoreSolution(solution: Solution): Number;
+    scoreSolution(solution: Solution): number;
 }
