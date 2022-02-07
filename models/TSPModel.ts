@@ -5,7 +5,7 @@ import { distance } from "../util/util.js";
 
 export default class TSPModel implements TaskModel {
     problem: Problem;
-    currentSolution: Solution;
+    currentSolution: Solution = [];
     problemEdgeLengthMin: number = 999;
     problemEdgeLengthMax: number = 0;
 
@@ -65,9 +65,23 @@ export default class TSPModel implements TaskModel {
     isMinimize(): boolean {
         return true;
     }
-    getRandomSolution() {
-        throw new Error("Method not implemented.");
-    }
+    shuffle = (array: number[]) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    };
+
+    getRandomSolution: Solution = () => {
+        let newSol = [];
+        for (let ii = 0; ii < this.problem.length; ++ii) {
+            newSol.push(ii);
+        }
+        this.shuffle(newSol);
+
+        return newSol;
+    };
+
     mutateSolution(solution: Solution) {
         throw new Error("Method not implemented.");
     }
@@ -95,6 +109,7 @@ export default class TSPModel implements TaskModel {
     getProblem: Problem = () => this.problem.slice();
 
     setSolution = (solution: Solution) => {
+        if (solution === null) return;
         this.currentSolution = solution.slice();
     };
     updateSolution = (newSol: Solution) => {

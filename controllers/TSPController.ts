@@ -21,6 +21,7 @@ export default class TSPController implements Controller {
         onNewSolution: Function
     ) {
         this.model = new TSPModel();
+        this.model.setSolution(this.model.getRandomSolution());
         this.offScreenCanvas = offScreenCanvas;
         this.onScreenCanvas = onScreenCanvas;
 
@@ -36,7 +37,7 @@ export default class TSPController implements Controller {
         this.registerMouseHandlers();
     }
 
-    registerMouseHandlers(): void {
+    registerMouseHandlers = () => {
         this.onScreenCanvas.addEventListener(
             "mousedown",
             this.view.handleMouseDown
@@ -50,24 +51,24 @@ export default class TSPController implements Controller {
             this.view.handleMouseMove
         );
         this.onScreenCanvas.addEventListener("mouseup", this.handleTaskMouseUp);
-    }
+    };
 
-    handleTaskMouseUp(event: MouseEvent): void {
+    handleTaskMouseUp = (event: MouseEvent) => {
         let newSol = this.view.handleMouseUp(event);
         this.updateSolution(newSol);
-    }
+    };
 
-    updateSolution(sol: Solution) {
+    updateSolution = (sol: Solution) => {
         this.model.updateSolution(sol);
         this.onNewSolution();
-    }
+    };
 
     registerButtonHandlers(): void {
         throw new Error("Method not implemented.");
     }
 
     // wrap window.requestAnimationFrame
-    render(requestAnimationFrame: Function): Function {
+    render: Function = (requestAnimationFrame: Function) => {
         // return a fn that takes a fn as an argument, to addon some functionality to that function
         return (drawFn: Function) => {
             let drawAddon = () => {
@@ -85,5 +86,5 @@ export default class TSPController implements Controller {
             };
             requestAnimationFrame(drawAddon);
         };
-    }
+    };
 }

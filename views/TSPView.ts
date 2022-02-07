@@ -30,6 +30,7 @@ export default class TSPView implements TaskView {
         this.canvasWidth = width;
         this.render = render;
         this.scale = 1;
+        this.drawHelper();
     }
 
     // call render(draw) to draw canvas updates
@@ -62,9 +63,9 @@ export default class TSPView implements TaskView {
         };
     }
 
-    drawHelper() {
+    drawHelper = () => {
         this.render(this.draw(this.getSolution(), this.getProblem()));
-    }
+    };
 
     // new solution segment! replace section of old solution with return value in controller please
     handleMouseUp: Solution | null = (event: MouseEvent) => {
@@ -111,7 +112,7 @@ export default class TSPView implements TaskView {
 
         if (this.cityHighlited !== mouseCity) {
             this.cityHighlited = mouseCity;
-            if (this.cityHighlited !== null) {
+            if (this.cityHighlited !== null && this.citiesSelected.length > 0) {
                 let index = this.citiesSelected.indexOf(this.cityHighlited);
                 if (index === -1) {
                     this.citiesSelected.push(this.cityHighlited);
@@ -126,7 +127,7 @@ export default class TSPView implements TaskView {
         this.drawHelper();
     };
 
-    problemToCanvas(ppt: number[]): number[] {
+    problemToCanvas = (ppt: number[]) => {
         // what is going on here
         return [
             1.5 * this.CITY_RADIUS +
@@ -134,21 +135,21 @@ export default class TSPView implements TaskView {
             1.5 * this.CITY_RADIUS +
                 (1.0 - ppt[1]) * (this.canvasHeight - 3.0 * this.CITY_RADIUS),
         ];
-    }
+    };
 
-    drawEdge(edge: number[], color: string, width: number): void {
+    drawEdge = (edge: number[], color: string, width: number) => {
         let problem = this.getProblem();
         let cc0 = this.problemToCanvas(problem[edge[0]]);
         let cc1 = this.problemToCanvas(problem[edge[1]]);
         this.context.beginPath();
-        this.context.moveTo(cc0[0], cc1[1]);
+        this.context.moveTo(cc0[0], cc0[1]);
         this.context.lineTo(cc1[0], cc1[1]);
         this.context.strokeStyle = color;
         this.context.lineWidth = width;
         this.context.stroke();
-    }
+    };
 
-    drawCity(index: number, ppt: number[]): void {
+    drawCity = (index: number, ppt: number[]) => {
         let cpt = this.problemToCanvas(ppt);
         this.context.beginPath();
         this.context.arc(
@@ -170,5 +171,5 @@ export default class TSPView implements TaskView {
             this.context.lineWidth = Math.max(1, 3 * this.scale);
             this.context.stroke();
         }
-    }
+    };
 }
