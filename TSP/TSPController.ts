@@ -6,7 +6,6 @@ import TSPModel from "./TSPModel.js";
 import TSPView from "./TSPView.js";
 import Solution from "../interfaces/Solution.js";
 
-// TODO: update canvas after writes to off screen context
 export default class TSPController implements Controller {
     offScreenCanvas: HTMLCanvasElement;
     onScreenCanvas: HTMLCanvasElement;

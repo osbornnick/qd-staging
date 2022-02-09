@@ -1,7 +1,8 @@
 import Solution from "./Solution.js";
+import Problem from "./Problem.js";
 
 export default interface Behavior {
-    name: string;
+    description: string;
 
-    calculateBehavior(solution: Solution): number;
+    calculateBehavior(problem: Problem, solution: Solution): number;
 }
