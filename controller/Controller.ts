@@ -1,5 +1,5 @@
-import TaskModel from "../models/TaskModel.js";
-import TaskView from "../views/TaskView.js";
+import TaskModel from "../model/TaskModel.js";
+import TaskView from "../view/TaskView.js";
 
 export default interface TaskController {
     offScreenCanvas: HTMLCanvasElement;

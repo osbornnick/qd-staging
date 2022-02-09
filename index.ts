@@ -1,4 +1,4 @@
-import TSPController from "./controllers/TSPController.js";
+import TSPController from "./TSP/TSPController.js";
 
 function makeCanvas(size: number) {
     let canvas = document.createElement("canvas");

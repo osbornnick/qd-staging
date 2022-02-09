@@ -1,6 +1,6 @@
 import Solution from "../interfaces/Solution.js";
 import Problem from "../interfaces/Problem.js";
-import TaskView from "./TaskView.js";
+import TaskView from "../view/TaskView.js";
 import { distanceSqr } from "../util/util.js";
 
 export default class TSPView implements TaskView {

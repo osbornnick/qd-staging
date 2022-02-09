@@ -1,4 +1,4 @@
-import TaskModel from "./TaskModel.js";
+import TaskModel from "../model/TaskModel.js";
 import Problem from "../interfaces/Problem.js";
 import Solution from "../interfaces/Solution.js";
 import { distance } from "../util/util.js";

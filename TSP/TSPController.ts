@@ -1,9 +1,9 @@
-import TaskModel from "../models/TaskModel.js";
-import TaskView from "../views/TaskView.js";
-import Controller from "./Controller.js";
+import TaskModel from "../model/TaskModel.js";
+import TaskView from "../view/TaskView.js";
+import Controller from "../controller/Controller.js";
 
-import TSPModel from "../models/TSPModel.js";
-import TSPView from "../views/TSPView.js";
+import TSPModel from "./TSPModel.js";
+import TSPView from "./TSPView.js";
 import Solution from "../interfaces/Solution.js";
 
 // TODO: update canvas after writes to off screen context
