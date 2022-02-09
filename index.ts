@@ -16,5 +16,5 @@ let TSP = new TSPController(
     onCanvas,
     offCanvas,
     window.requestAnimationFrame,
-    console.log
+    () => console.log("new solution recorded")
 );

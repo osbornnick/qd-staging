@@ -68,6 +68,7 @@ export default class TSPView implements TaskView {
     };
 
     // new solution segment! replace section of old solution with return value in controller please
+    // this breaks the interface. what other ways can we do it? I don't want to pass this the updateSolution method on the model
     handleMouseUp: Solution | null = (event: MouseEvent) => {
         let returnMe = null;
         if (this.citiesSelected.length !== 0) {
@@ -110,8 +111,10 @@ export default class TSPView implements TaskView {
             }
         }
 
+        // if this is a new highlighted city
         if (this.cityHighlited !== mouseCity) {
             this.cityHighlited = mouseCity;
+            // if we already have selected cities
             if (this.cityHighlited !== null && this.citiesSelected.length > 0) {
                 let index = this.citiesSelected.indexOf(this.cityHighlited);
                 if (index === -1) {
@@ -128,7 +131,7 @@ export default class TSPView implements TaskView {
     };
 
     problemToCanvas = (ppt: number[]) => {
-        // what is going on here
+        // map problem coordinate to canvas coordinate
         return [
             1.5 * this.CITY_RADIUS +
                 ppt[0] * (this.canvasWidth - 3 * this.CITY_RADIUS),

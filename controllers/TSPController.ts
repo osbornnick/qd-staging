@@ -55,7 +55,7 @@ export default class TSPController implements Controller {
 
     handleTaskMouseUp = (event: MouseEvent) => {
         let newSol = this.view.handleMouseUp(event);
-        this.updateSolution(newSol);
+        if (newSol !== null) this.updateSolution(newSol);
     };
 
     updateSolution = (sol: Solution) => {
