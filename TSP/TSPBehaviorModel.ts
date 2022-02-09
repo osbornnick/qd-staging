@@ -9,6 +9,7 @@ import Solution from "../interfaces/Solution.js";
 export default class TSPBehaviorModel implements BehaviorModel {
     binElites: Map<String, { solution: Solution; score: number }> = new Map();
     currentBehavior: number[] = [];
+    currentBin: number[] = [];
     currentIsNewElite: boolean = false;
     numBins: number = 10;
     behavior1: Behavior;
@@ -24,7 +25,19 @@ export default class TSPBehaviorModel implements BehaviorModel {
         let x = this.behavior1.calculateBehavior(problem, solution);
         let y = this.behavior2.calculateBehavior(problem, solution);
         let scaledEvaluation = this.scaleEvaluation(problem, x, y);
-        let binKey = scaledEvaluation.toString();
+
+        let behaviorBin = [
+            Math.min(
+                Math.floor(scaledEvaluation[0] * this.numBins),
+                this.numBins - 1
+            ),
+            Math.min(
+                Math.floor(scaledEvaluation[1] * this.numBins),
+                this.numBins - 1
+            ),
+        ];
+        this.currentBin = behaviorBin;
+        let binKey = behaviorBin.toString();
         let binElite = this.binElites.get(binKey);
         this.currentIsNewElite = false;
         // isMinimize should be checked?
@@ -37,6 +50,7 @@ export default class TSPBehaviorModel implements BehaviorModel {
             this.currentIsNewElite = true;
         }
 
+        this.currentBehavior = scaledEvaluation;
         return scaledEvaluation;
     };
 
@@ -67,6 +81,7 @@ export default class TSPBehaviorModel implements BehaviorModel {
     setBehavior1 = (b: Behavior) => (this.behavior1 = b);
     setBehavior2 = (b: Behavior) => (this.behavior2 = b);
     getCurrentIsNewElite = () => this.currentIsNewElite;
+    getCurrentBehaviorBin = () => this.currentBin;
 
     lremapClamp(x: number, lo: number, hi: number) {
         return Math.max(0.0, Math.min(1.0, (x - lo) / (hi - lo)));

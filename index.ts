@@ -1,4 +1,4 @@
-import TSPController from "./TSP/TSPController.js";
+import TSPTaskController from "./TSP/TSPTaskController.js";
 
 function makeCanvas(size: number) {
     let canvas = document.createElement("canvas");
@@ -12,7 +12,7 @@ let offCanvas = makeCanvas(540);
 document.getElementById("taskCanvasParent")?.appendChild(onCanvas);
 document.getElementById("offscreenTaskParent")?.appendChild(offCanvas);
 
-let TSP = new TSPController(
+let TSP = new TSPTaskController(
     onCanvas,
     offCanvas,
     window.requestAnimationFrame,
