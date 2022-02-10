@@ -4,7 +4,6 @@ import TaskController from "../controller/TaskController.js";
 
 import TSPModel from "./TSPModel.js";
 import TSPView from "./TSPView.js";
-import Solution from "../interfaces/Solution.js";
 import Controller from "../controller/Controller.js";
 
 export default class TSPTaskController
@@ -19,16 +18,16 @@ export default class TSPTaskController
         onScreenCanvas: HTMLCanvasElement,
         offScreenCanvas: HTMLCanvasElement,
         requestAnimationFrame: Function,
-        onNewSolution: Function
+        onNewSolution: Function,
+        getSolution: Function
     ) {
-        super(offScreenCanvas, onScreenCanvas);
-        this.model = new TSPModel();
-        this.model.setSolution(this.model.getRandomSolution());
+        super(offScreenCanvas, onScreenCanvas, getSolution);
+        this.model = new TSPModel(); // initialized with random solution
 
         this.view = new TSPView(
             offScreenCanvas.getContext("2d") || new CanvasRenderingContext2D(), // workaround
             this.model.getProblem,
-            this.model.getSolution,
+            getSolution,
             this.render(requestAnimationFrame),
             offScreenCanvas.height,
             offScreenCanvas.width
@@ -55,14 +54,14 @@ export default class TSPTaskController
 
     handleTaskMouseUp = (event: MouseEvent) => {
         let newSol = this.view.handleMouseUp(event);
-        if (newSol !== null) this.updateSolution(newSol);
+        if (newSol !== null) {
+            let combined = this.model.updateSolution(
+                this.getSolution(),
+                newSol
+            );
+            this.onNewSolution("user input", combined.slice());
+        }
     };
-
-    updateSolution = (sol: Solution) => {
-        this.model.updateSolution(sol);
-        this.onNewSolution();
-    };
-
     registerButtonHandlers(): void {
         throw new Error("Method not implemented.");
     }

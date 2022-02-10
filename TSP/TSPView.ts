@@ -34,7 +34,7 @@ export default class TSPView implements TaskView {
     }
 
     // call render(draw) to draw canvas updates
-    draw(solution: Solution, problem: Problem): Function {
+    draw = (solution: Solution, problem: Problem) => {
         return () => {
             this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
             for (let ii = 0; ii < solution.length; ++ii) {

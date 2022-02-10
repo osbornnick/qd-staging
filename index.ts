@@ -1,20 +1,3 @@
-import TSPTaskController from "./TSP/TSPTaskController.js";
+import TSPManager from "./manager/TSPManager";
 
-function makeCanvas(size: number) {
-    let canvas = document.createElement("canvas");
-    canvas.width = size;
-    canvas.height = size;
-    return canvas;
-}
-let onCanvas = makeCanvas(540);
-let offCanvas = makeCanvas(540);
-
-document.getElementById("taskCanvasParent")?.appendChild(onCanvas);
-document.getElementById("offscreenTaskParent")?.appendChild(offCanvas);
-
-let TSP = new TSPTaskController(
-    onCanvas,
-    offCanvas,
-    window.requestAnimationFrame,
-    () => console.log("new solution recorded")
-);
+let manager = new TSPManager();

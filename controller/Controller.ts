@@ -1,13 +1,16 @@
 export default abstract class Controller {
     offScreenCanvas: HTMLCanvasElement;
     onScreenCanvas: HTMLCanvasElement;
+    getSolution: Function;
 
     constructor(
         offScreenCanvas: HTMLCanvasElement,
-        onScreenCanvas: HTMLCanvasElement
+        onScreenCanvas: HTMLCanvasElement,
+        getSolution: Function
     ) {
         this.offScreenCanvas = offScreenCanvas;
         this.onScreenCanvas = onScreenCanvas;
+        this.getSolution = getSolution;
     }
 
     // wrap window.requestAnimationFrame

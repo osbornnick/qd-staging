@@ -5,7 +5,6 @@ import { distance } from "../util/util.js";
 
 export default class TSPModel implements TaskModel {
     problem: Problem;
-    currentSolution: Solution = [];
     problemEdgeLengthMin: number = 999;
     problemEdgeLengthMax: number = 0;
 
@@ -85,9 +84,10 @@ export default class TSPModel implements TaskModel {
     mutateSolution(solution: Solution) {
         throw new Error("Method not implemented.");
     }
-    crossoverSolution(sol1: Solution, solution: Solution) {
+    crossoverSolution(sol1: Solution, sol2: Solution) {
         throw new Error("Method not implemented.");
     }
+
     setProblem = (problem: Problem) => {
         this.problem = problem.slice();
         for (let ii = 0; ii < problem.length; ++ii) {
@@ -106,28 +106,21 @@ export default class TSPModel implements TaskModel {
             }
         }
     };
+
     getProblem: Problem = () => this.problem.slice();
 
-    setSolution = (solution: Solution) => {
-        if (solution === null) return;
-        this.currentSolution = solution.slice();
-    };
-    updateSolution = (newSol: Solution) => {
-        let startFrom = this.currentSolution.indexOf(newSol[0]);
-        for (let ii = 0; ii < this.currentSolution.length; ++ii) {
-            let val =
-                this.currentSolution[
-                    (startFrom + ii) % this.currentSolution.length
-                ];
+    updateSolution = (oldSol: Solution, newSol: Solution) => {
+        oldSol = oldSol.slice();
+        let startFrom = oldSol.indexOf(newSol[0]);
+        for (let ii = 0; ii < oldSol.length; ++ii) {
+            let val = oldSol[(startFrom + ii) % oldSol.length];
             if (newSol.indexOf(val) == -1) {
                 newSol.push(val);
             }
         }
-        this.setSolution(newSol);
+        return oldSol;
     };
-    getSolution: Solution = () => {
-        return this.currentSolution.slice();
-    };
+
     setRandomProblem(): void {
         throw new Error("Method not implemented.");
     }

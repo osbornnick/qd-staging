@@ -5,6 +5,7 @@ import Problem from "../interfaces/Problem.js";
 export default interface BehaviorModel {
     binElites: Map<String, Solution>;
     currentBehavior: number[];
+    currentBin: number[];
     currentIsNewElite: boolean;
     numBins: number;
     behavior1: Behavior;

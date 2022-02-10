@@ -3,7 +3,6 @@ import Solution from "../interfaces/Solution.js";
 
 export default interface Task {
     problem: Problem;
-    currentSolution: Solution;
 
     getName(): string;
     getObjectiveName(): string;
@@ -11,12 +10,10 @@ export default interface Task {
     isMinimize(): boolean;
     getRandomSolution(): Solution;
     mutateSolution(solution: Solution): Solution;
-    crossoverSolution(sol1: Solution, solution: Solution): Solution;
+    crossoverSolution(sol1: Solution, sol2: Solution): Solution;
     setProblem(problem: Problem): void;
     getProblem(): Problem;
-    setSolution(solution: Solution): void;
-    getSolution(): Solution;
-    updateSolution(newSol: Solution): void;
+    updateSolution(oldSol: Solution, newSol: Solution): Solution;
     setRandomProblem(): void;
     scoreSolution(solution: Solution): number;
 }
