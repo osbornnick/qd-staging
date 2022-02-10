@@ -38,6 +38,20 @@ export default class TSPBehaviorView implements BehaviorView {
         this.scale = scale;
     }
 
+    draw = () => {
+        let { getNumBins, getBinElites, getSolutionBehavior, getSolutionBin } =
+            this.modelGetters;
+        // numBins, binElites, solutionBehavior, solutionBin
+        this.render(
+            this.drawHelper(
+                getNumBins(),
+                getBinElites(),
+                getSolutionBehavior(),
+                getSolutionBin()
+            )
+        );
+    };
+
     drawHelper = (
         numBins: number,
         binElites: Map<String, {}>,
@@ -144,20 +158,6 @@ export default class TSPBehaviorView implements BehaviorView {
                 this.context.fill();
             }
         };
-    };
-
-    draw = () => {
-        let { getNumBins, getBinElites, getSolutionBehavior, getSolutionBin } =
-            this.modelGetters;
-        // numBins, binElites, solutionBehavior, solutionBin
-        this.render(
-            this.drawHelper(
-                getNumBins(),
-                getBinElites(),
-                getSolutionBehavior(),
-                getSolutionBin()
-            )
-        );
     };
 
     handleMouseUp = (event: MouseEvent) => {

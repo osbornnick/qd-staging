@@ -36,7 +36,7 @@ export default class TSPBehaviorModel implements BehaviorModel {
                 this.numBins - 1
             ),
         ];
-        this.currentBin = behaviorBin;
+        this.currentBin = behaviorBin.slice();
         let binKey = behaviorBin.toString();
         let binElite = this.binElites.get(binKey);
         this.currentIsNewElite = false;
@@ -50,7 +50,7 @@ export default class TSPBehaviorModel implements BehaviorModel {
             this.currentIsNewElite = true;
         }
 
-        this.currentBehavior = scaledEvaluation;
+        this.currentBehavior = scaledEvaluation.slice();
         return scaledEvaluation;
     };
 
