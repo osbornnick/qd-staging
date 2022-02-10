@@ -2,8 +2,8 @@ import TaskModel from "../model/TaskModel.js";
 import TaskView from "../view/TaskView.js";
 import TaskController from "../controller/TaskController.js";
 
-import TSPModel from "./TSPModel.js";
-import TSPView from "./TSPView.js";
+import TSPModel from "./TSPTaskModel.js";
+import TSPView from "./TSPTaskView.js";
 import Controller from "../controller/Controller.js";
 
 export default class TSPTaskController
@@ -13,6 +13,7 @@ export default class TSPTaskController
     onNewSolution: Function;
     model: TaskModel;
     view: TaskView;
+    getSolution: Function;
 
     constructor(
         onScreenCanvas: HTMLCanvasElement,
@@ -21,7 +22,8 @@ export default class TSPTaskController
         onNewSolution: Function,
         getSolution: Function
     ) {
-        super(offScreenCanvas, onScreenCanvas, getSolution);
+        super(offScreenCanvas, onScreenCanvas);
+        this.getSolution = getSolution;
         this.model = new TSPModel(); // initialized with random solution
 
         this.view = new TSPView(

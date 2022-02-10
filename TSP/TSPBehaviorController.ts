@@ -19,7 +19,7 @@ export default class TSPBehaviorController
         onScreenCanvas: HTMLCanvasElement,
         offScreenCanvas: HTMLCanvasElement,
         requestAnimationFrame: Function,
-        onNewSolution: Function
+        onNewSolution: Function,
     ) {
         super(offScreenCanvas, onScreenCanvas);
         this.model = new TSPBehaviorModel();
@@ -40,14 +40,6 @@ export default class TSPBehaviorController
         this.onNewSolution = onNewSolution;
         this.registerMouseHandlers();
     }
-
-    updateSolution = (
-        problem: Problem,
-        solution: Solution,
-        solutionScore: number
-    ) => {
-        this.model.evaluateSolution(problem, solution, solutionScore);
-    };
 
     registerMouseHandlers = () => {
         this.onScreenCanvas.addEventListener(

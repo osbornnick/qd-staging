@@ -5,7 +5,7 @@ export default interface BehaviorView {
     canvasHeight: number;
     scale: number;
 
-    draw(...varArgs: any): void;
+    draw(): void;
     handleMouseUp(event: MouseEvent): void;
     handleMouseDown(event: MouseEvent): void;
     handleMouseLeave(event: MouseEvent): void;

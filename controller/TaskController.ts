@@ -6,6 +6,7 @@ export default interface TaskController {
     onScreenCanvas: HTMLCanvasElement;
     model: TaskModel;
     view: TaskView;
+    getSolution: Function;
 
     registerMouseHandlers(): void;
     registerButtonHandlers(): void;

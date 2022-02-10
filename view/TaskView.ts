@@ -10,7 +10,7 @@ export default interface TaskView {
     getProblem: Problem;
     getSolution: Solution;
 
-    draw(solution: Solution, problem: Problem): Function;
+    draw(): void;
 
     handleMouseUp(event: MouseEvent): void;
     handleMouseDown(event: MouseEvent): void;

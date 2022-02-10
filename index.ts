@@ -1,3 +1,3 @@
-import TSPManager from "./manager/TSPManager";
+import TSPManager from "./TSP/TSPManager.js";
 
 let manager = new TSPManager();
