@@ -8,13 +8,13 @@ export default class LongestEdgeBehavior implements Behavior {
         this.description = "length of longest edge";
     }
     calculateBehavior(problem: number[][], solution: number[]): number {
-        let max = distance(problem[solution[0]], problem[solution[1]]);
-        for (let ii = 1; ii < solution.length; ++ii) {
+        let maxLength = 0;
+        for (let ii = 0; ii < solution.length; ++ii) {
             let src = problem[solution[ii]];
             let dst = problem[solution[(ii + 1) % solution.length]];
             let dist = distance(src, dst);
-            max = Math.max(max, dist);
+            maxLength = Math.max(maxLength, dist);
         }
-        return max;
+        return maxLength;
     }
 }

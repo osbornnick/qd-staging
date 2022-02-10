@@ -144,25 +144,60 @@ export default class TSPBehaviorView implements BehaviorView {
                     pt1[1] - pt0[1]
                 );
                 this.context.stroke();
-
-                var ptbc = this.behaviorToCanvas(solutionBehavior);
-                this.context.beginPath();
-                this.context.arc(
-                    ptbc[0],
-                    ptbc[1],
-                    this.BEHAVIOR_RADIUS_CANVAS,
-                    0,
-                    2 * Math.PI
-                );
-                this.context.fillStyle = "#0000dd";
-                this.context.fill();
             }
+            var ptbc = this.behaviorToCanvas(solutionBehavior);
+            this.context.beginPath();
+            this.context.arc(
+                ptbc[0],
+                ptbc[1],
+                this.BEHAVIOR_RADIUS_CANVAS,
+                0,
+                2 * Math.PI
+            );
+            this.context.fillStyle = "#0000dd";
+            this.context.fill();
         };
     };
 
     handleMouseUp = (event: MouseEvent) => {
-        throw new Error("Method not implemented.");
+        let returnMe = null;
+        if (this.binSelected !== null) {
+            if (this.binSelected[0] !== null && this.binSelected[1] !== null) {
+                // var binSelected0Elite = this.modelGetters
+                //     .getBinElites()
+                //     .get(this.binSelected[0].toString());
+                if (
+                    this.binSelected[0].toString() ===
+                    this.binSelected[1].toString()
+                ) {
+                    returnMe = {
+                        crossover: false,
+                        binKey: this.binSelected[0].slice(),
+                    }; // for controller to pass new solution (it gets from model)
+                    // newSolution(binSelected0Elite.solution.slice(), "elite");
+                } else {
+                    returnMe = {
+                        crossover: true,
+                        binKey1: this.binSelected[0].slice(),
+                        binKey2: this.binSelected[1].slice(),
+                    };
+                    // var binSelected1Elite = this.modelGetters
+                    //     .getBinElites()
+                    //     .get(this.binSelected[1].toString());
+                    // crossoverSolutions(
+                    //     binSelected0Elite.solution,
+                    //     binSelected1Elite.solution
+                    // );
+                }
+                this.binSelected = null;
+            } else {
+                this.binSelected = null;
+                this.draw();
+            }
+        }
+        return returnMe;
     };
+
     handleMouseDown = (event: MouseEvent) => {
         if (this.binHighlighted !== null) {
             if (
@@ -179,10 +214,50 @@ export default class TSPBehaviorView implements BehaviorView {
     };
 
     handleMouseLeave = (event: MouseEvent) => {
-        throw new Error("Method not implemented.");
+        this.binSelected = null;
+        this.binHighlighted = null;
+        this.draw();
     };
+
     handleMouseMove = (event: MouseEvent) => {
-        throw new Error("Method not implemented.");
+        let mcpt = [event.offsetX, event.offsetY];
+        let mouseBin = null;
+
+        let numBins = this.modelGetters.getNumBins();
+        for (var ii = 0; ii < numBins; ++ii) {
+            for (var jj = 0; jj < numBins; ++jj) {
+                var pt0 = this.behaviorToCanvas([ii / numBins, jj / numBins]);
+                var pt1 = this.behaviorToCanvas([
+                    (ii + 1) / numBins,
+                    (jj + 1) / numBins,
+                ]);
+
+                if (
+                    pt0[0] <= mcpt[0] &&
+                    mcpt[0] <= pt1[0] &&
+                    pt1[1] <= mcpt[1] &&
+                    mcpt[1] <= pt0[1]
+                ) {
+                    mouseBin = [ii, jj];
+                }
+            }
+        }
+        if (this.binHighlighted !== mouseBin) {
+            this.binHighlighted = mouseBin;
+            if (this.binHighlighted !== null && this.binSelected !== null) {
+                if (
+                    this.modelGetters
+                        .getBinElites()
+                        .has(this.binHighlighted.toString())
+                ) {
+                    this.binSelected[1] = this.binHighlighted;
+                } else {
+                    // why is this here
+                    // this.binSelected[1] = null;
+                }
+            }
+            this.draw();
+        }
     };
 
     behaviorToCanvas = (bpt: number[]) => {

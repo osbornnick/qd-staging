@@ -6,7 +6,7 @@ export default interface BehaviorView {
     scale: number;
 
     draw(): void;
-    handleMouseUp(event: MouseEvent): void;
+    handleMouseUp(event: MouseEvent): any;
     handleMouseDown(event: MouseEvent): void;
     handleMouseLeave(event: MouseEvent): void;
     handleMouseMove(event: MouseEvent): void;

@@ -46,7 +46,8 @@ export default class TSPManager implements Manager {
             behaviorOnCanvas,
             behaviorOffCanvas,
             window.requestAnimationFrame,
-            this.onNewSolution
+            this.onNewSolution,
+            this.crossoverSolution
         );
 
         // init
@@ -70,6 +71,12 @@ export default class TSPManager implements Manager {
     requestBestSolution(): void {
         throw new Error("Method not implemented.");
     }
+
+    crossoverSolution = (sol1: Solution, sol2: Solution) => {
+        let newSol = this.taskController.model.crossoverSolution(sol1, sol2);
+        this.onNewSolution("crossover", newSol);
+    };
+
     onNewSolution = (type: String, solution: any) => {
         console.log("onNewSolution called with:", type, solution);
         this.previousSolution = this.currentSolution.slice();

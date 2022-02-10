@@ -8,13 +8,13 @@ export default class ShortestEdgeBehavior implements Behavior {
         this.description = "length of shortest edge";
     }
     calculateBehavior(problem: number[][], solution: number[]): number {
-        let min = distance(problem[solution[0]], problem[solution[1]]);
-        for (let ii = 1; ii < solution.length; ++ii) {
+        let minLength = 999.99;
+        for (let ii = 0; ii < solution.length; ++ii) {
             let src = problem[solution[ii]];
             let dst = problem[solution[(ii + 1) % solution.length]];
             let dist = distance(src, dst);
-            min = Math.min(min, dist);
+            minLength = Math.min(minLength, dist);
         }
-        return min;
+        return minLength;
     }
 }

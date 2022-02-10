@@ -22,10 +22,13 @@ export default class TSPBehaviorModel implements BehaviorModel {
     }
 
     evaluateSolution = (problem: any, solution: any, solutionScore: number) => {
-        let x = this.behavior1.calculateBehavior(problem, solution);
-        let y = this.behavior2.calculateBehavior(problem, solution);
-        let scaledEvaluation = this.scaleEvaluation(problem, x, y);
-
+        let longestEdge = this.behavior1.calculateBehavior(problem, solution);
+        let shortestEdge = this.behavior2.calculateBehavior(problem, solution);
+        let scaledEvaluation = this.scaleEvaluation(
+            problem,
+            shortestEdge,
+            longestEdge
+        );
         let behaviorBin = [
             Math.min(
                 Math.floor(scaledEvaluation[0] * this.numBins),
@@ -56,8 +59,8 @@ export default class TSPBehaviorModel implements BehaviorModel {
 
     private scaleEvaluation = (
         problem: Problem,
-        shortest: number,
-        longest: number
+        shortestEdge: number,
+        longestEdge: number
     ) => {
         let problemMin = 999.9;
         let problemMax = 0.0;
@@ -72,8 +75,8 @@ export default class TSPBehaviorModel implements BehaviorModel {
         }
         let mid = 0.75 * problemMin + 0.25 * problemMax;
         return [
-            this.lremapClamp(shortest, problemMin, mid),
-            this.lremapClamp(longest, mid, problemMax),
+            this.lremapClamp(shortestEdge, problemMin, mid),
+            this.lremapClamp(longestEdge, mid, problemMax),
         ];
     };
 

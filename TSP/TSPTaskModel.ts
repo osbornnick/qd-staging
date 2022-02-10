@@ -5,8 +5,8 @@ import { distance } from "../util/util.js";
 
 export default class TSPModel implements TaskModel {
     problem: Problem;
-    problemEdgeLengthMin: number = 999;
-    problemEdgeLengthMax: number = 0;
+    // problemEdgeLengthMin: number = 999;
+    // problemEdgeLengthMax: number = 0;
 
     constructor() {
         this.setProblem([
@@ -84,27 +84,41 @@ export default class TSPModel implements TaskModel {
     mutateSolution(solution: Solution) {
         throw new Error("Method not implemented.");
     }
-    crossoverSolution(sol1: Solution, sol2: Solution) {
-        throw new Error("Method not implemented.");
+    crossoverSolution(sol1: Solution, sol2: Solution): Solution {
+        let length = sol1.length;
+        let crossstart = Math.floor(Math.random() * length);
+        let crosslength = Math.floor(Math.random() * (length - 1));
+        let child = [];
+        for (let ii = 0; ii < crosslength; ++ii) {
+            let val = sol1[(crossstart + ii) % length];
+            child.push(val);
+        }
+        for (let ii = 0; ii < length; ++ii) {
+            let val = sol2[ii];
+            if (child.indexOf(val) == -1) {
+                child.push(val);
+            }
+        }
+        return child;
     }
 
     setProblem = (problem: Problem) => {
         this.problem = problem.slice();
-        for (let ii = 0; ii < problem.length; ++ii) {
-            for (let jj = ii + 1; jj < problem.length; ++jj) {
-                let src = problem[ii];
-                let dest = problem[jj];
-                let dist = distance(src, dest);
-                this.problemEdgeLengthMin = Math.min(
-                    this.problemEdgeLengthMin,
-                    dist
-                );
-                this.problemEdgeLengthMax = Math.max(
-                    this.problemEdgeLengthMax,
-                    dist
-                );
-            }
-        }
+        // for (let ii = 0; ii < problem.length; ++ii) {
+        //     for (let jj = ii + 1; jj < problem.length; ++jj) {
+        //         let src = problem[ii];
+        //         let dest = problem[jj];
+        //         let dist = distance(src, dest);
+        //         this.problemEdgeLengthMin = Math.min(
+        //             this.problemEdgeLengthMin,
+        //             dist
+        //         );
+        //         this.problemEdgeLengthMax = Math.max(
+        //             this.problemEdgeLengthMax,
+        //             dist
+        //         );
+        //     }
+        // }
     };
 
     getProblem: Problem = () => this.problem.slice();
