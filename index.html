@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>QD testing</title>
-    </head>
-    <body>
-        <div id="onscreen" style="display: flex">
-            <div id="behaviorCanvasParent"></div>
-            <div id="taskCanvasParent"></div>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>QD testing</title>
+</head>
+
+<body>
+    <div id="onscreen" style="display: flex">
+        <div id="behaviorCanvasParent"></div>
+        <div id="taskCanvasParent"></div>
+    </div>
+    <div id="offscreen">
+        <h1>Offscreen</h1>
+        <div style="display: flex">
+            <div id="offscreenBehaviorParent"></div>
+            <div id="offscreenTaskParent"></div>
         </div>
-        <div id="offscreen">
-            <h1>Offscreen</h1>
-            <div style="display: flex">
-                <div id="offscreenBehaviorParent"></div>
-                <div id="offscreenTaskParent"></div>
-            </div>
-        </div>
-        <script src="build/index.js" type="module"></script>
-    </body>
+    </div>
+    <script src="build/index.js" type="module"></script>
+</body>
+
 </html>

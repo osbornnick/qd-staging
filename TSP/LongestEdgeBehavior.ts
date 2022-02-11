@@ -7,6 +7,7 @@ export default class LongestEdgeBehavior implements Behavior {
     constructor() {
         this.description = "length of longest edge";
     }
+    // scaling needs to be here
     calculateBehavior(problem: number[][], solution: number[]): number {
         let maxLength = 0;
         for (let ii = 0; ii < solution.length; ++ii) {

@@ -7,6 +7,7 @@ export default class ShortestEdgeBehavior implements Behavior {
     constructor() {
         this.description = "length of shortest edge";
     }
+    // scaling needs to be here
     calculateBehavior(problem: number[][], solution: number[]): number {
         let minLength = 999.99;
         for (let ii = 0; ii < solution.length; ++ii) {

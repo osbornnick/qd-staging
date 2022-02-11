@@ -21,6 +21,7 @@ export default class TSPBehaviorModel implements BehaviorModel {
         this.behavior2 = new ShortestEdgeBehavior();
     }
 
+    // needs to take isMinimize as an argument (for determining elite status)
     evaluateSolution = (problem: any, solution: any, solutionScore: number) => {
         let longestEdge = this.behavior1.calculateBehavior(problem, solution);
         let shortestEdge = this.behavior2.calculateBehavior(problem, solution);

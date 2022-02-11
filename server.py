@@ -216,6 +216,7 @@ if __name__ == '__main__':
 
         def get_request(self):
             req = http.server.HTTPServer.get_request(self)
+            # overwrites IP of address (but with hash for session)
             return req[0], (hashlib.sha1((HTTPServer._rnd + req[1][0]).encode('utf-8')).hexdigest(), req[1][1])
 
     httpd = HTTPServer((HOST_NAME, args.port), Handler)

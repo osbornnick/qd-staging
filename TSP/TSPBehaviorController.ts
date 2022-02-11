@@ -62,6 +62,7 @@ export default class TSPBehaviorController
 
     handleMouseUp = (evt: MouseEvent) => {
         let crossObj = this.view.handleMouseUp(evt);
+        if (crossObj == null) return;
         if (crossObj.crossover) {
             let sol1 = this.model.binElites.get(
                 crossObj.binKey1.toString()

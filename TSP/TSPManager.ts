@@ -93,6 +93,7 @@ export default class TSPManager implements Manager {
         this.behaviorController.view.draw();
         // solution, problem, solutionScore, isAnElite, behaviorBin, behaviorScore, type sent to log
         // check if solution is the best one
+        // taskController.model.isMinimize()
     };
 
     makeCanvas(size: number) {
