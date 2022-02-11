@@ -84,6 +84,7 @@ export default class TSPModel implements TaskModel {
     mutateSolution(solution: Solution) {
         throw new Error("Method not implemented.");
     }
+    
     crossoverSolution(sol1: Solution, sol2: Solution): Solution {
         let length = sol1.length;
         let crossstart = Math.floor(Math.random() * length);
@@ -138,6 +139,7 @@ export default class TSPModel implements TaskModel {
     setRandomProblem(): void {
         throw new Error("Method not implemented.");
     }
+
     scoreSolution(solution: Solution): number {
         let score = 0;
         for (let ii = 0; ii < solution.length; ++ii) {

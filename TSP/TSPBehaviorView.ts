@@ -163,9 +163,6 @@ export default class TSPBehaviorView implements BehaviorView {
         let returnMe = null;
         if (this.binSelected !== null) {
             if (this.binSelected[0] !== null && this.binSelected[1] !== null) {
-                // var binSelected0Elite = this.modelGetters
-                //     .getBinElites()
-                //     .get(this.binSelected[0].toString());
                 if (
                     this.binSelected[0].toString() ===
                     this.binSelected[1].toString()
@@ -174,20 +171,12 @@ export default class TSPBehaviorView implements BehaviorView {
                         crossover: false,
                         binKey: this.binSelected[0].slice(),
                     }; // for controller to pass new solution (it gets from model)
-                    // newSolution(binSelected0Elite.solution.slice(), "elite");
                 } else {
                     returnMe = {
                         crossover: true,
                         binKey1: this.binSelected[0].slice(),
                         binKey2: this.binSelected[1].slice(),
                     };
-                    // var binSelected1Elite = this.modelGetters
-                    //     .getBinElites()
-                    //     .get(this.binSelected[1].toString());
-                    // crossoverSolutions(
-                    //     binSelected0Elite.solution,
-                    //     binSelected1Elite.solution
-                    // );
                 }
                 this.binSelected = null;
             } else {
