@@ -3,7 +3,6 @@ import Problem from "../interfaces/Problem.js";
 import BehaviorModel from "../model/BehaviorModel.js";
 import LongestEdgeBehavior from "./LongestEdgeBehavior.js";
 import ShortestEdgeBehavior from "./ShortestEdgeBehavior.js";
-import { distance } from "../util/util.js";
 import Solution from "../interfaces/Solution.js";
 
 export default class TSPBehaviorModel implements BehaviorModel {
@@ -22,21 +21,21 @@ export default class TSPBehaviorModel implements BehaviorModel {
     }
 
     // needs to take isMinimize as an argument (for determining elite status)
-    evaluateSolution = (problem: any, solution: any, solutionScore: number) => {
+    evaluateSolution = (
+        problem: Problem,
+        solution: Solution,
+        solutionScore: number
+    ) => {
         let longestEdge = this.behavior1.calculateBehavior(problem, solution);
         let shortestEdge = this.behavior2.calculateBehavior(problem, solution);
-        let scaledEvaluation = this.scaleEvaluation(
-            problem,
-            shortestEdge,
-            longestEdge
-        );
+        let evaluation = [shortestEdge, longestEdge];
         let behaviorBin = [
             Math.min(
-                Math.floor(scaledEvaluation[0] * this.numBins),
+                Math.floor(evaluation[0] * this.numBins),
                 this.numBins - 1
             ),
             Math.min(
-                Math.floor(scaledEvaluation[1] * this.numBins),
+                Math.floor(evaluation[1] * this.numBins),
                 this.numBins - 1
             ),
         ];
@@ -54,31 +53,8 @@ export default class TSPBehaviorModel implements BehaviorModel {
             this.currentIsNewElite = true;
         }
 
-        this.currentBehavior = scaledEvaluation.slice();
-        return scaledEvaluation;
-    };
-
-    private scaleEvaluation = (
-        problem: Problem,
-        shortestEdge: number,
-        longestEdge: number
-    ) => {
-        let problemMin = 999.9;
-        let problemMax = 0.0;
-        for (var ii = 0; ii < problem.length; ++ii) {
-            for (var jj = ii + 1; jj < problem.length; ++jj) {
-                var src = problem[ii];
-                var dst = problem[jj];
-                var dist = distance(src, dst);
-                problemMin = Math.min(problemMin, dist);
-                problemMax = Math.max(problemMax, dist);
-            }
-        }
-        let mid = 0.75 * problemMin + 0.25 * problemMax;
-        return [
-            this.lremapClamp(shortestEdge, problemMin, mid),
-            this.lremapClamp(longestEdge, mid, problemMax),
-        ];
+        this.currentBehavior = evaluation.slice();
+        return evaluation;
     };
 
     setBins = (bins: number) => (this.numBins = bins);
@@ -86,8 +62,4 @@ export default class TSPBehaviorModel implements BehaviorModel {
     setBehavior2 = (b: Behavior) => (this.behavior2 = b);
     getCurrentIsNewElite = () => this.currentIsNewElite;
     getCurrentBehaviorBin = () => this.currentBin;
-
-    lremapClamp(x: number, lo: number, hi: number) {
-        return Math.max(0.0, Math.min(1.0, (x - lo) / (hi - lo)));
-    }
 }
