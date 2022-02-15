@@ -108,10 +108,10 @@ export default class TSPManager implements Manager {
         );
     };
     requestLastSolution = () => {
-        this.onNewSolution("request last", this.previousSolution);
+        this.onNewSolution("request last", this.previousSolution.slice());
     };
     requestBestSolution = () => {
-        this.onNewSolution("request best", this.bestSolution);
+        this.onNewSolution("request best", this.bestSolution.slice());
     };
     requestMutateSolution = () => {
         this.onNewSolution(
@@ -150,11 +150,13 @@ export default class TSPManager implements Manager {
                 score < this.bestScore
             ) {
                 this.bestSolution = this.currentSolution.slice();
+                this.bestScore = score;
             } else if (
                 !this.taskController.model.isMinimize() &&
                 score > this.bestScore
             ) {
                 this.bestSolution = this.currentSolution.slice();
+                this.bestScore = score;
             }
         }
     };
