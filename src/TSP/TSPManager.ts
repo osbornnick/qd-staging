@@ -48,6 +48,10 @@ export default class TSPManager implements Manager {
         this.registerButtonHandlers();
         // init
         this.requestRandomSolution();
+        this.sendLog("start", { behavior_visible: this.behaviorVisible });
+        this.sendLog("problem", {
+            problem: this.taskController.model.getProblem(),
+        });
     }
 
     private initUserID = () => {
@@ -159,6 +163,17 @@ export default class TSPManager implements Manager {
                 this.bestScore = score;
             }
         }
+
+        this.sendLog("solution", {
+            solution: this.currentSolution,
+            type,
+            score,
+            best_score: this.bestScore,
+            behavior,
+            behavior_bin: this.behaviorController.model.currentBin,
+            arch_elite_count: this.behaviorController.model.binElites.size, //is this right?
+            new_elite: this.behaviorController.model.currentIsNewElite,
+        });
     };
 
     makeCanvas(size: number) {
