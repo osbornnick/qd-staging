@@ -81,10 +81,14 @@ export default class TSPModel implements TaskModel {
         return newSol;
     };
 
-    mutateSolution(solution: Solution) {
-        throw new Error("Method not implemented.");
+    mutateSolution(solution: Solution): Solution {
+        let newSol = solution.slice();
+        let ii = Math.floor(Math.random() * newSol.length);
+        let jj = Math.floor(Math.random() * ii);
+        [newSol[ii], newSol[jj]] = [newSol[jj], newSol[ii]];
+        return newSol;
     }
-    
+
     crossoverSolution(sol1: Solution, sol2: Solution): Solution {
         let length = sol1.length;
         let crossstart = Math.floor(Math.random() * length);

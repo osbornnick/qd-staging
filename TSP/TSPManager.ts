@@ -63,7 +63,7 @@ export default class TSPManager implements Manager {
             .getElementById("mutateSolutionButton")
             ?.addEventListener("click", () => this.requestMutateSolution());
     };
-    
+
     sendLog(type: String, info: {}): void {
         throw new Error("Method not implemented.");
     }
@@ -85,7 +85,12 @@ export default class TSPManager implements Manager {
     requestBestSolution = () => {
         this.onNewSolution("request best", this.bestSolution);
     };
-    requestMutateSolution = () => {};
+    requestMutateSolution = () => {
+        this.onNewSolution(
+            "mutate solution",
+            this.taskController.model.mutateSolution(this.currentSolution)
+        );
+    };
 
     crossoverSolution = (sol1: Solution, sol2: Solution) => {
         let newSol = this.taskController.model.crossoverSolution(sol1, sol2);
