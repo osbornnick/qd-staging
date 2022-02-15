@@ -8,7 +8,7 @@ export default interface Manager {
     bestSolution: Solution;
     previousSolution: Solution;
     currentSolution: Solution;
-    bestScore: number;
+    bestScore: number | null;
 
     taskController: TaskController;
     behaviorController: BehaviorController;

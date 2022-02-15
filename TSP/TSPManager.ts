@@ -11,7 +11,7 @@ export default class TSPManager implements Manager {
     bestSolution: any;
     previousSolution: Solution;
     currentSolution: Solution = [[]];
-    bestScore: number = 0;
+    bestScore: number | null = null;
     taskController: TaskController;
     behaviorController: BehaviorController;
 
@@ -26,14 +26,8 @@ export default class TSPManager implements Manager {
 
         document.getElementById("taskCanvasParent")?.appendChild(taskOnCanvas);
         document
-            .getElementById("offscreenTaskParent")
-            ?.appendChild(taskOffCanvas);
-        document
             .getElementById("behaviorCanvasParent")
             ?.appendChild(behaviorOnCanvas);
-        document
-            .getElementById("offscreenBehaviorParent")
-            ?.appendChild(behaviorOffCanvas);
 
         this.taskController = new TSPTaskController(
             taskOnCanvas,
@@ -50,12 +44,26 @@ export default class TSPManager implements Manager {
             this.crossoverSolution
         );
 
+        this.registerButtonHandlers();
         // init
-        this.onNewSolution(
-            "random start",
-            this.taskController.model.getRandomSolution()
-        );
+        this.requestRandomSolution();
     }
+
+    private registerButtonHandlers = () => {
+        document
+            .getElementById("bestSolutionButton")
+            ?.addEventListener("click", () => this.requestBestSolution());
+        document
+            .getElementById("lastSolutionButton")
+            ?.addEventListener("click", () => this.requestLastSolution());
+        document
+            .getElementById("randomSolutionButton")
+            ?.addEventListener("click", () => this.requestRandomSolution());
+        document
+            .getElementById("mutateSolutionButton")
+            ?.addEventListener("click", () => this.requestMutateSolution());
+    };
+    
     sendLog(type: String, info: {}): void {
         throw new Error("Method not implemented.");
     }
@@ -65,12 +73,19 @@ export default class TSPManager implements Manager {
     chooseGame(): void {
         throw new Error("Method not implemented.");
     }
-    requestLastSolution(): void {
-        throw new Error("Method not implemented.");
-    }
-    requestBestSolution(): void {
-        throw new Error("Method not implemented.");
-    }
+    requestRandomSolution = () => {
+        this.onNewSolution(
+            "random",
+            this.taskController.model.getRandomSolution()
+        );
+    };
+    requestLastSolution = () => {
+        this.onNewSolution("request last", this.previousSolution);
+    };
+    requestBestSolution = () => {
+        this.onNewSolution("request best", this.bestSolution);
+    };
+    requestMutateSolution = () => {};
 
     crossoverSolution = (sol1: Solution, sol2: Solution) => {
         let newSol = this.taskController.model.crossoverSolution(sol1, sol2);
@@ -78,7 +93,6 @@ export default class TSPManager implements Manager {
     };
 
     onNewSolution = (type: String, solution: any) => {
-        console.log("onNewSolution called with:", type, solution);
         this.previousSolution = this.currentSolution.slice();
         this.currentSolution = solution.slice();
         // send solution to task model for scoring
@@ -92,8 +106,24 @@ export default class TSPManager implements Manager {
         this.taskController.view.draw();
         this.behaviorController.view.draw();
         // solution, problem, solutionScore, isAnElite, behaviorBin, behaviorScore, type sent to log
+
         // check if solution is the best one
-        // taskController.model.isMinimize()
+        if (this.bestScore == null) {
+            this.bestSolution = this.currentSolution.slice();
+            this.bestScore = score;
+        } else {
+            if (
+                this.taskController.model.isMinimize() &&
+                score < this.bestScore
+            ) {
+                this.bestSolution = this.currentSolution.slice();
+            } else if (
+                !this.taskController.model.isMinimize() &&
+                score > this.bestScore
+            ) {
+                this.bestSolution = this.currentSolution.slice();
+            }
+        }
     };
 
     makeCanvas(size: number) {
