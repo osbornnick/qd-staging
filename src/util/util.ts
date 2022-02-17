@@ -8,4 +8,8 @@ function distance(p0: number[], p1: number[]): number {
     return Math.sqrt(distanceSqr(p0, p1));
 }
 
-export { distance, distanceSqr };
+function clamp(x: number, min: number, max: number) {
+    return Math.min(max, Math.max(min, x));
+}
+
+export { distance, distanceSqr, clamp };

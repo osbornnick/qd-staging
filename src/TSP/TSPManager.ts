@@ -4,6 +4,7 @@ import TSPBehaviorController from "./TSPBehaviorController";
 import TSPTaskController from "./TSPTaskController";
 import Manager from "../manager/Manager";
 import Solution from "../interfaces/Solution";
+import { clamp } from "../util/util";
 
 export default class TSPManager implements Manager {
     userID: String = "default";
@@ -84,7 +85,7 @@ export default class TSPManager implements Manager {
             run: runID,
             run_index: this.runIndex,
             user: this.userID,
-            token: this.makeId(),
+            token: this.generateToken(),
             type: type,
             info,
         };
@@ -96,12 +97,11 @@ export default class TSPManager implements Manager {
             body: JSON.stringify(data),
         });
     };
-    makeId(): string {
-        return "test";
-    }
+
     logTick(): void {
-        throw new Error("Method not implemented.");
+        this.sendLog("tick", {});
     }
+
     chooseGame(): void {
         throw new Error("Method not implemented.");
     }
@@ -181,5 +181,25 @@ export default class TSPManager implements Manager {
         canvas.width = size;
         canvas.height = size;
         return canvas;
+    }
+
+    generateToken() {
+        let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        let text = "";
+        for (let ii = 0; ii < 9; ++ii) {
+            let rnd = crypto.getRandomValues(new Uint8Array(1))[0] / 255.0;
+            text += possible.charAt(
+                clamp(Math.floor(rnd * possible.length), 0, possible.length - 1)
+            );
+        }
+
+        let check = 0;
+        for (let ii = 0; ii < text.length; ++ii) {
+            check += text.charCodeAt(ii);
+        }
+        text += (check % 16).toString(16).toUpperCase();
+
+        return text;
     }
 }
