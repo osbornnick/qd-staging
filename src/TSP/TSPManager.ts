@@ -24,8 +24,8 @@ export default class TSPManager implements Manager {
 
         let taskOnCanvas = this.makeCanvas(480);
         let taskOffCanvas = this.makeCanvas(480);
-        let behaviorOnCanvas = this.makeCanvas(350);
-        let behaviorOffCanvas = this.makeCanvas(350);
+        let behaviorOnCanvas = this.makeCanvas(210);
+        let behaviorOffCanvas = this.makeCanvas(210);
 
         document.getElementById("taskCanvasParent")?.appendChild(taskOnCanvas);
         document
@@ -59,11 +59,15 @@ export default class TSPManager implements Manager {
         setInterval(this.logTick, 60000);
     }
 
-    private initUserID = () => {
-        fetch("/api/id").then(async (res) => {
+    private initUserID = async () => {
+        await fetch("/api/id").then(async (res) => {
             let { id } = await res.json();
             this.userID = id;
         });
+        console.log("User id: ", this.userID);
+
+        if (this.userID.charAt(this.userID.length - 1) == "0")
+            this.showBehavior();
     };
 
     private registerButtonHandlers = () => {
@@ -250,5 +254,10 @@ export default class TSPManager implements Manager {
         let bestScoreElement = document.getElementById("bestscore");
         if (bestScoreElement !== null)
             bestScoreElement.innerText = this.bestScore.toFixed(0);
+    };
+
+    showBehavior = () => {
+        let behaviorElement = document.getElementById("behaviorcontent");
+        if (behaviorElement !== null) behaviorElement.style.display = "block";
     };
 }

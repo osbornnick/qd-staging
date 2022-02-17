@@ -19,10 +19,10 @@ function shuffleArray(array: number[]) {
     }
 }
 
-// app.use((req, res, next) => {
-//     req.ip = ""; // obfuscate the IP
-//     next();
-// });
+app.use((req, res, next) => {
+    req.ip;
+    next();
+});
 
 app.get("/api/id", (req, res) => {
     let id = crypto.randomBytes(9).toString("hex");
