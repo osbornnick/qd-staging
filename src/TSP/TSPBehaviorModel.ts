@@ -62,4 +62,6 @@ export default class TSPBehaviorModel implements BehaviorModel {
     setBehavior2 = (b: Behavior) => (this.behavior2 = b);
     getCurrentIsNewElite = () => this.currentIsNewElite;
     getCurrentBehaviorBin = () => this.currentBin;
+    getInstructions = () =>
+        "The grid (below) will keep track of the routes you've found based on the length of their longest and shortests legs. Your current route is a blue dot. Grids cells that you have found a route in are shaded blue. Filling in the grid may help find different and shorter routes!<br> <b>Click a grid cell</b> to copy the best route from that cell. <br><b>Click and drag</b> between two grid cells to combine their best routes.";
 }

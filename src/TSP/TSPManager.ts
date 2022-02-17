@@ -8,11 +8,12 @@ import { clamp } from "../util/util";
 
 export default class TSPManager implements Manager {
     userID: String = "default";
+    codeID: String = "default";
     behaviorVisible: boolean;
     bestSolution: any;
     previousSolution: Solution;
     currentSolution: Solution = [[]];
-    bestScore: number | null = null;
+    bestScore: number = -1; // MAGIC NUMBER
     taskController: TaskController;
     behaviorController: BehaviorController;
     runIndex: number = 0;
@@ -21,10 +22,10 @@ export default class TSPManager implements Manager {
         this.initUserID();
         this.behaviorVisible = true;
 
-        let taskOnCanvas = this.makeCanvas(540);
-        let taskOffCanvas = this.makeCanvas(540);
-        let behaviorOnCanvas = this.makeCanvas(540);
-        let behaviorOffCanvas = this.makeCanvas(540);
+        let taskOnCanvas = this.makeCanvas(480);
+        let taskOffCanvas = this.makeCanvas(480);
+        let behaviorOnCanvas = this.makeCanvas(350);
+        let behaviorOffCanvas = this.makeCanvas(350);
 
         document.getElementById("taskCanvasParent")?.appendChild(taskOnCanvas);
         document
@@ -48,11 +49,14 @@ export default class TSPManager implements Manager {
 
         this.registerButtonHandlers();
         // init
-        this.requestRandomSolution();
+        this.codeID = this.generateToken().slice(1, 3);
         this.sendLog("start", { behavior_visible: this.behaviorVisible });
         this.sendLog("problem", {
             problem: this.taskController.model.getProblem(),
         });
+        this.requestRandomSolution();
+        this.initUI();
+        setInterval(this.logTick, 60000);
     }
 
     private initUserID = () => {
@@ -89,7 +93,7 @@ export default class TSPManager implements Manager {
             type: type,
             info,
         };
-        fetch("/log", {
+        fetch("/api/log", {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
@@ -98,11 +102,12 @@ export default class TSPManager implements Manager {
         });
     };
 
-    logTick(): void {
+    logTick = () => {
         this.sendLog("tick", {});
-    }
+    };
 
     chooseGame(): void {
+        this.initUI();
         throw new Error("Method not implemented.");
     }
     requestRandomSolution = () => {
@@ -145,7 +150,7 @@ export default class TSPManager implements Manager {
         // solution, problem, solutionScore, isAnElite, behaviorBin, behaviorScore, type sent to log
 
         // check if solution is the best one
-        if (this.bestScore == null) {
+        if (this.bestScore == -1) {
             this.bestSolution = this.currentSolution.slice();
             this.bestScore = score;
         } else {
@@ -174,6 +179,7 @@ export default class TSPManager implements Manager {
             arch_elite_count: this.behaviorController.model.binElites.size, //is this right?
             new_elite: this.behaviorController.model.currentIsNewElite,
         });
+        this.updateUI(score);
     };
 
     makeCanvas(size: number) {
@@ -202,4 +208,47 @@ export default class TSPManager implements Manager {
 
         return text;
     }
+
+    initUI = () => {
+        let instructionElement = document.getElementById("gameinstructions");
+        if (instructionElement !== null)
+            instructionElement.innerHTML =
+                this.taskController.model.getInstructions();
+
+        let behaviorInstructionElement = document.getElementById(
+            "behaviorinstructions"
+        );
+        if (behaviorInstructionElement !== null)
+            behaviorInstructionElement.innerHTML =
+                this.behaviorController.model.getInstructions();
+    };
+
+    updateUI = (score: number) => {
+        let bonusCents = clamp(
+            Math.round(100 * Math.pow((250000 - this.bestScore) / 250000, 2)),
+            0,
+            100
+        );
+        let bonusCode =
+            (100 + 5 * bonusCents).toString(16) +
+            "x" +
+            ((bonusCents * 47) % 97).toString() +
+            "x" +
+            this.codeID;
+
+        let bonusCodeElement = document.getElementById("bonuscode");
+        if (bonusCodeElement !== null) bonusCodeElement.innerText = bonusCode;
+        let bonusCentsElement = document.getElementById("bonuscents");
+        if (bonusCentsElement !== null)
+            bonusCentsElement.innerText =
+                "$" + String((bonusCents / 100.0).toFixed(2));
+
+        let currentScoreElement = document.getElementById("currentscore");
+        if (currentScoreElement !== null)
+            currentScoreElement.innerText = score.toFixed(0);
+
+        let bestScoreElement = document.getElementById("bestscore");
+        if (bestScoreElement !== null)
+            bestScoreElement.innerText = this.bestScore.toFixed(0);
+    };
 }

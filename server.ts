@@ -2,7 +2,6 @@ import express from "express";
 import fs from "fs";
 import crypto from "crypto";
 import path from "path";
-import { nextTick } from "process";
 
 let app = express();
 app.use(express.json());
@@ -20,10 +19,10 @@ function shuffleArray(array: number[]) {
     }
 }
 
-app.use((req, res, next) => {
-    req.ip = ""; // obfuscate the IP
-    next();
-});
+// app.use((req, res, next) => {
+//     req.ip = ""; // obfuscate the IP
+//     next();
+// });
 
 app.get("/api/id", (req, res) => {
     let id = crypto.randomBytes(9).toString("hex");
@@ -37,7 +36,7 @@ app.get("/api/id", (req, res) => {
 
 app.post("/api/log", (req, res) => {
     fs.writeFile(
-        "./log.txt",
+        path.join(__dirname, "log.txt"),
         JSON.stringify(req.body) + "\n",
         { flag: "a+" },
         (err) => {

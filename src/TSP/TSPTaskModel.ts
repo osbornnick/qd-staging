@@ -59,7 +59,7 @@ export default class TSPModel implements TaskModel {
         return "route length";
     }
     getInstructions(): string {
-        return "You are given a map of multiple cities and your goal is to find the shortest route that connects them all. The dots on the map represent cities and the lines represent legs of the route.";
+        return "You are given a map of multiple cities. Your goal is to find the shortest route that connects them all. The dots on the map represent cities and the lines represent legs of the route. <br> <b>Click and drag</b> between multiple cities to update the legs of the route.";
     }
     isMinimize(): boolean {
         return true;
