@@ -5,6 +5,7 @@ import TSPTaskController from "./TSPTaskController";
 import Manager from "../manager/Manager";
 import Solution from "../interfaces/Solution";
 import { clamp } from "../util/util";
+import { time } from "console";
 
 export default class TSPManager implements Manager {
     userID: String = "default";
@@ -17,6 +18,7 @@ export default class TSPManager implements Manager {
     taskController: TaskController;
     behaviorController: BehaviorController;
     runIndex: number = 0;
+    solver: any;
 
     constructor() {
         this.initUserID();
@@ -57,6 +59,8 @@ export default class TSPManager implements Manager {
         this.requestRandomSolution();
         this.initUI();
         setInterval(this.logTick, 60000);
+
+        this.solver = this.makeSolver();
     }
 
     private initUserID = async () => {
@@ -83,6 +87,10 @@ export default class TSPManager implements Manager {
         document
             .getElementById("mutateSolutionButton")
             ?.addEventListener("click", () => this.requestMutateSolution());
+
+        document
+            .getElementById("solvetoggle")
+            ?.addEventListener("click", () => this.toggleSolving());
     };
 
     sendLog = (type: String, info: {}) => {
@@ -90,7 +98,7 @@ export default class TSPManager implements Manager {
         let runID = 0;
         let data = {
             time: Date.now(),
-            run: runID,
+            run: runID, // what is this
             run_index: this.runIndex,
             user: this.userID,
             token: this.generateToken(),
@@ -138,7 +146,11 @@ export default class TSPManager implements Manager {
         this.onNewSolution("crossover", newSol);
     };
 
-    onNewSolution = (type: String, solution: any) => {
+    onNewSolution = (
+        type: String,
+        solution: any,
+        shouldLog: boolean = true
+    ) => {
         this.previousSolution = this.currentSolution.slice();
         this.currentSolution = solution.slice();
         // send solution to task model for scoring
@@ -173,16 +185,17 @@ export default class TSPManager implements Manager {
             }
         }
 
-        this.sendLog("solution", {
-            solution: this.currentSolution,
-            type,
-            score,
-            best_score: this.bestScore,
-            behavior,
-            behavior_bin: this.behaviorController.model.currentBin,
-            arch_elite_count: this.behaviorController.model.binElites.size, //is this right?
-            new_elite: this.behaviorController.model.currentIsNewElite,
-        });
+        if (shouldLog)
+            this.sendLog("solution", {
+                solution: this.currentSolution,
+                type,
+                score,
+                best_score: this.bestScore,
+                behavior,
+                behavior_bin: this.behaviorController.model.currentBin,
+                arch_elite_count: this.behaviorController.model.binElites.size, //is this right?
+                new_elite: this.behaviorController.model.currentIsNewElite,
+            });
         this.updateUI(score);
     };
 
@@ -259,5 +272,86 @@ export default class TSPManager implements Manager {
     showBehavior = () => {
         let behaviorElement = document.getElementById("behaviorcontent");
         if (behaviorElement !== null) behaviorElement.style.display = "block";
+    };
+
+    toggleSolving = () => {
+        this.solver.toggleSolving();
+    };
+
+    makeSolver = () => {
+        let tc = this.taskController;
+        let bc = this.behaviorController;
+        let manager = this;
+        class Solver {
+            i: number = 0;
+            solving: Boolean = false;
+
+            solve = async () => {
+                while (this.solving) {
+                    if (this.i < 100) manager.requestRandomSolution();
+                    else {
+                        let randomChoice = manager.randomMapChoice(
+                            bc.model.binElites
+                        );
+                        let newSol;
+                        let randomElite = bc.model.binElites.get(randomChoice);
+                        let type;
+                        if (Math.random() < 0.2) {
+                            newSol = tc.model.mutateSolution(
+                                randomElite.solution
+                            );
+                            type = "random solver";
+                        } else {
+                            let rand2 = manager.randomMapChoice(
+                                bc.model.binElites
+                            );
+                            let rand2elite = bc.model.binElites.get(rand2);
+                            newSol = tc.model.crossoverSolution(
+                                randomElite.solution,
+                                rand2elite.solution
+                            );
+                            type = "crossover solver";
+                        }
+                        manager.onNewSolution(type, newSol, false);
+                        await new Promise((r) => setTimeout(r, 10));
+                    }
+                    this.i++;
+                }
+            };
+
+            toggleSolving = () => {
+                this.solving = !this.solving;
+                this.solve();
+            };
+        }
+        return new Solver();
+    };
+
+    // solve = async () => {
+    //     let i = 0;
+    //     while (this.solving) {
+    //         if (i < 100) this.requestRandomSolution();
+    //         else {
+    //             //  get a random elite
+    //             let randomChoice = this.randomMapChoice(
+    //                 this.behaviorController.model.binElites
+    //             );
+    //             let randomElite =
+    //                 this.behaviorController.model.binElites.get(randomChoice);
+    //             // mutate that solution
+    //             let newSolution = this.taskController.model.mutateSolution(
+    //                 randomElite.solution
+    //             );
+    //             this.onNewSolution("MAPELITES", newSolution);
+    //             // sleep for .1 seconds
+    //             await new Promise((r) => setTimeout(r, 100));
+    //         }
+    //         i++;
+    //     }
+    // };
+
+    randomMapChoice = (map: Map<String, any>) => {
+        let keys = Array.from(this.behaviorController.model.binElites.keys());
+        return keys[Math.floor(Math.random() * keys.length)];
     };
 }
