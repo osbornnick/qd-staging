@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>QD testing</title>
+        <link href="style.css" rel="stylesheet" />
+    </head>
+
+    <body>
+        <div class="flex-container topbar">
+            <div class="space-around">Bonus code: <b id="bonuscode"></b></div>
+            <div class="space-around">
+                Current bonus: <b id="bonuscents"></b>
+            </div>
+            <div class="space-around">
+                A shorter route is worth a higher bonus. You can enter your
+                bonus code at any time regardless of route length!
+            </div>
+        </div>
+        <div
+            id="onscreen"
+            class="flex-container"
+            style="justify-content: space-around"
+        >
+            <div>
+                <div id="gameinstructions" class="space-around"></div>
+                <div>Length of current route: <b id="currentscore"></b></div>
+                <div>
+                    Length of shortest route found: <b id="bestscore"></b>
+                </div>
+                <div id="behaviorcontent" style="display: none">
+                    <p id="behaviorinstructions" class="space-around"></p>
+                    <div
+                        id="behaviorCanvasParent"
+                        style="text-align: center"
+                    ></div>
+                </div>
+            </div>
+            <div>
+                <div id="taskCanvasParent"></div>
+                <div class="flex-container space-between">
+                    <button id="bestSolutionButton">
+                        Restore best solution
+                    </button>
+                    <button id="lastSolutionButton">
+                        Restore last solution
+                    </button>
+                    <button id="randomSolutionButton">Random solution</button>
+                    <button id="mutateSolutionButton">Random change</button>
+                </div>
+            </div>
+        </div>
+        <button id="solvetoggle">Toggle solver</button>
+        <script src="bundle.js"></script>
+    </body>
+</html>

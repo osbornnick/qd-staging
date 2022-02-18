@@ -5,10 +5,9 @@ import TSPTaskController from "./TSPTaskController";
 import Manager from "../manager/Manager";
 import Solution from "../interfaces/Solution";
 import { clamp } from "../util/util";
-import { time } from "console";
 
 export default class TSPManager implements Manager {
-    userID: String = "default";
+    userID: String = "default"; // should not give a new one when restarting, url or cookie
     codeID: String = "default";
     behaviorVisible: boolean;
     bestSolution: any;
@@ -64,6 +63,7 @@ export default class TSPManager implements Manager {
     }
 
     private initUserID = async () => {
+        // needs to persist across sessions (url?)
         await fetch("/api/id").then(async (res) => {
             let { id } = await res.json();
             this.userID = id;
@@ -98,7 +98,7 @@ export default class TSPManager implements Manager {
         let runID = 0;
         let data = {
             time: Date.now(),
-            run: runID, // what is this
+            run: runID, // indicate a starting of the game (refresh gives new one)
             run_index: this.runIndex,
             user: this.userID,
             token: this.generateToken(),
@@ -206,6 +206,7 @@ export default class TSPManager implements Manager {
         return canvas;
     }
 
+    // identifies a message (unique to each message)
     generateToken() {
         let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
