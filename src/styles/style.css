@@ -1,0 +1,22 @@
+.space-around {
+    padding: 1rem;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+body {
+    max-width: 960px;
+    margin: auto;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.topbar {
+    background-color: bisque;
+    border-radius: 1rem;
+    margin: 1rem;
+}

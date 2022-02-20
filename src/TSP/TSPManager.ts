@@ -8,6 +8,7 @@ import { clamp } from "../util/util";
 
 export default class TSPManager implements Manager {
     userID: String = "default"; // should not give a new one when restarting, url or cookie
+    runID: String = "default";
     codeID: String = "default";
     behaviorVisible: boolean;
     bestSolution: any;
@@ -50,7 +51,8 @@ export default class TSPManager implements Manager {
 
         this.registerButtonHandlers();
         // init
-        this.codeID = this.generateToken().slice(1, 3);
+        this.runID = this.generateToken();
+        this.codeID = this.runID.slice(1, 3);
         this.sendLog("start", { behavior_visible: this.behaviorVisible });
         this.sendLog("problem", {
             problem: this.taskController.model.getProblem(),
@@ -63,13 +65,13 @@ export default class TSPManager implements Manager {
     }
 
     private initUserID = async () => {
-        // needs to persist across sessions (url?)
-        await fetch("/api/id").then(async (res) => {
-            let { id } = await res.json();
-            this.userID = id;
-        });
+        const urlParams = new URLSearchParams(window.location.search);
+        let id = urlParams.get("uid");
+        if (id !== null) this.userID = id;
+        else {
+            console.log("URL PARAMS ERROR, NO USER ID (WAHT DO?)");
+        }
         console.log("User id: ", this.userID);
-
         if (this.userID.charAt(this.userID.length - 1) == "0")
             this.showBehavior();
     };
@@ -95,10 +97,9 @@ export default class TSPManager implements Manager {
 
     sendLog = (type: String, info: {}) => {
         ++this.runIndex;
-        let runID = 0;
         let data = {
             time: Date.now(),
-            run: runID, // indicate a starting of the game (refresh gives new one)
+            run: this.runID, // indicate a starting of the game (refresh gives new one)
             run_index: this.runIndex,
             user: this.userID,
             token: this.generateToken(),
