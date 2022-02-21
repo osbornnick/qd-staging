@@ -1,4 +1,6 @@
+import Solution from "../interfaces/Solution";
 import BehaviorView from "../view/BehaviorView";
+import interpolate from "color-interpolate";
 
 export default class TSPBehaviorView implements BehaviorView {
     context: CanvasRenderingContext2D;
@@ -8,6 +10,7 @@ export default class TSPBehaviorView implements BehaviorView {
         getBinElites: Function;
         getSolutionBehavior: Function;
         getSolutionBin: Function;
+        getScoreRange: Function;
     };
     canvasWidth: number;
     canvasHeight: number;
@@ -25,6 +28,7 @@ export default class TSPBehaviorView implements BehaviorView {
             getBinElites: Function;
             getSolutionBehavior: Function;
             getSolutionBin: Function;
+            getScoreRange: Function;
         },
         canvasWidth: number,
         canvasHeight: number,
@@ -39,27 +43,34 @@ export default class TSPBehaviorView implements BehaviorView {
     }
 
     draw = () => {
-        let { getNumBins, getBinElites, getSolutionBehavior, getSolutionBin } =
-            this.modelGetters;
+        let {
+            getNumBins,
+            getBinElites,
+            getSolutionBehavior,
+            getSolutionBin,
+            getScoreRange,
+        } = this.modelGetters;
         // numBins, binElites, solutionBehavior, solutionBin
         this.render(
             this.drawHelper(
                 getNumBins(),
                 getBinElites(),
                 getSolutionBehavior(),
-                getSolutionBin()
+                getSolutionBin(),
+                getScoreRange()
             )
         );
     };
 
     drawHelper = (
         numBins: number,
-        binElites: Map<String, {}>,
+        binElites: Map<String, { solution: Solution; score: number }>,
         solutionBehavior: number[],
-        solutionBin: number[]
+        solutionBin: number[],
+        scoreRange: number[]
     ) => {
         return () => {
-            this.drawBins(numBins, binElites, solutionBin);
+            this.drawBins(numBins, binElites, solutionBin, scoreRange);
             this.drawSelectedBins(numBins);
             this.drawHighlightedBin(numBins, binElites);
 
@@ -106,8 +117,9 @@ export default class TSPBehaviorView implements BehaviorView {
 
     drawBins = (
         numBins: number,
-        binElites: Map<String, {}>,
-        solutionBin: number[]
+        binElites: Map<String, { solution: Solution; score: number }>,
+        solutionBin: number[],
+        scoreRange: number[]
     ) => {
         this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         this.context.lineWidth = 1;
@@ -128,10 +140,19 @@ export default class TSPBehaviorView implements BehaviorView {
                 );
                 this.context.stroke();
 
-                if (ii === solutionBin[0] && jj === solutionBin[1]) {
-                    this.context.fillStyle = "#5555aa";
-                } else if (binElites.has([ii, jj].toString())) {
-                    this.context.fillStyle = "#7777ee";
+                // if (ii === solutionBin[0] && jj === solutionBin[1]) {
+                //     this.context.fillStyle = "#5555aa";
+                // }
+                if (binElites.has([ii, jj].toString())) {
+                    let elite = binElites.get([ii, jj].toString());
+                    let fillColor = "#7777ee";
+                    if (elite != undefined) {
+                        fillColor = this.computeFillColor(
+                            scoreRange,
+                            elite.score
+                        );
+                    }
+                    this.context.fillStyle = fillColor;
                 } else {
                     this.context.fillStyle = "#dddddd";
                 }
@@ -270,5 +291,21 @@ export default class TSPBehaviorView implements BehaviorView {
                         (this.canvasHeight - 3.0 * this.BEHAVIOR_RADIUS_CANVAS)
             ),
         ];
+    };
+
+    computeFillColor = (scoreRange: number[], score: number) => {
+        let worstScore = scoreRange[0];
+        let bestScore = scoreRange[1];
+        let min = worstScore;
+        let max = bestScore;
+        if (worstScore > bestScore) {
+            min = bestScore;
+            max = worstScore;
+        }
+        let scaled = (score - min) / (max - min);
+        if (max == min) scaled = 0;
+
+        let colormap = interpolate(["#c0ff33", "#fb4b4b"]);
+        return colormap(scaled);
     };
 }

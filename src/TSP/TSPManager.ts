@@ -7,7 +7,7 @@ import Solution from "../interfaces/Solution";
 import { clamp } from "../util/util";
 
 export default class TSPManager implements Manager {
-    userID: String = "default"; // should not give a new one when restarting, url or cookie
+    userID: String = "default";
     runID: String = "default";
     codeID: String = "default";
     behaviorVisible: boolean;
@@ -15,6 +15,7 @@ export default class TSPManager implements Manager {
     previousSolution: Solution;
     currentSolution: Solution = [[]];
     bestScore: number = -1; // MAGIC NUMBER
+    worstScore: number = -1; // MAGIC NUMBER
     taskController: TaskController;
     behaviorController: BehaviorController;
     runIndex: number = 0;
@@ -46,7 +47,8 @@ export default class TSPManager implements Manager {
             behaviorOffCanvas,
             window.requestAnimationFrame,
             this.onNewSolution,
-            this.crossoverSolution
+            this.crossoverSolution,
+            () => [this.worstScore, this.bestScore]
         );
 
         this.registerButtonHandlers();
@@ -183,6 +185,23 @@ export default class TSPManager implements Manager {
             ) {
                 this.bestSolution = this.currentSolution.slice();
                 this.bestScore = score;
+            }
+        }
+
+        // check if solution is the worst one
+        if (this.worstScore == -1) {
+            this.worstScore = score;
+        } else {
+            if (
+                this.taskController.model.isMinimize() &&
+                score > this.worstScore
+            ) {
+                this.worstScore = score;
+            } else if (
+                !this.taskController.model.isMinimize() &&
+                score < this.worstScore
+            ) {
+                this.worstScore = score;
             }
         }
 
