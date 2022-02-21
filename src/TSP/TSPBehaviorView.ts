@@ -59,78 +59,97 @@ export default class TSPBehaviorView implements BehaviorView {
         solutionBin: number[]
     ) => {
         return () => {
-            this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-            this.context.lineWidth = 1;
-            this.context.strokeStyle = "#222222";
-            for (let ii = 0; ii < numBins; ++ii) {
-                for (let jj = 0; jj < numBins; ++jj) {
-                    let pt0 = this.behaviorToCanvas([
-                        ii / numBins,
-                        jj / numBins,
-                    ]);
-                    let pt1 = this.behaviorToCanvas([
-                        (ii + 1) / numBins,
-                        (jj + 1) / numBins,
-                    ]);
-                    this.context.beginPath();
-                    this.context.rect(
-                        pt0[0],
-                        pt0[1],
-                        pt1[0] - pt0[0],
-                        pt1[1] - pt0[1]
-                    );
-                    this.context.stroke();
+            this.drawBins(numBins, binElites, solutionBin);
+            this.drawSelectedBins(numBins);
+            this.drawHighlightedBin(numBins, binElites);
 
-                    if (ii === solutionBin[0] && jj === solutionBin[1]) {
-                        this.context.fillStyle = "#5555aa";
-                    } else if (binElites.has([ii, jj].toString())) {
-                        this.context.fillStyle = "#7777ee";
-                    } else {
-                        this.context.fillStyle = "#dddddd";
-                    }
-                    this.context.fill();
-                }
+            this.drawBehaviorPoint(solutionBehavior);
+        };
+    };
+
+    drawHighlightedBin = (numBins: number, binElites: Map<String, {}>) => {
+        if (this.binHighlighted !== null) {
+            let ii = this.binHighlighted[0];
+            let jj = this.binHighlighted[1];
+
+            this.context.lineWidth = 3;
+            if (binElites.has(this.binHighlighted.toString())) {
+                this.context.strokeStyle = "#999900";
+            } else {
+                this.context.strokeStyle = "#999999";
             }
 
-            if (this.binSelected !== null) {
-                for (let bb = 0; bb < this.binSelected.length; ++bb) {
-                    if (this.binSelected[bb] === null) continue;
+            let pt0 = this.behaviorToCanvas([ii / numBins, jj / numBins]);
+            let pt1 = this.behaviorToCanvas([
+                (ii + 1) / numBins,
+                (jj + 1) / numBins,
+            ]);
+            this.context.beginPath();
+            this.context.rect(pt0[0], pt0[1], pt1[0] - pt0[0], pt1[1] - pt0[1]);
+            this.context.stroke();
+        }
+    };
 
-                    let ii = this.binSelected[bb][0];
-                    let jj = this.binSelected[bb][1];
+    drawBehaviorPoint = (solutionBehavior: number[]) => {
+        let ptbc = this.behaviorToCanvas(solutionBehavior);
+        this.context.beginPath();
+        this.context.arc(
+            ptbc[0],
+            ptbc[1],
+            this.BEHAVIOR_RADIUS_CANVAS,
+            0,
+            2 * Math.PI
+        );
+        this.context.fillStyle = "#0000dd";
+        this.context.fill();
+    };
 
-                    this.context.lineWidth = 5;
-                    this.context.strokeStyle = "#009900";
-                    let pt0 = this.behaviorToCanvas([
-                        ii / numBins,
-                        jj / numBins,
-                    ]);
-                    let pt1 = this.behaviorToCanvas([
-                        (ii + 1) / numBins,
-                        (jj + 1) / numBins,
-                    ]);
-                    this.context.beginPath();
-                    this.context.rect(
-                        pt0[0],
-                        pt0[1],
-                        pt1[0] - pt0[0],
-                        pt1[1] - pt0[1]
-                    );
-                    this.context.stroke();
-                }
-            }
+    drawBins = (
+        numBins: number,
+        binElites: Map<String, {}>,
+        solutionBin: number[]
+    ) => {
+        this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+        this.context.lineWidth = 1;
+        this.context.strokeStyle = "#222222";
+        for (let ii = 0; ii < numBins; ++ii) {
+            for (let jj = 0; jj < numBins; ++jj) {
+                let pt0 = this.behaviorToCanvas([ii / numBins, jj / numBins]);
+                let pt1 = this.behaviorToCanvas([
+                    (ii + 1) / numBins,
+                    (jj + 1) / numBins,
+                ]);
+                this.context.beginPath();
+                this.context.rect(
+                    pt0[0],
+                    pt0[1],
+                    pt1[0] - pt0[0],
+                    pt1[1] - pt0[1]
+                );
+                this.context.stroke();
 
-            if (this.binHighlighted !== null) {
-                let ii = this.binHighlighted[0];
-                let jj = this.binHighlighted[1];
-
-                this.context.lineWidth = 3;
-                if (binElites.has(this.binHighlighted.toString())) {
-                    this.context.strokeStyle = "#999900";
+                if (ii === solutionBin[0] && jj === solutionBin[1]) {
+                    this.context.fillStyle = "#5555aa";
+                } else if (binElites.has([ii, jj].toString())) {
+                    this.context.fillStyle = "#7777ee";
                 } else {
-                    this.context.strokeStyle = "#999999";
+                    this.context.fillStyle = "#dddddd";
                 }
+                this.context.fill();
+            }
+        }
+    };
 
+    drawSelectedBins = (numBins: number) => {
+        if (this.binSelected !== null) {
+            for (let bb = 0; bb < this.binSelected.length; ++bb) {
+                if (this.binSelected[bb] === null) continue;
+
+                let ii = this.binSelected[bb][0];
+                let jj = this.binSelected[bb][1];
+
+                this.context.lineWidth = 5;
+                this.context.strokeStyle = "#009900";
                 let pt0 = this.behaviorToCanvas([ii / numBins, jj / numBins]);
                 let pt1 = this.behaviorToCanvas([
                     (ii + 1) / numBins,
@@ -145,18 +164,7 @@ export default class TSPBehaviorView implements BehaviorView {
                 );
                 this.context.stroke();
             }
-            var ptbc = this.behaviorToCanvas(solutionBehavior);
-            this.context.beginPath();
-            this.context.arc(
-                ptbc[0],
-                ptbc[1],
-                this.BEHAVIOR_RADIUS_CANVAS,
-                0,
-                2 * Math.PI
-            );
-            this.context.fillStyle = "#0000dd";
-            this.context.fill();
-        };
+        }
     };
 
     handleMouseUp = (event: MouseEvent) => {
