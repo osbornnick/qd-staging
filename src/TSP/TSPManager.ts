@@ -16,8 +16,6 @@ export default class TSPManager implements Manager {
     currentSolution: Solution = [[]];
     bestScore: number = -1; // MAGIC NUMBER
     // should this be worstEliteScore? rather than overall worst score?
-    worstScore: number = -1; // MAGIC NUMBER
-    worstEliteScore: number = -1; //MAGIC NUMBER
     taskController: TaskController;
     behaviorController: BehaviorController;
     runIndex: number = 0;
@@ -68,8 +66,7 @@ export default class TSPManager implements Manager {
             behaviorOffCanvas,
             window.requestAnimationFrame,
             this.onNewSolution,
-            this.crossoverSolution,
-            () => [this.worstEliteScore, this.bestScore] // change for worst score or worst elite score
+            this.crossoverSolution
         );
         document
             .getElementById("behaviorCanvasParent")
@@ -199,41 +196,6 @@ export default class TSPManager implements Manager {
             }
         }
 
-        // check if solution is the worst one
-        if (this.worstScore == -1) {
-            this.worstScore = score;
-        } else {
-            if (
-                this.taskController.model.isMinimize() &&
-                score > this.worstScore
-            ) {
-                this.worstScore = score;
-            } else if (
-                !this.taskController.model.isMinimize() &&
-                score < this.worstScore
-            ) {
-                this.worstScore = score;
-            }
-        }
-
-        // check if solution is the worst one
-        if (this.behaviorController.model.currentIsNewElite) {
-            if (this.worstEliteScore == -1) {
-                this.worstEliteScore = score;
-            } else {
-                if (
-                    this.taskController.model.isMinimize() &&
-                    score > this.worstEliteScore
-                ) {
-                    this.worstEliteScore = score;
-                } else if (
-                    !this.taskController.model.isMinimize() &&
-                    score < this.worstEliteScore
-                ) {
-                    this.worstEliteScore = score;
-                }
-            }
-        }
         if (shouldLog)
             this.sendLog("solution", {
                 solution: this.currentSolution,

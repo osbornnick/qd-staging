@@ -147,10 +147,7 @@ export default class TSPBehaviorView implements BehaviorView {
                     let elite = binElites.get([ii, jj].toString());
                     let fillColor = "#7777ee";
                     if (elite != undefined) {
-                        fillColor = this.computeFillColor(
-                            scoreRange,
-                            elite.score
-                        );
+                        fillColor = this.computeColor(scoreRange, elite.score);
                     }
                     this.context.fillStyle = fillColor;
                 } else {
@@ -293,7 +290,7 @@ export default class TSPBehaviorView implements BehaviorView {
         ];
     };
 
-    computeFillColor = (scoreRange: number[], score: number) => {
+    computeColor = (scoreRange: number[], score: number) => {
         let worstScore = scoreRange[0];
         let bestScore = scoreRange[1];
         let min = worstScore;
@@ -305,7 +302,7 @@ export default class TSPBehaviorView implements BehaviorView {
         let scaled = (score - min) / (max - min);
         if (max == min) scaled = 0;
 
-        let colormap = interpolate(["#c0ff33", "#fb4b4b"]);
+        let colormap = interpolate(["#333dff", "#fb4b4b"]);
         return colormap(scaled);
     };
 }

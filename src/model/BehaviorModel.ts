@@ -21,4 +21,5 @@ export default interface BehaviorModel {
     setBehavior2(b: Behavior): void;
     getCurrentIsNewElite(): boolean;
     getInstructions(): string;
+    getEliteScoreRange(): number[];
 }

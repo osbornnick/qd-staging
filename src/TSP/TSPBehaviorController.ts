@@ -19,8 +19,7 @@ export default class TSPBehaviorController
         offScreenCanvas: HTMLCanvasElement,
         requestAnimationFrame: Function,
         onNewSolution: Function,
-        requestCrossover: Function,
-        getScoreRange: Function
+        requestCrossover: Function
     ) {
         super(offScreenCanvas, onScreenCanvas);
         this.requestCrossover = requestCrossover;
@@ -31,7 +30,7 @@ export default class TSPBehaviorController
             getBinElites: () => this.model.binElites,
             getSolutionBehavior: () => this.model.currentBehavior,
             getSolutionBin: () => this.model.currentBin,
-            getScoreRange,
+            getScoreRange: this.model.getEliteScoreRange,
         };
         this.view = new TSPBehaviorView(
             offScreenCanvas.getContext("2d") || new CanvasRenderingContext2D(),

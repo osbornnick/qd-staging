@@ -25,7 +25,7 @@ export default class TSPBehaviorModel implements BehaviorModel {
         problem: Problem,
         solution: Solution,
         solutionScore: number
-    ) => {
+    ): number[] => {
         let shortestEdge = this.behavior1.calculateBehavior(problem, solution);
         let longestEdge = this.behavior2.calculateBehavior(problem, solution);
         let evaluation = [shortestEdge, longestEdge];
@@ -62,6 +62,22 @@ export default class TSPBehaviorModel implements BehaviorModel {
     setBehavior2 = (b: Behavior) => (this.behavior2 = b);
     getCurrentIsNewElite = () => this.currentIsNewElite;
     getCurrentBehaviorBin = () => this.currentBin;
+    getEliteScoreRange = (): number[] => {
+        let minScore = 0;
+        let maxScore = 0;
+        let i = 0;
+        this.binElites.forEach((value, key) => {
+            if (i === 0) {
+                minScore = value.score;
+                maxScore = value.score;
+            } else {
+                minScore = Math.min(minScore, value.score);
+                maxScore = Math.max(maxScore, value.score);
+            }
+            i++;
+        });
+        return [minScore, maxScore];
+    };
     getInstructions = () =>
         "The grid (below) will keep track of the routes you've found based on the length of their longest and shortests legs. Your current route is a blue dot. Grids cells that you have found a route in are shaded blue. Filling in the grid may help find different and shorter routes!<br> <b>Click a grid cell</b> to copy the best route from that cell. <br><b>Click and drag</b> between two grid cells to combine their best routes.";
 }
