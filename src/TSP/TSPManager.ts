@@ -15,6 +15,7 @@ export default class TSPManager implements Manager {
     previousSolution: Solution;
     currentSolution: Solution = [[]];
     bestScore: number = -1; // MAGIC NUMBER
+    // should this be worstEliteScore? rather than overall worst score?
     worstScore: number = -1; // MAGIC NUMBER
     taskController: TaskController;
     behaviorController: BehaviorController;
@@ -24,32 +25,8 @@ export default class TSPManager implements Manager {
     constructor() {
         this.initUserID();
         this.behaviorVisible = true;
-
-        let taskOnCanvas = this.makeCanvas(480);
-        let taskOffCanvas = this.makeCanvas(480);
-        let behaviorOnCanvas = this.makeCanvas(210);
-        let behaviorOffCanvas = this.makeCanvas(210);
-
-        document.getElementById("taskCanvasParent")?.appendChild(taskOnCanvas);
-        document
-            .getElementById("behaviorCanvasParent")
-            ?.appendChild(behaviorOnCanvas);
-
-        this.taskController = new TSPTaskController(
-            taskOnCanvas,
-            taskOffCanvas,
-            window.requestAnimationFrame,
-            this.onNewSolution,
-            () => this.currentSolution.slice()
-        );
-        this.behaviorController = new TSPBehaviorController(
-            behaviorOnCanvas,
-            behaviorOffCanvas,
-            window.requestAnimationFrame,
-            this.onNewSolution,
-            this.crossoverSolution,
-            () => [this.worstScore, this.bestScore]
-        );
+        this.taskController = this.initTask();
+        this.behaviorController = this.initBehavior();
 
         this.registerButtonHandlers();
         // init
@@ -65,6 +42,39 @@ export default class TSPManager implements Manager {
 
         this.solver = this.makeSolver();
     }
+
+    private initTask = (): TaskController => {
+        let taskOnCanvas = this.makeCanvas(480);
+        let taskOffCanvas = this.makeCanvas(480);
+
+        let taskController = new TSPTaskController(
+            taskOnCanvas,
+            taskOffCanvas,
+            window.requestAnimationFrame,
+            this.onNewSolution,
+            () => this.currentSolution.slice()
+        );
+        document.getElementById("taskCanvasParent")?.appendChild(taskOnCanvas);
+        return taskController;
+    };
+
+    private initBehavior = (): BehaviorController => {
+        let behaviorOnCanvas = this.makeCanvas(210);
+        let behaviorOffCanvas = this.makeCanvas(210);
+
+        let behaviorController = new TSPBehaviorController(
+            behaviorOnCanvas,
+            behaviorOffCanvas,
+            window.requestAnimationFrame,
+            this.onNewSolution,
+            this.crossoverSolution,
+            () => [this.worstScore, this.bestScore]
+        );
+        document
+            .getElementById("behaviorCanvasParent")
+            ?.appendChild(behaviorOnCanvas);
+        return behaviorController;
+    };
 
     private initUserID = async () => {
         const urlParams = new URLSearchParams(window.location.search);
