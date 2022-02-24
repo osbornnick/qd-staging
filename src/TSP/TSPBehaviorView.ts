@@ -11,6 +11,7 @@ export default class TSPBehaviorView implements BehaviorView {
         getSolutionBehavior: Function;
         getSolutionBin: Function;
         getScoreRange: Function;
+        getCurrentScore: Function;
     };
     canvasWidth: number;
     canvasHeight: number;
@@ -29,6 +30,7 @@ export default class TSPBehaviorView implements BehaviorView {
             getSolutionBehavior: Function;
             getSolutionBin: Function;
             getScoreRange: Function;
+            getCurrentScore: Function;
         },
         canvasWidth: number,
         canvasHeight: number,
@@ -49,6 +51,7 @@ export default class TSPBehaviorView implements BehaviorView {
             getSolutionBehavior,
             getSolutionBin,
             getScoreRange,
+            getCurrentScore,
         } = this.modelGetters;
         // numBins, binElites, solutionBehavior, solutionBin
         this.render(
@@ -57,7 +60,8 @@ export default class TSPBehaviorView implements BehaviorView {
                 getBinElites(),
                 getSolutionBehavior(),
                 getSolutionBin(),
-                getScoreRange()
+                getScoreRange(),
+                getCurrentScore()
             )
         );
     };
@@ -67,14 +71,15 @@ export default class TSPBehaviorView implements BehaviorView {
         binElites: Map<String, { solution: Solution; score: number }>,
         solutionBehavior: number[],
         solutionBin: number[],
-        scoreRange: number[]
+        scoreRange: number[],
+        currentScore: number
     ) => {
         return () => {
             this.drawBins(numBins, binElites, solutionBin, scoreRange);
             this.drawSelectedBins(numBins);
             this.drawHighlightedBin(numBins, binElites);
 
-            this.drawBehaviorPoint(solutionBehavior);
+            this.drawBehaviorPoint(solutionBehavior, scoreRange, currentScore);
         };
     };
 
@@ -101,7 +106,11 @@ export default class TSPBehaviorView implements BehaviorView {
         }
     };
 
-    drawBehaviorPoint = (solutionBehavior: number[]) => {
+    drawBehaviorPoint = (
+        solutionBehavior: number[],
+        scoreRange: number[],
+        currentScore: number
+    ) => {
         let ptbc = this.behaviorToCanvas(solutionBehavior);
         this.context.beginPath();
         this.context.arc(
@@ -111,8 +120,11 @@ export default class TSPBehaviorView implements BehaviorView {
             0,
             2 * Math.PI
         );
-        this.context.fillStyle = "#0000dd";
+        this.context.fillStyle = this.computeColor(scoreRange, currentScore);
         this.context.fill();
+        this.context.strokeStyle = "white";
+        this.context.lineWidth = 2;
+        this.context.stroke();
     };
 
     drawBins = (

@@ -14,6 +14,7 @@ export default class TSPManager implements Manager {
     bestSolution: any;
     previousSolution: Solution;
     currentSolution: Solution = [[]];
+    currentScore: number = 0;
     bestScore: number = -1; // MAGIC NUMBER
     // should this be worstEliteScore? rather than overall worst score?
     taskController: TaskController;
@@ -58,15 +59,16 @@ export default class TSPManager implements Manager {
     };
 
     private initBehavior = (): BehaviorController => {
-        let behaviorOnCanvas = this.makeCanvas(210);
-        let behaviorOffCanvas = this.makeCanvas(210);
+        let behaviorOnCanvas = this.makeCanvas(250);
+        let behaviorOffCanvas = this.makeCanvas(250);
 
         let behaviorController = new TSPBehaviorController(
             behaviorOnCanvas,
             behaviorOffCanvas,
             window.requestAnimationFrame,
             this.onNewSolution,
-            this.crossoverSolution
+            this.crossoverSolution,
+            () => this.currentScore
         );
         document
             .getElementById("behaviorCanvasParent")
@@ -166,6 +168,7 @@ export default class TSPManager implements Manager {
         this.currentSolution = solution.slice();
         // send solution to task model for scoring
         let score = this.taskController.model.scoreSolution(solution);
+        this.currentScore = score;
         // solution sent w grade to behavior model for behavior scoring
         let behavior = this.behaviorController.model.evaluateSolution(
             this.taskController.model.problem,
