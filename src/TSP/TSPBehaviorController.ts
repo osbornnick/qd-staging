@@ -4,8 +4,6 @@ import Controller from "../controller/Controller";
 import BehaviorView from "../view/BehaviorView";
 import TSPBehaviorModel from "./TSPBehaviorModel";
 import TSPBehaviorView from "./TSPBehaviorView";
-import Solution from "../interfaces/Solution";
-import Problem from "../interfaces/Problem";
 
 export default class TSPBehaviorController
     extends Controller
@@ -27,6 +25,7 @@ export default class TSPBehaviorController
         super(offScreenCanvas, onScreenCanvas);
         this.requestCrossover = requestCrossover;
         this.model = new TSPBehaviorModel();
+        let scale = 1;
         let modelGetters = {
             getNumBins: () => this.model.numBins,
             getBinElites: () => this.model.binElites,
@@ -40,7 +39,7 @@ export default class TSPBehaviorController
             modelGetters,
             offScreenCanvas.width,
             offScreenCanvas.height,
-            1
+            scale
         );
         this.onNewSolution = onNewSolution;
         this.registerMouseHandlers();

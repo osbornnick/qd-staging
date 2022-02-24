@@ -269,6 +269,16 @@ export default class TSPManager implements Manager {
         if (behaviorInstructionElement !== null)
             behaviorInstructionElement.innerHTML =
                 this.behaviorController.model.getInstructions();
+
+        let behavior1name = document.getElementById("behavior1title");
+        if (behavior1name !== null)
+            behavior1name.innerText +=
+                this.behaviorController.model.behavior1.description;
+
+        let behavior2name = document.getElementById("behavior2title");
+        if (behavior2name !== null)
+            behavior2name.innerText +=
+                this.behaviorController.model.behavior2.description;
     };
 
     updateUI = (score: number) => {
@@ -357,29 +367,6 @@ export default class TSPManager implements Manager {
         }
         return new Solver();
     };
-
-    // solve = async () => {
-    //     let i = 0;
-    //     while (this.solving) {
-    //         if (i < 100) this.requestRandomSolution();
-    //         else {
-    //             //  get a random elite
-    //             let randomChoice = this.randomMapChoice(
-    //                 this.behaviorController.model.binElites
-    //             );
-    //             let randomElite =
-    //                 this.behaviorController.model.binElites.get(randomChoice);
-    //             // mutate that solution
-    //             let newSolution = this.taskController.model.mutateSolution(
-    //                 randomElite.solution
-    //             );
-    //             this.onNewSolution("MAPELITES", newSolution);
-    //             // sleep for .1 seconds
-    //             await new Promise((r) => setTimeout(r, 100));
-    //         }
-    //         i++;
-    //     }
-    // };
 
     randomMapChoice = (map: Map<String, any>) => {
         let keys = Array.from(this.behaviorController.model.binElites.keys());

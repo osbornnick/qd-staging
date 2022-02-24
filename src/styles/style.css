@@ -20,3 +20,27 @@ body {
     border-radius: 1rem;
     margin: 1rem;
 }
+
+.behaviorgrid {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 30px auto;
+    grid-template-rows: auto 30px;
+}
+
+#behavior1title {
+    grid-column-start: 2;
+    grid-row-start: 2;
+}
+
+#behavior2title {
+    transform: rotate(180deg);
+    grid-column-start: 1;
+    grid-row-start: 1;
+    writing-mode: vertical-lr;
+}
+
+#behaviorcanvasparent {
+    grid-column-start: 2;
+    grid-row-start: 1;
+}
