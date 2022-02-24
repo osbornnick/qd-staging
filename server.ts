@@ -2,6 +2,8 @@ import express from "express";
 import fs from "fs";
 import crypto from "crypto";
 import path from "path";
+import http from "http";
+import https from "https";
 
 let app = express();
 app.use(express.json());
@@ -50,5 +52,17 @@ app.post("/api/log", (req, res) => {
     );
 });
 
-const PORT = 4000;
-app.listen(process.env.PORT || PORT);
+const PORT = process.env.port || 4000;
+let server;
+
+if (process.env.NODE_ENV === "prod") {
+    console.log("Starting in production mode, serving https");
+    let key = fs.readFileSync("path/to/private/key", "utf8");
+    let cert = fs.readFileSync("path/to/cert", "utf8");
+    server = https.createServer({ key, cert }, app);
+} else {
+    console.log("Starting in development mode, serving http");
+    server = http.createServer(app);
+}
+
+server.listen(PORT);

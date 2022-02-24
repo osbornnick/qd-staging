@@ -4,7 +4,8 @@
     "description": "framework for running quality diversity study",
     "private": "true",
     "scripts": {
-        "start": "nodemon ./server.js",
+        "dev": "nodemon ./server.js",
+        "prod": "export NODE_ENV=prod node ./server.js",
         "build": "tsc --esModuleInterop ./server.ts && npx webpack --config webpack.config.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
