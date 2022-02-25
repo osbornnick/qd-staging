@@ -2,7 +2,7 @@ import Problem from "../interfaces/Problem";
 import Solution from "../interfaces/Solution";
 
 export default interface TaskView {
-    context: CanvasRenderingContext2D | null;
+    context: CanvasRenderingContext2D;
     render: Function;
     canvasWidth: number;
     canvasHeight: number;
