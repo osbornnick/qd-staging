@@ -37,9 +37,11 @@ app.get("/api/id", (req, res) => {
 });
 
 app.post("/api/log", (req, res) => {
+    let data = req.body;
+    data.server_time = new Date();
     fs.writeFile(
         path.join(__dirname, "log.txt"),
-        JSON.stringify(req.body) + "\n",
+        JSON.stringify(data) + "\n",
         { flag: "a+" },
         (err) => {
             if (err) {

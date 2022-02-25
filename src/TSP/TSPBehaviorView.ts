@@ -168,6 +168,7 @@ export default class TSPBehaviorView implements BehaviorView {
                 this.context.fill();
             }
         }
+        
     };
 
     drawSelectedBins = (numBins: number) => {

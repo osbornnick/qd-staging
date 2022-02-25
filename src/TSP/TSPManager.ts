@@ -110,7 +110,7 @@ export default class TSPManager implements Manager {
     sendLog = (type: String, info: {}) => {
         ++this.runIndex;
         let data = {
-            time: Date.now(),
+            time: Date.now(), // comes from client
             run: this.runID, // indicate a starting of the game (refresh gives new one)
             run_index: this.runIndex,
             user: this.userID,
