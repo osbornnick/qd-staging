@@ -155,4 +155,6 @@ export default class TSPModel implements TaskModel {
         score *= 10000;
         return score;
     }
+
+    isValidSolution = (solution: Solution) => true;
 }

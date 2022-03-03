@@ -168,7 +168,6 @@ export default class TSPBehaviorView implements BehaviorView {
                 this.context.fill();
             }
         }
-        
     };
 
     drawSelectedBins = (numBins: number) => {
@@ -303,7 +302,7 @@ export default class TSPBehaviorView implements BehaviorView {
         ];
     };
 
-    computeColor = (scoreRange: number[], score: number) => {
+    computeColor = (scoreRange: number[], score: number): string => {
         let worstScore = scoreRange[0];
         let bestScore = scoreRange[1];
         let min = worstScore;

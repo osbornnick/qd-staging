@@ -16,4 +16,5 @@ export default interface Task {
     updateSolution(oldSol: Solution, newSol: Solution): Solution;
     setRandomProblem(): void;
     scoreSolution(solution: Solution): number;
+    isValidSolution(solution: Solution): boolean;
 }
