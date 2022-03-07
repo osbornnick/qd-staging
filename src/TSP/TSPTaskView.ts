@@ -30,6 +30,7 @@ export default class TSPView implements TaskView {
         this.canvasWidth = width;
         this.render = render;
         this.scale = 1;
+        this.draw();
     }
 
     draw = () => {

@@ -1,3 +1,5 @@
 import TSPManager from "./TSP/TSPManager";
 import "./styles/style.css";
-let manager = new TSPManager();
+import KManager from "./Knapsack/tempManager";
+// let manager = new TSPManager();
+let manager = new KManager();

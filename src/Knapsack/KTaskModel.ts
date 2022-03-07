@@ -1,7 +1,7 @@
 import Task from "../model/TaskModel";
 
 export type Problem = {
-    coins: [number[]];
+    coins: number[][];
     capacity: number;
 };
 
@@ -12,6 +12,39 @@ export default class KTaskModel implements Task {
     // each i indice in problem represents a coin, with [i][0] being its weight and [i][1] its value
     // a solution is an array of 1s and 0s, where the ith value represents inclusion or exclusion of a coin
     problem: Problem = { coins: [[]], capacity: 0 }; // coins as x,y,area?
+
+    constructor() {
+        this.problem = {
+            coins: [
+                [10, 48],
+                [30, 30],
+                [12, 42],
+                [22, 36],
+                [12, 22],
+                [20, 43],
+                [9, 18],
+                [18, 36],
+                [18, 36],
+                [20, 29],
+                [25, 30],
+                [25, 30],
+                [18, 25],
+                [7, 19],
+                [16, 41],
+                [16, 41],
+                [24, 34],
+                [24, 34],
+                [21, 32],
+                [21, 27],
+                [21, 27],
+                [32, 24],
+                [32, 24],
+                [9, 18],
+                [9, 18],
+            ],
+            capacity: 100,
+        };
+    }
 
     getName = (): string => {
         return "Knapsack problem";
@@ -86,4 +119,6 @@ export default class KTaskModel implements Task {
         }
         return score;
     }
+
+   
 }

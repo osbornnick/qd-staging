@@ -1,5 +1,7 @@
 import { Problem, Solution } from "./KTaskModel";
 import TaskView from "../view/TaskView";
+import { scale } from "../util/util";
+import interpolate from "color-interpolate";
 
 export class KTaskView implements TaskView {
     context: CanvasRenderingContext2D;
@@ -13,6 +15,11 @@ export class KTaskView implements TaskView {
     coinSelected: number | null = null;
     maxCoinWidth: number;
     maxCoinHeight: number;
+
+    minCoinWeight: number = 0;
+    maxCoinWeight: number = 0;
+    minCoinValue: number = 0;
+    maxCoinValue: number = 0;
 
     constructor(
         context: CanvasRenderingContext2D,
@@ -33,7 +40,7 @@ export class KTaskView implements TaskView {
         this.getSolution = getSolution;
         this.scale = 1;
 
-        // assuming coins in 5x5 grid
+        // assuming coins in 5x5 grid (25 coins)
         this.maxCoinWidth = width / 5;
         this.maxCoinHeight = height / 5;
     }
@@ -43,9 +50,32 @@ export class KTaskView implements TaskView {
     };
 
     drawHelper = (solution: Solution, problem: Problem) => {
+        this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+        [this.minCoinWeight, this.maxCoinWeight] = this.computeRange(
+            problem,
+            0
+        );
+        [this.minCoinValue, this.maxCoinValue] = this.computeRange(problem, 1);
         return () => {
-            // render everything
+            problem.coins.forEach((c, i) => {
+                // console.log("drawing coin %d %d in position %d", c[0], c[1], i);
+                if (solution[i] == 1) {
+                    this.drawCoin(c[0], c[1], i, true);
+                } else {
+                    this.drawCoin(c[0], c[1], i, false);
+                }
+            });
         };
+    };
+
+    computeRange = (problem: Problem, i: number): number[] => {
+        let min = problem.coins[0][i];
+        let max = min;
+        problem.coins.forEach((c) => {
+            min = Math.min(min, c[i]);
+            max = Math.max(max, c[i]);
+        });
+        return [min, max];
     };
 
     handleMouseUp(event: MouseEvent): number {
@@ -71,26 +101,58 @@ export class KTaskView implements TaskView {
         throw new Error("Method not implemented.");
     }
     // drawcoin function
-    drawCoin = (i: number) => {};
+    drawCoin = (
+        coinWeight: number,
+        coinValue: number,
+        i: number,
+        inSolution: boolean
+    ) => {
+        let radius = this.computeRadius(coinWeight);
+        let color = this.computeColor(coinValue);
+        let center = this.coinToCanvas(i);
+        this.context.beginPath();
+        this.context.arc(center[0], center[1], radius, 0, 2 * Math.PI);
+        this.context.fillStyle = color;
+        this.context.fill();
+        this.context.fillStyle = "white";
+        this.context.fillText(i.toString(), center[0], center[1]);
+        // if highlited, if in solution, color differently
+    };
 
     // draw weight scale
     drawCapacityScale = () => {};
 
     // fn that calculates the radius of the coin (based on weight)
     computeRadius = (coinWeight: number): number => {
-        return 0;
+        let tenthDistance = (this.maxCoinWeight - this.minCoinWeight) * 0.1;
+        let scaled = scale(
+            coinWeight,
+            this.minCoinWeight - tenthDistance * 3,
+            this.maxCoinWeight + tenthDistance
+        );
+
+        return (scaled * this.maxCoinWidth) / 2;
     };
 
     // fn that calculates the color of the coin (based on value)
     computeColor = (coinValue: number): string => {
-        return "";
+        let scaled = scale(coinValue, this.minCoinValue, this.maxCoinValue);
+        let colormap = interpolate(["#b87333", "#C0C0C0", "#FFD700"]);
+        return colormap(scaled);
     };
     // fn that calculates the posn of the coin on canvas
     coinToCanvas = (i: number): number[] => {
-        return [0, 0];
+        let col = i % 5;
+        let row = Math.floor(i / 5);
+        return [
+            col * this.maxCoinHeight + this.maxCoinHeight / 2,
+            row * this.maxCoinWidth + this.maxCoinWidth / 2,
+        ];
     };
     // fn that calculates canvas x,y coords to the coin index in problem
     canvasToCoin = (ptc: number[]): number => {
-        return 0;
+        let col = Math.floor(ptc[0] / this.maxCoinWidth);
+        let row = Math.floor(ptc[1] % this.maxCoinHeight);
+        return col + row * 5;
     };
 }

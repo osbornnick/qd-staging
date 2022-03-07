@@ -1,12 +1,12 @@
 import BehaviorController from "../controller/BehaviorController";
 import TaskController from "../controller/TaskController";
-import TSPBehaviorController from "./TSPBehaviorController";
-import TSPTaskController from "./TSPTaskController";
+import KTaskController from "./KTaskController";
 import Manager from "../manager/Manager";
 import Solution from "../interfaces/Solution";
 import { clamp } from "../util/util";
 
-export default class TSPManager implements Manager {
+export default class TSPManager {
+    // implements Manager
     userID: String = "default";
     runID: String = "default";
     codeID: String = "default";
@@ -16,9 +16,8 @@ export default class TSPManager implements Manager {
     currentSolution: Solution = [];
     currentScore: number = 0;
     bestScore: number = -1; // MAGIC NUMBER
-    // should this be worstEliteScore? rather than overall worst score?
     taskController: TaskController;
-    behaviorController: BehaviorController;
+    // behaviorController: BehaviorController;
     runIndex: number = 0;
     solver: any;
 
@@ -26,7 +25,7 @@ export default class TSPManager implements Manager {
         this.initUserID();
         this.behaviorVisible = true;
         this.taskController = this.initTask();
-        this.behaviorController = this.initBehavior();
+        // this.behaviorController = this.initBehavior();
 
         this.registerButtonHandlers();
         // init
@@ -40,14 +39,14 @@ export default class TSPManager implements Manager {
         this.initUI();
         setInterval(this.logTick, 60000);
 
-        this.solver = this.makeSolver();
+        // this.solver = this.makeSolver();
     }
 
     private initTask = (): TaskController => {
         let taskOnCanvas = this.makeCanvas(480);
         let taskOffCanvas = this.makeCanvas(480);
 
-        let taskController = new TSPTaskController(
+        let taskController = new KTaskController(
             taskOnCanvas,
             taskOffCanvas,
             window.requestAnimationFrame,
@@ -58,23 +57,23 @@ export default class TSPManager implements Manager {
         return taskController;
     };
 
-    private initBehavior = (): BehaviorController => {
-        let behaviorOnCanvas = this.makeCanvas(250);
-        let behaviorOffCanvas = this.makeCanvas(250);
+    // private initBehavior = (): BehaviorController => {
+    //     // let behaviorOnCanvas = this.makeCanvas(250);
+    //     // let behaviorOffCanvas = this.makeCanvas(250);
 
-        let behaviorController = new TSPBehaviorController(
-            behaviorOnCanvas,
-            behaviorOffCanvas,
-            window.requestAnimationFrame,
-            this.onNewSolution,
-            this.crossoverSolution,
-            () => this.currentScore
-        );
-        document
-            .getElementById("behaviorCanvasParent")
-            ?.appendChild(behaviorOnCanvas);
-        return behaviorController;
-    };
+    //     // let behaviorController = new TSPBehaviorController(
+    //     //     behaviorOnCanvas,
+    //     //     behaviorOffCanvas,
+    //     //     window.requestAnimationFrame,
+    //     //     this.onNewSolution,
+    //     //     this.crossoverSolution,
+    //     //     () => this.currentScore
+    //     // );
+    //     // document
+    //     //     .getElementById("behaviorCanvasParent")
+    //     //     ?.appendChild(behaviorOnCanvas);
+    //     // return behaviorController;
+    // };
 
     private initUserID = async () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -102,9 +101,9 @@ export default class TSPManager implements Manager {
             .getElementById("mutateSolutionButton")
             ?.addEventListener("click", () => this.requestMutateSolution());
 
-        document
-            .getElementById("solvetoggle")
-            ?.addEventListener("click", () => this.toggleSolving());
+        // document
+        //     .getElementById("solvetoggle")
+        //     ?.addEventListener("click", () => this.toggleSolving());
     };
 
     sendLog = (type: String, info: {}) => {
@@ -170,13 +169,13 @@ export default class TSPManager implements Manager {
         let score = this.taskController.model.scoreSolution(solution);
         this.currentScore = score;
         // solution sent w grade to behavior model for behavior scoring
-        let behavior = this.behaviorController.model.evaluateSolution(
-            this.taskController.model.problem,
-            solution,
-            score
-        );
+        // let behavior = this.behaviorController.model.evaluateSolution(
+        //     this.taskController.model.problem,
+        //     solution,
+        //     score
+        // );
         this.taskController.view.draw();
-        this.behaviorController.view.draw();
+        // this.behaviorController.view.draw();
 
         // check if solution is the best one
         if (this.bestScore == -1) {
@@ -204,10 +203,10 @@ export default class TSPManager implements Manager {
                 type,
                 score,
                 best_score: this.bestScore,
-                behavior,
-                behavior_bin: this.behaviorController.model.currentBin,
-                arch_elite_count: this.behaviorController.model.binElites.size, //is this right?
-                new_elite: this.behaviorController.model.currentIsNewElite,
+                // behavior,
+                // behavior_bin: this.behaviorController.model.currentBin,
+                // arch_elite_count: this.behaviorController.model.binElites.size, //is this right?
+                // new_elite: this.behaviorController.model.currentIsNewElite,
             });
         this.updateUI(score);
     };
@@ -246,22 +245,22 @@ export default class TSPManager implements Manager {
             instructionElement.innerHTML =
                 this.taskController.model.getInstructions();
 
-        let behaviorInstructionElement = document.getElementById(
-            "behaviorinstructions"
-        );
-        if (behaviorInstructionElement !== null)
-            behaviorInstructionElement.innerHTML =
-                this.behaviorController.model.getInstructions();
+        // let behaviorInstructionElement = document.getElementById(
+        //     "behaviorinstructions"
+        // );
+        // if (behaviorInstructionElement !== null)
+        //     behaviorInstructionElement.innerHTML =
+        //         this.behaviorController.model.getInstructions();
 
-        let behavior1name = document.getElementById("behavior1title");
-        if (behavior1name !== null)
-            behavior1name.innerText +=
-                " " + this.behaviorController.model.behavior1.description;
+        // let behavior1name = document.getElementById("behavior1title");
+        // if (behavior1name !== null)
+        //     behavior1name.innerText +=
+        //         " " + this.behaviorController.model.behavior1.description;
 
-        let behavior2name = document.getElementById("behavior2title");
-        if (behavior2name !== null)
-            behavior2name.innerText +=
-                " " + this.behaviorController.model.behavior2.description;
+        // let behavior2name = document.getElementById("behavior2title");
+        // if (behavior2name !== null)
+        //     behavior2name.innerText +=
+        //         " " + this.behaviorController.model.behavior2.description;
     };
 
     updateUI = (score: number) => {
@@ -298,61 +297,61 @@ export default class TSPManager implements Manager {
         if (behaviorElement !== null) behaviorElement.style.display = "block";
     };
 
-    toggleSolving = () => {
-        this.solver.toggleSolving();
-    };
+    // toggleSolving = () => {
+    //     this.solver.toggleSolving();
+    // };
 
-    makeSolver = () => {
-        let tc = this.taskController;
-        let bc = this.behaviorController;
-        let manager = this;
-        class Solver {
-            i: number = 0;
-            solving: Boolean = false;
+    // makeSolver = () => {
+    //     let tc = this.taskController;
+    //     let bc = this.behaviorController;
+    //     let manager = this;
+    //     class Solver {
+    //         i: number = 0;
+    //         solving: Boolean = false;
 
-            solve = async () => {
-                while (this.solving) {
-                    if (this.i < 100) manager.requestRandomSolution();
-                    else {
-                        let randomChoice = manager.randomMapChoice(
-                            bc.model.binElites
-                        );
-                        let newSol;
-                        let randomElite = bc.model.binElites.get(randomChoice);
-                        let type;
-                        if (Math.random() < 0.2) {
-                            newSol = tc.model.mutateSolution(
-                                randomElite.solution
-                            );
-                            type = "random solver";
-                        } else {
-                            let rand2 = manager.randomMapChoice(
-                                bc.model.binElites
-                            );
-                            let rand2elite = bc.model.binElites.get(rand2);
-                            newSol = tc.model.crossoverSolution(
-                                randomElite.solution,
-                                rand2elite.solution
-                            );
-                            type = "crossover solver";
-                        }
-                        manager.onNewSolution(type, newSol, false);
-                        await new Promise((r) => setTimeout(r, 10));
-                    }
-                    this.i++;
-                }
-            };
+    //         solve = async () => {
+    //             while (this.solving) {
+    //                 if (this.i < 100) manager.requestRandomSolution();
+    //                 else {
+    //                     let randomChoice = manager.randomMapChoice(
+    //                         bc.model.binElites
+    //                     );
+    //                     let newSol;
+    //                     let randomElite = bc.model.binElites.get(randomChoice);
+    //                     let type;
+    //                     if (Math.random() < 0.2) {
+    //                         newSol = tc.model.mutateSolution(
+    //                             randomElite.solution
+    //                         );
+    //                         type = "random solver";
+    //                     } else {
+    //                         let rand2 = manager.randomMapChoice(
+    //                             bc.model.binElites
+    //                         );
+    //                         let rand2elite = bc.model.binElites.get(rand2);
+    //                         newSol = tc.model.crossoverSolution(
+    //                             randomElite.solution,
+    //                             rand2elite.solution
+    //                         );
+    //                         type = "crossover solver";
+    //                     }
+    //                     manager.onNewSolution(type, newSol, false);
+    //                     await new Promise((r) => setTimeout(r, 10));
+    //                 }
+    //                 this.i++;
+    //             }
+    //         };
 
-            toggleSolving = () => {
-                this.solving = !this.solving;
-                this.solve();
-            };
-        }
-        return new Solver();
-    };
+    //         toggleSolving = () => {
+    //             this.solving = !this.solving;
+    //             this.solve();
+    //         };
+        // }
+    //     return new Solver();
+    // };
 
-    randomMapChoice = (map: Map<String, any>) => {
-        let keys = Array.from(this.behaviorController.model.binElites.keys());
-        return keys[Math.floor(Math.random() * keys.length)];
-    };
+    // randomMapChoice = (map: Map<String, any>) => {
+    //     let keys = Array.from(this.behaviorController.model.binElites.keys());
+    //     return keys[Math.floor(Math.random() * keys.length)];
+    // };
 }

@@ -12,4 +12,8 @@ function clamp(x: number, min: number, max: number) {
     return Math.min(max, Math.max(min, x));
 }
 
-export { distance, distanceSqr, clamp };
+function scale(x: number, min: number, max: number) {
+    return (x - min) / (max - min);
+}
+
+export { distance, distanceSqr, clamp, scale };
