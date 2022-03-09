@@ -13,6 +13,8 @@ export class KTaskView implements TaskView {
     getSolution: Function;
     coinHighlited: number | null = null;
     coinSelected: number | null = null;
+    coinCanvasWidth: number;
+    capacityCanvasWidth: number = 8;
     maxCoinWidth: number;
     maxCoinHeight: number;
 
@@ -37,12 +39,13 @@ export class KTaskView implements TaskView {
         this.getProblem = getProblem;
         this.canvasHeight = height;
         this.canvasWidth = width;
+        this.coinCanvasWidth = width - this.capacityCanvasWidth;
         this.getSolution = getSolution;
         this.scale = 1;
 
         // assuming coins in 5x5 grid (25 coins)
-        this.maxCoinWidth = width / 5;
-        this.maxCoinHeight = height / 5;
+        this.maxCoinWidth = this.coinCanvasWidth / 5;
+        this.maxCoinHeight = this.coinCanvasWidth / 5;
     }
 
     draw = (): void => {
@@ -60,15 +63,12 @@ export class KTaskView implements TaskView {
             problem.coins.forEach((c, i) => {
                 // console.log("drawing coin %d %d in position %d", c[0], c[1], i);
                 let highlight = false;
-                if (this.coinHighlited && i === this.coinHighlited) {
+                if (this.coinHighlited != null && i === this.coinHighlited) {
                     highlight = true;
                 }
-                if (solution[i] == 1) {
-                    this.drawCoin(c[0], c[1], i, true, highlight);
-                } else {
-                    this.drawCoin(c[0], c[1], i, false, highlight);
-                }
+                this.drawCoin(c[0], c[1], i, solution[i] === 1, highlight);
             });
+            this.drawCapacityScale(solution, problem);
         };
     };
 
@@ -148,16 +148,45 @@ export class KTaskView implements TaskView {
                 this.context.strokeStyle = "blue";
             }
             if (inSolution && highlight) {
-                this.context.strokeStyle = "red";
+                this.context.strokeStyle = "orange";
             }
             this.context.stroke();
         }
         this.context.fillStyle = "white";
         this.context.fillText(i.toString(), center[0], center[1]);
+        this.context.closePath();
     };
 
     // draw weight scale
-    drawCapacityScale = () => {};
+    drawCapacityScale = (sol: Solution, problem: Problem) => {
+        let { coins, capacity } = problem;
+        let backgroundCol = "gray";
+        let weightColor = "green";
+        let lineWidth = this.capacityCanvasWidth;
+        let scaleX = this.canvasWidth - lineWidth / 2;
+        this.context.lineWidth = lineWidth;
+
+        let weight = 0;
+        for (let i = 0; i < sol.length; i++) {
+            if (sol[i] === 1) weight += coins[i][0];
+        }
+        let scaled = scale(weight, 0, capacity);
+        let weightHeight = scaled * this.canvasHeight;
+        let weightY = this.canvasHeight - weightHeight;
+
+        this.context.beginPath();
+        this.context.moveTo(scaleX, this.canvasHeight);
+        this.context.strokeStyle = weightColor;
+        this.context.lineTo(scaleX, weightY);
+        this.context.stroke();
+        this.context.closePath();
+        this.context.beginPath();
+        this.context.moveTo(scaleX, weightY);
+        this.context.strokeStyle = backgroundCol;
+        this.context.lineTo(scaleX, 0);
+        this.context.stroke();
+        this.context.closePath();
+    };
 
     // fn that calculates the radius of the coin (based on weight)
     computeRadius = (coinWeight: number): number => {
@@ -187,9 +216,9 @@ export class KTaskView implements TaskView {
         ];
     };
     // fn that calculates canvas x,y coords to the coin index in problem
-    canvasToCoin = (ptc: number[]): number => {
-        let col = Math.floor(ptc[0] / this.maxCoinWidth);
-        let row = Math.floor(ptc[1] % this.maxCoinHeight);
-        return col + row * 5;
-    };
+    // canvasToCoin = (ptc: number[]): number => {
+    //     let col = Math.floor(ptc[0] / this.maxCoinWidth);
+    //     let row = Math.floor(ptc[1] % this.maxCoinHeight);
+    //     return col + row * 5;
+    // };
 }
