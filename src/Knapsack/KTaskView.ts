@@ -1,6 +1,6 @@
 import { Problem, Solution } from "./KTaskModel";
 import TaskView from "../view/TaskView";
-import { scale } from "../util/util";
+import { scale, distanceSqr } from "../util/util";
 import interpolate from "color-interpolate";
 
 export class KTaskView implements TaskView {
@@ -9,8 +9,8 @@ export class KTaskView implements TaskView {
     canvasWidth: number;
     canvasHeight: number;
     scale: number;
-    getProblem: any;
-    getSolution: any;
+    getProblem: Function;
+    getSolution: Function;
     coinHighlited: number | null = null;
     coinSelected: number | null = null;
     maxCoinWidth: number;
@@ -59,10 +59,14 @@ export class KTaskView implements TaskView {
         return () => {
             problem.coins.forEach((c, i) => {
                 // console.log("drawing coin %d %d in position %d", c[0], c[1], i);
+                let highlight = false;
+                if (this.coinHighlited && i === this.coinHighlited) {
+                    highlight = true;
+                }
                 if (solution[i] == 1) {
-                    this.drawCoin(c[0], c[1], i, true);
+                    this.drawCoin(c[0], c[1], i, true, highlight);
                 } else {
-                    this.drawCoin(c[0], c[1], i, false);
+                    this.drawCoin(c[0], c[1], i, false, highlight);
                 }
             });
         };
@@ -78,34 +82,55 @@ export class KTaskView implements TaskView {
         return [min, max];
     };
 
-    handleMouseUp(event: MouseEvent): number {
+    handleMouseUp = (event: MouseEvent): number => {
         // send selected coin to controller for:
         // if selected coin is in solution, remove it
         // if selected coin is not in solution, and it is valid, add it
 
         // clear selected and highlighted coins
         throw new Error("Method not implemented.");
-    }
-    handleMouseDown(event: MouseEvent): void {
+    };
+    handleMouseDown = (event: MouseEvent): void => {
         // select a coin
         throw new Error("Method not implemented.");
-    }
-    handleMouseLeave(event: MouseEvent): void {
+    };
+    handleMouseLeave = (event: MouseEvent): void => {
         // remove selected coin and highlighted coins
         throw new Error("Method not implemented.");
-    }
-    handleMouseMove(event: MouseEvent): void {
+    };
+    handleMouseMove = (event: MouseEvent): void => {
         // if no coin is selected, highlight coins that are moused over
         // if highlighted coin changes, show result in weight meter, and
         // highlight
-        throw new Error("Method not implemented.");
-    }
+        let mcpt = [event.offsetX, event.offsetY];
+        let { coins } = this.getProblem();
+        // let coinIndex = this.canvasToCoin(mcpt);
+        let mouseCoin = null;
+        let mouseCoinDsq = 0;
+        for (let i = 0; i < coins.length; i++) {
+            let coinCenter = this.coinToCanvas(i);
+            let coinRadius = this.computeRadius(coins[i][0]);
+            let dsq = distanceSqr(mcpt, coinCenter);
+            if (dsq < Math.pow(Math.max(2, coinRadius), 2)) {
+                if (mouseCoin == null || dsq < mouseCoinDsq) {
+                    mouseCoin = i;
+                    mouseCoinDsq = dsq;
+                }
+            }
+        }
+
+        if (this.coinHighlited !== mouseCoin) {
+            this.coinHighlited = mouseCoin;
+        }
+        this.draw();
+    };
     // drawcoin function
     drawCoin = (
         coinWeight: number,
         coinValue: number,
         i: number,
-        inSolution: boolean
+        inSolution: boolean,
+        highlight: boolean
     ) => {
         let radius = this.computeRadius(coinWeight);
         let color = this.computeColor(coinValue);
@@ -114,9 +139,21 @@ export class KTaskView implements TaskView {
         this.context.arc(center[0], center[1], radius, 0, 2 * Math.PI);
         this.context.fillStyle = color;
         this.context.fill();
+        this.context.lineWidth = this.scale * 4;
+        if (inSolution || highlight) {
+            if (inSolution) {
+                this.context.strokeStyle = "green";
+            }
+            if (highlight) {
+                this.context.strokeStyle = "blue";
+            }
+            if (inSolution && highlight) {
+                this.context.strokeStyle = "red";
+            }
+            this.context.stroke();
+        }
         this.context.fillStyle = "white";
         this.context.fillText(i.toString(), center[0], center[1]);
-        // if highlited, if in solution, color differently
     };
 
     // draw weight scale

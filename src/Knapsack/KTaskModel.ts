@@ -73,12 +73,14 @@ export default class KTaskModel implements Task {
         let totalWeight = 0;
         let coinList = [];
         for (let i = 0; i < this.problem.coins.length; i++) {
+            sol[i] = 0;
             coinList.push(i);
         }
         this.shuffleArray(coinList);
         let i = 0;
         while (totalWeight + coinList[i] <= this.problem.capacity) {
-            sol.push(coinList[i]);
+            sol[coinList[i]] = 1;
+            // sol.push(coinList[i]);
             totalWeight += this.problem.coins[coinList[i]][0];
             i++;
         }

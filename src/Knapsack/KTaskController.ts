@@ -34,10 +34,14 @@ export default class KTaskController
             onScreenCanvas.height,
             onScreenCanvas.width
         );
+        this.registerMouseHandlers();
     }
-    registerMouseHandlers(): void {
-        throw new Error("Method not implemented.");
-    }
+    registerMouseHandlers = (): void => {
+        this.onScreenCanvas.addEventListener(
+            "mousemove",
+            this.view.handleMouseMove
+        );
+    };
     registerButtonHandlers(): void {
         throw new Error("Method not implemented.");
     }
