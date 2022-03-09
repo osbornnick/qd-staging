@@ -60,11 +60,15 @@ export default class KTaskModel implements Task {
     };
     isValidSolution = (sol: number[]): boolean => {
         let weight = 0;
-        for (let i = 0; i < sol.length; i++)
-            weight += this.problem.coins[sol[i]][0];
+        for (let i = 0; i < sol.length; i++) {
+            if (sol[i] == 1) {
+                weight += this.problem.coins[i][0];
+            }
+        }
         if (weight <= this.problem.capacity) return true;
         return false;
     };
+
     getRandomSolution = () => {
         // list from 0 to n-1
         // shuffle list
@@ -78,7 +82,10 @@ export default class KTaskModel implements Task {
         }
         this.shuffleArray(coinList);
         let i = 0;
-        while (totalWeight + coinList[i] <= this.problem.capacity) {
+        while (
+            totalWeight + this.problem.coins[coinList[i]][0] <=
+            this.problem.capacity
+        ) {
             sol[coinList[i]] = 1;
             // sol.push(coinList[i]);
             totalWeight += this.problem.coins[coinList[i]][0];
@@ -117,10 +124,8 @@ export default class KTaskModel implements Task {
     scoreSolution(solution: any): number {
         let score = 0;
         for (let i = 0; i < solution.length; i++) {
-            if (solution[i] == i) score += this.problem.coins[i][1];
+            if (solution[i] == 1) score += this.problem.coins[i][1];
         }
         return score;
     }
-
-   
 }
