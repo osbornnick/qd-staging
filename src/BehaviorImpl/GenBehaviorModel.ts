@@ -30,9 +30,9 @@ export default class GenBehaviorModel implements BehaviorModel {
         solution: Solution,
         solutionScore: number
     ): number[] => {
-        let shortestEdge = this.behavior1.calculateBehavior(problem, solution);
-        let longestEdge = this.behavior2.calculateBehavior(problem, solution);
-        let evaluation = [shortestEdge, longestEdge];
+        let b1 = this.behavior1.calculateBehavior(problem, solution);
+        let b2 = this.behavior2.calculateBehavior(problem, solution);
+        let evaluation = [b1, b2];
         let behaviorBin = [
             Math.min(
                 Math.floor(evaluation[0] * this.numBins),

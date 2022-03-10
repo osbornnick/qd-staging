@@ -102,12 +102,42 @@ export default class KTaskModel implements Task {
             array[j] = temp;
         }
     }
-    mutateSolution(solution: Solution) {
-        throw new Error("Method not implemented.");
-    }
-    crossoverSolution(sol1: Solution, sol2: Solution) {
-        throw new Error("Method not implemented.");
-    }
+    mutateSolution = (solution: Solution) => {
+        let newSol = solution.slice();
+        let ci = Math.floor(Math.random() * solution.length);
+        if (newSol[ci] === 1) newSol[ci] = 0;
+        if (newSol[ci] === 0) newSol[ci] = 1;
+        if (this.isValidSolution(newSol)) return newSol;
+        return solution;
+    };
+
+    crossoverSolution = (sol1: Solution, sol2: Solution): Solution => {
+        let newSol = [];
+        for (let i = 0; i < sol1.length; i++) newSol[i] = 0;
+        let weight = 0;
+        for (let i = 0; i < sol1.length; i++) {
+            if (sol1[i] === 1 && newSol[i] === 0) {
+                if (
+                    weight + this.problem.coins[i][0] <=
+                    this.problem.capacity
+                ) {
+                    newSol[i] = 1;
+                    weight += this.problem.coins[i][0];
+                }
+            }
+            if (sol2[sol2.length - 1 - i] === 1 && newSol[i] === 0) {
+                if (
+                    weight + this.problem.coins[i][0] <=
+                    this.problem.capacity
+                ) {
+                    newSol[i] = 1;
+                    weight += this.problem.coins[i][0];
+                }
+            }
+        }
+        return newSol;
+    };
+
     setProblem = (problem: Problem): void => {
         this.problem = problem;
     };

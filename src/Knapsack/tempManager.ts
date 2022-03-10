@@ -175,13 +175,13 @@ export default class TSPManager {
         let score = this.taskController.model.scoreSolution(solution);
         this.currentScore = score;
         // solution sent w grade to behavior model for behavior scoring
-        // let behavior = this.behaviorController.model.evaluateSolution(
-        //     this.taskController.model.problem,
-        //     solution,
-        //     score
-        // );
+        let behavior = this.behaviorController.model.evaluateSolution(
+            this.taskController.model.problem,
+            solution,
+            score
+        );
         this.taskController.view.draw();
-        // this.behaviorController.view.draw();
+        this.behaviorController.view.draw();
 
         // check if solution is the best one
         if (this.bestScore == -1) {
@@ -209,10 +209,10 @@ export default class TSPManager {
                 type,
                 score,
                 best_score: this.bestScore,
-                // behavior,
-                // behavior_bin: this.behaviorController.model.currentBin,
-                // arch_elite_count: this.behaviorController.model.binElites.size, //is this right?
-                // new_elite: this.behaviorController.model.currentIsNewElite,
+                behavior,
+                behavior_bin: this.behaviorController.model.currentBin,
+                arch_elite_count: this.behaviorController.model.binElites.size, //is this right?
+                new_elite: this.behaviorController.model.currentIsNewElite,
             });
         this.updateUI(score);
     };
@@ -357,7 +357,7 @@ export default class TSPManager {
     };
 
     randomMapChoice = (map: Map<String, any>) => {
-        let keys = Array.from(this.behaviorController.model.binElites.keys());
+        let keys = Array.from(map.keys());
         return keys[Math.floor(Math.random() * keys.length)];
     };
 }
