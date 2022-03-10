@@ -9,6 +9,7 @@ export default interface TaskView {
     scale: number;
     getProblem: Problem;
     getSolution: Solution;
+    colorFn: Function | null;
 
     draw(): void;
 

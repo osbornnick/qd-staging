@@ -105,7 +105,10 @@ export default class KTaskModel implements Task {
     mutateSolution = (solution: Solution) => {
         let newSol = solution.slice();
         let ci = Math.floor(Math.random() * solution.length);
-        if (newSol[ci] === 1) newSol[ci] = 0;
+        if (newSol[ci] === 1) {
+            newSol[ci] = 0;
+            return newSol;
+        }
         if (newSol[ci] === 0) newSol[ci] = 1;
         if (this.isValidSolution(newSol)) return newSol;
         return solution;

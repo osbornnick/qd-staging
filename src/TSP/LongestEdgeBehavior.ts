@@ -9,7 +9,6 @@ export default class LongestEdgeBehavior implements Behavior {
     constructor() {
         this.description = "length of longest edge";
     }
-    // scaling needs to be here
     calculateBehavior(problem: Problem, solution: Solution): number {
         let maxLength = 0;
         for (let ii = 0; ii < solution.length; ++ii) {
@@ -19,6 +18,21 @@ export default class LongestEdgeBehavior implements Behavior {
             maxLength = Math.max(maxLength, dist);
         }
         return this.scaleMaxLength(problem, maxLength);
+    }
+
+    behaviorDefining(problem: Problem, solution: Solution) {
+        let rtn = 0;
+        let maxLength = 0;
+        for (let ii = 0; ii < solution.length; ++ii) {
+            let src = problem[solution[ii]];
+            let dst = problem[solution[(ii + 1) % solution.length]];
+            let dist = distance(src, dst);
+            if (dist > maxLength) {
+                maxLength = dist;
+                rtn = solution[ii];
+            }
+        }
+        return rtn;
     }
 
     lremapClamp(x: number, lo: number, hi: number) {

@@ -74,10 +74,39 @@ export default class TSPManager implements Manager {
         );
         behaviorController.model.behavior1 = new ShortestEdgeBehavior();
         behaviorController.model.behavior2 = new LongestEdgeBehavior();
+        this.taskController.view.colorFn = this.generateColorFn(
+            behaviorController.model.behavior1.behaviorDefining,
+            behaviorController.model.behavior2.behaviorDefining
+        );
         document
             .getElementById("behaviorCanvasParent")
             ?.appendChild(behaviorOnCanvas);
         return behaviorController;
+    };
+
+    private generateColorFn = (
+        behaviorDefining1: Function,
+        behaviorDefining2: Function
+    ): Function => {
+        return (i: number): string => {
+            if (
+                i ===
+                behaviorDefining1(
+                    this.taskController.model.getProblem(),
+                    this.currentSolution
+                )
+            )
+                return "blue";
+            if (
+                i ===
+                behaviorDefining2(
+                    this.taskController.model.getProblem(),
+                    this.currentSolution
+                )
+            )
+                return "red";
+            return "#999999";
+        };
     };
 
     private initUserID = async () => {

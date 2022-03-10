@@ -17,6 +17,7 @@ export class KTaskView implements TaskView {
     capacityCanvasWidth: number = 8;
     maxCoinWidth: number;
     maxCoinHeight: number;
+    colorFn: Function | null = null;
 
     minCoinWeight: number = 0;
     maxCoinWeight: number = 0;

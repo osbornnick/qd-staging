@@ -21,6 +21,21 @@ export default class ShortestEdgeBehavior implements Behavior {
         return this.scaleMinLength(problem, minLength);
     }
 
+    behaviorDefining(problem: Problem, solution: Solution): number {
+        let rtn = 0;
+        let minLength = 999.99;
+        for (let ii = 0; ii < solution.length; ++ii) {
+            let src = problem[solution[ii]];
+            let dst = problem[solution[(ii + 1) % solution.length]];
+            let dist = distance(src, dst);
+            if (dist < minLength) {
+                minLength = dist;
+                rtn = solution[ii];
+            }
+        }
+        return rtn;
+    }
+
     lremapClamp(x: number, lo: number, hi: number) {
         return Math.max(0.0, Math.min(1.0, (x - lo) / (hi - lo)));
     }

@@ -17,6 +17,7 @@ export default class GenBehaviorModel implements BehaviorModel {
         // default to this behavior.
         let dummyBehavior = {
             calculateBehavior: (p: Problem, s: Solution) => 0,
+            behaviorDefining: (p: Problem, s: Solution) => 0,
             description: "",
         };
         this.behavior1 = dummyBehavior;

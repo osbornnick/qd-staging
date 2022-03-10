@@ -14,6 +14,7 @@ export default class TSPView implements TaskView {
     CITY_RADIUS: number = 20;
     cityHighlited: number | null = null;
     citiesSelected: number[] = [];
+    colorFn: Function | null;
 
     constructor(
         context: CanvasRenderingContext2D,
@@ -21,7 +22,8 @@ export default class TSPView implements TaskView {
         getSolution: Function,
         render: Function,
         height: number,
-        width: number
+        width: number,
+        colorFn?: Function
     ) {
         this.getProblem = getProblem;
         this.getSolution = getSolution;
@@ -30,6 +32,8 @@ export default class TSPView implements TaskView {
         this.canvasWidth = width;
         this.render = render;
         this.scale = 1;
+        if (typeof colorFn !== "undefined") this.colorFn = colorFn;
+        else this.colorFn = null;
         this.draw();
     }
 
@@ -44,11 +48,11 @@ export default class TSPView implements TaskView {
             for (let ii = 0; ii < solution.length; ++ii) {
                 let src = solution[ii];
                 let dst = solution[(ii + 1) % solution.length];
-                this.drawEdge(
-                    [src, dst],
-                    "#999999",
-                    Math.max(1, 10 * this.scale)
-                );
+                let color = "#999999";
+                if (this.colorFn) {
+                    color = this.colorFn(src);
+                }
+                this.drawEdge([src, dst], color, Math.max(1, 10 * this.scale));
             }
             if (this.citiesSelected.length > 0) {
                 for (let ii = 0; ii + 1 < this.citiesSelected.length; ++ii) {
