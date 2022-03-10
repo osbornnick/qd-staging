@@ -13,6 +13,7 @@ export default class KBehaviorModel implements BehaviorModel {
     behavior1: Behavior;
     behavior2: Behavior;
 
+    // add an isminimize check
     constructor() {
         this.behavior1 = new SmallestWeightBehavior();
         this.behavior2 = new LargestWeightBehavior();
@@ -60,6 +61,7 @@ export default class KBehaviorModel implements BehaviorModel {
         throw new Error("Method not implemented.");
     }
     getEliteScoreRange = (): number[] => {
+        // needs to check isminimize
         let minScore = 0;
         let maxScore = 0;
         let i = 0;
@@ -74,4 +76,5 @@ export default class KBehaviorModel implements BehaviorModel {
             i++;
         });
         return [minScore, maxScore];
+    };
 }
