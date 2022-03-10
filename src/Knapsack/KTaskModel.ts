@@ -50,10 +50,10 @@ export default class KTaskModel implements Task {
         return "Knapsack problem";
     };
     getObjectiveName(): string {
-        throw new Error("Method not implemented.");
+        return "largest coin value";
     }
     getInstructions(): string {
-        throw new Error("Method not implemented.");
+        return "Choose coins that fit into the knapsack that maximizes their collective value!";
     }
     isMinimize = (): boolean => {
         return false;
@@ -87,7 +87,6 @@ export default class KTaskModel implements Task {
             this.problem.capacity
         ) {
             sol[coinList[i]] = 1;
-            // sol.push(coinList[i]);
             totalWeight += this.problem.coins[coinList[i]][0];
             i++;
         }
@@ -116,7 +115,7 @@ export default class KTaskModel implements Task {
         return this.problem;
     };
     updateSolution(oldSol: Solution, newSol: Solution) {
-        throw new Error("Method not implemented.");
+        return newSol;
     }
     setRandomProblem(): void {
         throw new Error("Method not implemented.");

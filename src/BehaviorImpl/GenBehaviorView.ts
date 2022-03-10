@@ -2,7 +2,7 @@ import Solution from "../interfaces/Solution";
 import BehaviorView from "../view/BehaviorView";
 import interpolate from "color-interpolate";
 
-export default class TSPBehaviorView implements BehaviorView {
+export default class GenBehaviorView implements BehaviorView {
     context: CanvasRenderingContext2D;
     render: Function;
     modelGetters: {
@@ -303,18 +303,26 @@ export default class TSPBehaviorView implements BehaviorView {
     };
 
     computeColor = (scoreRange: number[], score: number): string => {
+        // assume worstScore < bestScore
+        // if not, switch em
         let worstScore = scoreRange[0];
         let bestScore = scoreRange[1];
+        let goodColor = "#333dff";
+        let badColor = "#fb4b4b";
+        let cols = [badColor, goodColor];
         let min = worstScore;
         let max = bestScore;
+        let colormap;
         if (worstScore > bestScore) {
             min = bestScore;
             max = worstScore;
+            cols = [goodColor, badColor];
         }
-        let scaled = (score - min) / (max - min);
-        if (max == min) scaled = 0;
+        let scaled;
+        if (max === min) scaled = 1;
+        else scaled = (score - min) / (max - min);
 
-        let colormap = interpolate(["#333dff", "#fb4b4b"]);
+        colormap = interpolate(cols);
         return colormap(scaled);
     };
 }

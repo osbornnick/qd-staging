@@ -1,11 +1,9 @@
 import Behavior from "../interfaces/Behavior";
 import Problem from "../interfaces/Problem";
 import BehaviorModel from "../model/BehaviorModel";
-import LongestEdgeBehavior from "./LongestEdgeBehavior";
-import ShortestEdgeBehavior from "./ShortestEdgeBehavior";
 import Solution from "../interfaces/Solution";
 
-export default class TSPBehaviorModel implements BehaviorModel {
+export default class GenBehaviorModel implements BehaviorModel {
     binElites: Map<String, { solution: Solution; score: number }> = new Map();
     currentBehavior: number[] = [];
     currentBin: number[] = [];
@@ -13,11 +11,17 @@ export default class TSPBehaviorModel implements BehaviorModel {
     numBins: number = 10;
     behavior1: Behavior;
     behavior2: Behavior;
+    taskIsMinimize: Function;
 
-    constructor() {
+    constructor(taskIsMinimize: Function) {
         // default to this behavior.
-        this.behavior1 = new ShortestEdgeBehavior();
-        this.behavior2 = new LongestEdgeBehavior();
+        let dummyBehavior = {
+            calculateBehavior: (p: Problem, s: Solution) => 0,
+            description: "",
+        };
+        this.behavior1 = dummyBehavior;
+        this.behavior2 = dummyBehavior;
+        this.taskIsMinimize = taskIsMinimize;
     }
 
     // needs to take isMinimize as an argument (for determining elite status)
@@ -43,8 +47,11 @@ export default class TSPBehaviorModel implements BehaviorModel {
         let binKey = behaviorBin.toString();
         let binElite = this.binElites.get(binKey);
         this.currentIsNewElite = false;
-        // isMinimize should be checked?
-        if (binElite === undefined || binElite.score > solutionScore) {
+        if (
+            binElite === undefined ||
+            // binElite.score > solutionScore
+            this.compareScores(binElite.score, solutionScore) === solutionScore
+        ) {
             let newElite = {
                 score: solutionScore,
                 solution: solution.slice(),
@@ -62,6 +69,8 @@ export default class TSPBehaviorModel implements BehaviorModel {
     setBehavior2 = (b: Behavior) => (this.behavior2 = b);
     getCurrentIsNewElite = () => this.currentIsNewElite;
     getCurrentBehaviorBin = () => this.currentBin;
+
+    // return worstscore, bestscore array (depends on if task isminimize)
     getEliteScoreRange = (): number[] => {
         let minScore = 0;
         let maxScore = 0;
@@ -76,8 +85,29 @@ export default class TSPBehaviorModel implements BehaviorModel {
             }
             i++;
         });
+        if (this.taskIsMinimize()) return [maxScore, minScore];
         return [minScore, maxScore];
     };
+
     getInstructions = () =>
         "The grid (below) will keep track of the routes you've found based on the length of their longest and shortests legs. Your current route is a blue dot. Grids cells that you have found a route in are shaded blue. Filling in the grid may help find different and shorter routes!<br> <b>Click a grid cell</b> to copy the best route from that cell. <br><b>Click and drag</b> between two grid cells to combine their best routes.";
+
+    // return better score
+    compareScores = (score1: number, score2: number): number => {
+        let larger, smaller;
+        if (score1 > score2) {
+            larger = score1;
+            smaller = score2;
+        } else if (score2 > score1) {
+            larger = score2;
+            smaller = score1;
+        } else {
+            return score1;
+        }
+        if (this.taskIsMinimize()) {
+            return smaller;
+        } else {
+            return larger;
+        }
+    };
 }

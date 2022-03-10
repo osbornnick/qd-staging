@@ -2,10 +2,10 @@ import BehaviorController from "../controller/BehaviorController";
 import BehaviorModel from "../model/BehaviorModel";
 import Controller from "../controller/Controller";
 import BehaviorView from "../view/BehaviorView";
-import TSPBehaviorModel from "./TSPBehaviorModel";
-import TSPBehaviorView from "./TSPBehaviorView";
+import GenBehaviorModel from "./GenBehaviorModel";
+import GenBehaviorView from "./GenBehaviorView";
 
-export default class TSPBehaviorController
+export default class GenBehaviorController
     extends Controller
     implements BehaviorController
 {
@@ -20,11 +20,12 @@ export default class TSPBehaviorController
         requestAnimationFrame: Function,
         onNewSolution: Function,
         requestCrossover: Function,
-        getCurrentScore: Function
+        getCurrentScore: Function,
+        taskIsMinimize: Function
     ) {
         super(offScreenCanvas, onScreenCanvas);
         this.requestCrossover = requestCrossover;
-        this.model = new TSPBehaviorModel();
+        this.model = new GenBehaviorModel(taskIsMinimize);
         let scale = 1;
         let modelGetters = {
             getNumBins: () => this.model.numBins,
@@ -34,7 +35,7 @@ export default class TSPBehaviorController
             getScoreRange: this.model.getEliteScoreRange,
             getCurrentScore,
         };
-        this.view = new TSPBehaviorView(
+        this.view = new GenBehaviorView(
             offScreenCanvas.getContext("2d") || new CanvasRenderingContext2D(),
             this.render(requestAnimationFrame),
             modelGetters,

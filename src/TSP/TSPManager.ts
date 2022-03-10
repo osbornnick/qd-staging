@@ -1,10 +1,12 @@
 import BehaviorController from "../controller/BehaviorController";
 import TaskController from "../controller/TaskController";
-import TSPBehaviorController from "./TSPBehaviorController";
+import GenBehaviorController from "../BehaviorImpl/GenBehaviorController";
 import TSPTaskController from "./TSPTaskController";
 import Manager from "../manager/Manager";
 import Solution from "../interfaces/Solution";
 import { clamp } from "../util/util";
+import ShortestEdgeBehavior from "./ShortestEdgeBehavior";
+import LongestEdgeBehavior from "./LongestEdgeBehavior";
 
 export default class TSPManager implements Manager {
     userID: String = "default";
@@ -16,7 +18,6 @@ export default class TSPManager implements Manager {
     currentSolution: Solution = [];
     currentScore: number = 0;
     bestScore: number = -1; // MAGIC NUMBER
-    // should this be worstEliteScore? rather than overall worst score?
     taskController: TaskController;
     behaviorController: BehaviorController;
     runIndex: number = 0;
@@ -62,14 +63,17 @@ export default class TSPManager implements Manager {
         let behaviorOnCanvas = this.makeCanvas(250);
         let behaviorOffCanvas = this.makeCanvas(250);
 
-        let behaviorController = new TSPBehaviorController(
+        let behaviorController = new GenBehaviorController(
             behaviorOnCanvas,
             behaviorOffCanvas,
             window.requestAnimationFrame,
             this.onNewSolution,
             this.crossoverSolution,
-            () => this.currentScore
+            () => this.currentScore,
+            () => this.taskController.model.isMinimize()
         );
+        behaviorController.model.behavior1 = new ShortestEdgeBehavior();
+        behaviorController.model.behavior2 = new LongestEdgeBehavior();
         document
             .getElementById("behaviorCanvasParent")
             ?.appendChild(behaviorOnCanvas);

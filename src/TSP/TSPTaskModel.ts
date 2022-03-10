@@ -5,8 +5,6 @@ import { distance } from "../util/util";
 
 export default class TSPModel implements TaskModel {
     problem: Problem;
-    // problemEdgeLengthMin: number = 999;
-    // problemEdgeLengthMax: number = 0;
 
     constructor() {
         this.setProblem([
