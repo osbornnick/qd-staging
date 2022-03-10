@@ -63,10 +63,20 @@ export class KTaskView implements TaskView {
             problem.coins.forEach((c, i) => {
                 // console.log("drawing coin %d %d in position %d", c[0], c[1], i);
                 let highlight = false;
-                if (this.coinHighlited != null && i === this.coinHighlited) {
+                if (this.coinHighlited != null && i === this.coinHighlited)
                     highlight = true;
-                }
-                this.drawCoin(c[0], c[1], i, solution[i] === 1, highlight);
+
+                let select = false;
+                if (this.coinSelected != null && i === this.coinSelected)
+                    select = true;
+                this.drawCoin(
+                    c[0],
+                    c[1],
+                    i,
+                    solution[i] === 1,
+                    highlight,
+                    select
+                );
             });
             this.drawCapacityScale(solution, problem);
         };
@@ -86,17 +96,21 @@ export class KTaskView implements TaskView {
         // send selected coin to controller for:
         // if selected coin is in solution, remove it
         // if selected coin is not in solution, and it is valid, add it
-
-        // clear selected and highlighted coins
-        throw new Error("Method not implemented.");
+        let coinSelected = -1;
+        if (this.coinSelected != null) coinSelected = this.coinSelected;
+        this.coinSelected = null;
+        this.coinHighlited = null;
+        this.draw();
+        return coinSelected;
     };
     handleMouseDown = (event: MouseEvent): void => {
-        // select a coin
-        throw new Error("Method not implemented.");
+        if (this.coinHighlited != null) this.coinSelected = this.coinHighlited;
+        this.draw();
     };
     handleMouseLeave = (event: MouseEvent): void => {
-        // remove selected coin and highlighted coins
-        throw new Error("Method not implemented.");
+        this.coinSelected = null;
+        this.coinHighlited = null;
+        this.draw();
     };
     handleMouseMove = (event: MouseEvent): void => {
         // if no coin is selected, highlight coins that are moused over
@@ -130,7 +144,8 @@ export class KTaskView implements TaskView {
         coinValue: number,
         i: number,
         inSolution: boolean,
-        highlight: boolean
+        highlight: boolean,
+        select: boolean
     ) => {
         let radius = this.computeRadius(coinWeight);
         let color = this.computeColor(coinValue);
@@ -140,20 +155,15 @@ export class KTaskView implements TaskView {
         this.context.fillStyle = color;
         this.context.fill();
         this.context.lineWidth = this.scale * 4;
-        if (inSolution || highlight) {
-            if (inSolution) {
-                this.context.strokeStyle = "green";
-            }
-            if (highlight) {
-                this.context.strokeStyle = "blue";
-            }
-            if (inSolution && highlight) {
-                this.context.strokeStyle = "orange";
-            }
+        if (inSolution || highlight || select) {
+            if (inSolution) this.context.strokeStyle = "green";
+            if (highlight) this.context.strokeStyle = "blue";
+            if (inSolution && highlight) this.context.strokeStyle = "orange";
+            if (select) this.context.strokeStyle = "pink";
             this.context.stroke();
         }
-        this.context.fillStyle = "white";
-        this.context.fillText(i.toString(), center[0], center[1]);
+        // this.context.fillStyle = "white";
+        // this.context.fillText(i.toString(), center[0], center[1]);
         this.context.closePath();
     };
 
@@ -174,18 +184,61 @@ export class KTaskView implements TaskView {
         let weightHeight = scaled * this.canvasHeight;
         let weightY = this.canvasHeight - weightHeight;
 
+        // draw solution weight
         this.context.beginPath();
         this.context.moveTo(scaleX, this.canvasHeight);
         this.context.strokeStyle = weightColor;
         this.context.lineTo(scaleX, weightY);
         this.context.stroke();
         this.context.closePath();
+
+        // draw background scale
         this.context.beginPath();
         this.context.moveTo(scaleX, weightY);
         this.context.strokeStyle = backgroundCol;
         this.context.lineTo(scaleX, 0);
         this.context.stroke();
         this.context.closePath();
+
+        // draw highlited
+        if (this.coinHighlited != null) {
+            if (sol[this.coinHighlited] == 1) {
+                this.context.beginPath();
+                this.context.moveTo(scaleX, weightY);
+                let scaledCoinWeight = scale(
+                    coins[this.coinHighlited][0],
+                    0,
+                    capacity
+                );
+                let weightLength = scaledCoinWeight * this.canvasHeight;
+                this.context.lineTo(scaleX, weightY + weightLength);
+                this.context.strokeStyle = "orange";
+                this.context.stroke();
+                this.context.closePath();
+            } else {
+                if (coins[this.coinHighlited][0] + weight <= capacity) {
+                    this.context.beginPath();
+                    this.context.moveTo(scaleX, weightY);
+                    let scaledCoinWeight = scale(
+                        coins[this.coinHighlited][0],
+                        0,
+                        capacity
+                    );
+                    let weightLength = scaledCoinWeight * this.canvasHeight;
+                    this.context.lineTo(scaleX, weightY - weightLength);
+                    this.context.strokeStyle = "blue";
+                    this.context.closePath();
+                    this.context.stroke();
+                } else {
+                    this.context.beginPath();
+                    this.context.moveTo(scaleX, weightY);
+                    this.context.lineTo(scaleX, 0);
+                    this.context.strokeStyle = "red";
+                    this.context.closePath();
+                    this.context.stroke();
+                }
+            }
+        }
     };
 
     // fn that calculates the radius of the coin (based on weight)

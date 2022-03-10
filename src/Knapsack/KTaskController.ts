@@ -41,6 +41,31 @@ export default class KTaskController
             "mousemove",
             this.view.handleMouseMove
         );
+        this.onScreenCanvas.addEventListener(
+            "mousedown",
+            this.view.handleMouseDown
+        );
+        this.onScreenCanvas.addEventListener(
+            "mouseleave",
+            this.view.handleMouseLeave
+        );
+        this.onScreenCanvas.addEventListener("mouseup", this.handleMouseUp);
+    };
+
+    handleMouseUp = (evt: MouseEvent) => {
+        let coinSelected = this.view.handleMouseUp(evt);
+        let currentSol = this.getSolution();
+        let newVal;
+        if (currentSol[coinSelected] === 1) {
+            newVal = 0;
+        } else {
+            // add to solution
+            newVal = 1;
+        }
+        let newSol = currentSol.slice();
+        newSol[coinSelected] = newVal;
+        if (this.model.isValidSolution(newSol))
+            this.onNewSolution("user input", newSol);
     };
     registerButtonHandlers(): void {
         throw new Error("Method not implemented.");
