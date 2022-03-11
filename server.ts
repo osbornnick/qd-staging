@@ -4,6 +4,7 @@ import crypto from "crypto";
 import path from "path";
 import http from "http";
 import https from "https";
+import { exit } from "process";
 
 let app = express();
 app.use(express.json());
@@ -58,9 +59,18 @@ const PORT = process.env.port || 4000;
 let server;
 
 if (process.env.NODE_ENV === "prod") {
+    if (typeof process.env.SSLKEY === "undefined") {
+        console.log("SSLKEY env variable must be defined to run with https");
+        exit(1);
+    }
+    if (typeof process.env.SSLCERT === "undefined") {
+        console.log("SSLCERT env variable must be defined to run with https");
+        exit(1);
+    }
+
     console.log("Starting in production mode, serving https");
-    let key = fs.readFileSync("path/to/private/key", "utf8");
-    let cert = fs.readFileSync("path/to/cert", "utf8");
+    let key = fs.readFileSync(process.env.SSLKEY, "utf8");
+    let cert = fs.readFileSync(process.env.SSLCERT, "utf8");
     server = https.createServer({ key, cert }, app);
 } else {
     console.log("Starting in development mode, serving http");
