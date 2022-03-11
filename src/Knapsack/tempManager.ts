@@ -254,9 +254,11 @@ export default class TSPManager {
         let behaviorInstructionElement = document.getElementById(
             "behaviorinstructions"
         );
+        this.behaviorController.model.instructions =
+            "The grid (below) will keep track of solutions you've found. Your current route is a white-outlined dot. Grid cells that you have found a solution in are shaded in based on how good that solution is. Filling in the grid may help find different and better solutions! <br> <b>Click a grid cell</b> to copy the best solution from that cell. <br><b>Click and drag</b> between two grid cells to combine their best solutions.";
         if (behaviorInstructionElement !== null)
             behaviorInstructionElement.innerHTML =
-                this.behaviorController.model.getInstructions();
+                this.behaviorController.model.instructions;
 
         let behavior1name = document.getElementById("behavior1title");
         if (behavior1name !== null)

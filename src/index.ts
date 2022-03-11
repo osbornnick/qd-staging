@@ -5,5 +5,5 @@ fetch("/api/id")
         if (linkElement?.getAttribute("href") == "#")
             document
                 .getElementById("linktogame")
-                ?.setAttribute("href", `game.html?uid=${id}`);
+                ?.setAttribute("href", `tsp.html?uid=${id}`);
     });

@@ -10,6 +10,7 @@ export default interface BehaviorModel {
     numBins: number;
     behavior1: Behavior;
     behavior2: Behavior;
+    instructions: string;
 
     evaluateSolution(
         problem: Problem,
@@ -20,6 +21,5 @@ export default interface BehaviorModel {
     setBehavior1(b: Behavior): void;
     setBehavior2(b: Behavior): void;
     getCurrentIsNewElite(): boolean;
-    getInstructions(): string;
     getEliteScoreRange(): number[];
 }

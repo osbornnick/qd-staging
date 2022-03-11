@@ -2,7 +2,11 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-    entry: { game: "./src/game.ts", index: "./src/index.ts" },
+    entry: {
+        tsp: "./src/tsp.ts",
+        index: "./src/index.ts",
+        knapsack: "./src/knapsack.ts",
+    },
     devtool: "inline-source-map",
     mode: "development",
     module: {
@@ -24,14 +28,19 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: "src/templates/game.html",
-            filename: "game.html",
-            chunks: ["game"],
+            template: "src/templates/tsp.html",
+            filename: "tsp.html",
+            chunks: ["tsp"],
         }),
         new HtmlWebpackPlugin({
             template: "src/templates/index.html",
             filename: "index.html",
             chunks: ["index"],
+        }),
+        new HtmlWebpackPlugin({
+            template: "src/templates/knapsack.html",
+            filename: "knapsack.html",
+            chunks: ["knapsack"],
         }),
     ],
 };
