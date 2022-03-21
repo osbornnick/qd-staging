@@ -55,9 +55,9 @@ app.post("/api/log", (req, res) => {
     );
 });
 
-const PORT = process.env.port || 4000;
+const PORT = process.env.PORT || 4000;
 let server;
-
+console.log(process.env.NODE_ENV);
 if (process.env.NODE_ENV === "prod") {
     if (typeof process.env.SSLKEY === "undefined") {
         console.log("SSLKEY env variable must be defined to run with https");
