@@ -14,7 +14,7 @@ export class KTaskView implements TaskView {
     coinHighlited: number | null = null;
     coinSelected: number | null = null;
     coinCanvasWidth: number;
-    capacityCanvasWidth: number = 8;
+    capacityCanvasWidth: number = 20;
     maxCoinWidth: number;
     maxCoinHeight: number;
     colorFn: Function | null = null;
@@ -174,7 +174,8 @@ export class KTaskView implements TaskView {
         let backgroundCol = "gray";
         let weightColor = "green";
         let lineWidth = this.capacityCanvasWidth;
-        let scaleX = this.canvasWidth - lineWidth / 2;
+        // let scaleX = this.canvasWidth - lineWidth / 2;
+        let scaleX = lineWidth / 2;
         this.context.lineWidth = lineWidth;
 
         let weight = 0;
@@ -265,7 +266,8 @@ export class KTaskView implements TaskView {
         let col = i % 5;
         let row = Math.floor(i / 5);
         return [
-            col * this.maxCoinHeight + this.maxCoinHeight / 2,
+            this.capacityCanvasWidth +
+                (col * this.maxCoinHeight + this.maxCoinHeight / 2),
             row * this.maxCoinWidth + this.maxCoinWidth / 2,
         ];
     };

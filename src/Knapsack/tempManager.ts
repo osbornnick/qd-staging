@@ -88,7 +88,7 @@ export default class TSPManager {
         else {
             console.log("URL PARAMS ERROR, NO USER ID (WAHT DO?)");
         }
-        console.log("User id: ", this.userID);
+        // console.log("User id: ", this.userID);
         if (this.userID.charAt(this.userID.length - 1) == "0")
             this.showBehavior();
     };
