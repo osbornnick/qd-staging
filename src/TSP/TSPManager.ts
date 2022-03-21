@@ -331,6 +331,8 @@ export default class TSPManager implements Manager {
     showBehavior = () => {
         let behaviorElement = document.getElementById("behaviorcontent");
         if (behaviorElement !== null) behaviorElement.style.display = "block";
+        const solverButton = document.getElementById("solvetoggle");
+        if (solverButton !== null) solverButton.style.display = "block";
     };
 
     toggleSolving = () => {
