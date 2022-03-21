@@ -53,7 +53,7 @@ export default class KTaskModel implements Task {
         return "largest coin value";
     }
     getInstructions(): string {
-        return "Choose coins that fit into the knapsack that maximizes their collective value!";
+        return "Choose coins that fit into the knapsack that maximizes their collective value! Each coin is colored and sized based off its value and weight, respectively. Bigger coins weigh more, and more valuable coins are more golden (bronze coins are the least valuable, while silver is middling). <br /> The gray bar on the left displays the filled (green) capacity of the knapsack, and the remaining (gray) space. <br /> Hover over a coin to see how much weight it will add to the knapsack, or if it will fit at all.";
     }
     isMinimize = (): boolean => {
         return false;
