@@ -7,8 +7,6 @@ module.exports = {
         index: "./src/index.ts",
         knapsack: "./src/knapsack.ts",
     },
-    devtool: "inline-source-map",
-    mode: "development",
     module: {
         rules: [
             {
