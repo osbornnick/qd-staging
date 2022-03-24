@@ -16,33 +16,33 @@ export default class KTaskModel implements Task {
     constructor() {
         this.problem = {
             coins: [
-                [10, 48],
-                [30, 30],
-                [12, 42],
-                [22, 36],
-                [12, 22],
-                [20, 43],
-                [9, 18],
-                [18, 36],
-                [18, 36],
-                [20, 29],
-                [25, 30],
-                [25, 30],
-                [18, 25],
-                [7, 19],
-                [16, 41],
-                [16, 41],
-                [24, 34],
-                [24, 34],
-                [21, 32],
-                [21, 27],
-                [21, 27],
-                [32, 24],
-                [32, 24],
-                [9, 18],
-                [9, 18],
+                [83, 103],
+                [36, 66],
+                [53, 73],
+                [9, 29],
+                [15, 35],
+                [26, 46],
+                [3, 23],
+                [45, 65],
+                [24, 54],
+                [72, 102],
+                [56, 76],
+                [8, 28],
+                [96, 126],
+                [91, 111],
+                [72, 102],
+                [93, 113],
+                [83, 103],
+                [39, 59],
+                [72, 102],
+                [31, 51],
+                [23, 43],
+                [40, 60],
+                [41, 61],
+                [93, 113],
+                [94, 114],
             ],
-            capacity: 100,
+            capacity: 129,
         };
     }
 
@@ -110,8 +110,9 @@ export default class KTaskModel implements Task {
             return newSol;
         }
         if (newSol[ci] === 0) newSol[ci] = 1;
-        if (this.isValidSolution(newSol)) return newSol;
-        return solution;
+        // if (this.isValidSolution(newSol)) return newSol;
+        // return solution;
+        return newSol;
     };
 
     crossoverSolution = (sol1: Solution, sol2: Solution): Solution => {
@@ -153,11 +154,12 @@ export default class KTaskModel implements Task {
     setRandomProblem(): void {
         throw new Error("Method not implemented.");
     }
-    scoreSolution(solution: any): number {
+    scoreSolution = (solution: any): number => {
+        if (!this.isValidSolution(solution)) return 0;
         let score = 0;
         for (let i = 0; i < solution.length; i++) {
             if (solution[i] == 1) score += this.problem.coins[i][1];
         }
         return score;
-    }
+    };
 }

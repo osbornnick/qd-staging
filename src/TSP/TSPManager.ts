@@ -151,6 +151,7 @@ export default class TSPManager implements Manager {
             type: type,
             info,
         };
+        // add retries
         fetch("/api/log", {
             method: "POST",
             headers: {
