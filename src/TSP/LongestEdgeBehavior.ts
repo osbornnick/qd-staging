@@ -29,9 +29,10 @@ export default class LongestEdgeBehavior implements Behavior {
             let dist = distance(src, dst);
             if (dist > maxLength) {
                 maxLength = dist;
-                rtn = solution[ii];
+                rtn = ii;
             }
         }
+
         return rtn;
     }
 

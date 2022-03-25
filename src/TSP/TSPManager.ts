@@ -70,11 +70,11 @@ export default class TSPManager implements Manager {
             this.onNewSolution,
             this.crossoverSolution,
             () => this.currentScore,
-            () => this.taskController.model.isMinimize()
+            this.taskController.model.isMinimize
         );
         behaviorController.model.behavior1 = new ShortestEdgeBehavior();
         behaviorController.model.behavior2 = new LongestEdgeBehavior();
-        this.taskController.view.colorFn = this.generateColorFn(
+        this.taskController.view.indexColors = this.generateColorFn(
             behaviorController.model.behavior1.behaviorDefining,
             behaviorController.model.behavior2.behaviorDefining
         );
@@ -83,30 +83,21 @@ export default class TSPManager implements Manager {
             ?.appendChild(behaviorOnCanvas);
         return behaviorController;
     };
-
+    // lets implement this in the taskView, just passing the behavior def functions
     private generateColorFn = (
         behaviorDefining1: Function,
         behaviorDefining2: Function
     ): Function => {
-        return (i: number): string => {
-            if (
-                i ===
-                behaviorDefining1(
-                    this.taskController.model.getProblem(),
-                    this.currentSolution
-                )
-            )
-                return "blue";
-            if (
-                i ===
-                behaviorDefining2(
-                    this.taskController.model.getProblem(),
-                    this.currentSolution
-                )
-            )
-                return "red";
-            return "#999999";
-        };
+        return () => [
+            behaviorDefining1(
+                this.taskController.model.getProblem(),
+                this.currentSolution
+            ),
+            behaviorDefining2(
+                this.taskController.model.getProblem(),
+                this.currentSolution
+            ),
+        ];
     };
 
     private initUserID = async () => {
@@ -116,7 +107,7 @@ export default class TSPManager implements Manager {
         else {
             console.log("URL PARAMS ERROR, NO USER ID (WAHT DO?)");
         }
-        console.log("User id: ", this.userID);
+        // console.log("User id: ", this.userID);
         if (this.userID.charAt(this.userID.length - 1) == "0")
             this.showBehavior();
     };
@@ -140,7 +131,7 @@ export default class TSPManager implements Manager {
             ?.addEventListener("click", () => this.toggleSolving());
     };
 
-    sendLog = (type: String, info: {}) => {
+    sendLog = (type: String, info: {}, retries: number = 3) => {
         ++this.runIndex;
         let data = {
             time: Date.now(), // comes from client
@@ -151,13 +142,15 @@ export default class TSPManager implements Manager {
             type: type,
             info,
         };
-        // add retries
         fetch("/api/log", {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
             },
             body: JSON.stringify(data),
+        }).catch((err) => {
+            console.log(err);
+            if (retries > 0) this.sendLog(type, info, retries--);
         });
     };
 
@@ -330,7 +323,7 @@ export default class TSPManager implements Manager {
     };
 
     showBehavior = () => {
-        let behaviorElement = document.getElementById("behaviorcontent");
+        const behaviorElement = document.getElementById("behaviorcontent");
         if (behaviorElement !== null) behaviorElement.style.display = "block";
         const solverButton = document.getElementById("solvetoggle");
         if (solverButton !== null) solverButton.style.display = "block";
@@ -390,7 +383,7 @@ export default class TSPManager implements Manager {
     };
 
     randomMapChoice = (map: Map<String, any>) => {
-        let keys = Array.from(this.behaviorController.model.binElites.keys());
+        const keys = Array.from(map.keys());
         return keys[Math.floor(Math.random() * keys.length)];
     };
 }

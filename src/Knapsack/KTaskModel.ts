@@ -12,6 +12,7 @@ export default class KTaskModel implements Task {
     // each i indice in problem represents a coin, with [i][0] being its weight and [i][1] its value
     // a solution is an array of 1s and 0s, where the ith value represents inclusion or exclusion of a coin
     problem: Problem = { coins: [[]], capacity: 0 }; // coins as x,y,area?
+    bestPossibleScore: number = 0;
 
     constructor() {
         this.problem = {
@@ -44,6 +45,7 @@ export default class KTaskModel implements Task {
             ],
             capacity: 129,
         };
+        this.bestPossibleScore = 0;
     }
 
     getName = (): string => {
