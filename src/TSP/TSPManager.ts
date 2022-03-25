@@ -52,6 +52,12 @@ export default class TSPManager extends GenManager implements Manager {
         );
         behaviorController.model.behavior1 = new ShortestEdgeBehavior();
         behaviorController.model.behavior2 = new LongestEdgeBehavior();
+        const bcm = behaviorController.model;
+        this.taskController.view.indexColors = this.generateColorFn(
+            behaviorController.model.behavior1.behaviorDefining,
+            behaviorController.model.behavior2.behaviorDefining
+        );
+
         document
             .getElementById("behaviorCanvasParent")
             ?.appendChild(behaviorOnCanvas);
