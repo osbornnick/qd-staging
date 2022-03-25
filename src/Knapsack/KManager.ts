@@ -86,7 +86,7 @@ export default class TSPManager extends GenManager implements Manager {
 
     updateUI = (score: number) => {
         let bonusCents = clamp(
-            Math.round(100 * scale(this.bestScore, 0, 269)),
+            Math.round(100 * scale(this.bestScore, 0, 500)),
             0,
             100
         );

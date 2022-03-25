@@ -117,6 +117,9 @@ export default class KTaskModel implements Task {
         return newSol;
     };
 
+    // how does crossover work with invalid solutions
+
+    //  pick a number between 1 and 24, slice each solution at that point, take first half and second
     crossoverSolution = (sol1: Solution, sol2: Solution): Solution => {
         let newSol = [];
         for (let i = 0; i < sol1.length; i++) newSol[i] = 0;

@@ -105,6 +105,7 @@ export default class GenManager implements Manager {
             type: type,
             info,
         };
+        // delay send log for a second
         fetch("/api/log", {
             method: "POST",
             headers: {
