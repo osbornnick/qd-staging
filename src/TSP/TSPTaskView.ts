@@ -12,7 +12,7 @@ export default class TSPView implements TaskView {
     scale: number;
     getProblem: Function;
     getSolution: Function;
-    CITY_RADIUS: number = 20;
+    CITY_RADIUS: number = 15;
     cityHighlited: number | null = null;
     citiesSelected: number[] = [];
     indexColors: Function | null;
@@ -32,7 +32,7 @@ export default class TSPView implements TaskView {
         this.canvasHeight = height;
         this.canvasWidth = width;
         this.render = render;
-        this.scale = 1;
+        this.scale = 0.5;
         if (typeof indexColors !== "undefined") this.indexColors = indexColors;
         else this.indexColors = null;
         this.draw();
@@ -53,21 +53,6 @@ export default class TSPView implements TaskView {
                 let color = "#999999";
                 this.drawEdge([src, dst], color, Math.max(1, 10 * this.scale));
             }
-            if (this.indexColors) {
-                const iColors = this.indexColors();
-                console.log(iColors);
-                for (let ii = 0; ii < iColors.length; ii++) {
-                    let src = solution[iColors[ii]];
-                    let dst = solution[(iColors[ii] + 1) % solution.length];
-                    let color = "blue";
-                    if (ii === 1) color = "red";
-                    this.drawEdge(
-                        [src, dst],
-                        color,
-                        Math.max(1, 10 * this.scale)
-                    );
-                }
-            }
             if (this.citiesSelected.length > 0) {
                 for (let ii = 0; ii + 1 < this.citiesSelected.length; ++ii) {
                     let src = this.citiesSelected[ii];
@@ -81,6 +66,21 @@ export default class TSPView implements TaskView {
             }
             for (let ii = 0; ii < problem.length; ++ii) {
                 this.drawCity(ii, problem[ii]);
+            }
+            if (this.indexColors) {
+                const iColors = this.indexColors();
+                console.log(iColors);
+                for (let ii = 0; ii < iColors.length; ii++) {
+                    let src = solution[iColors[ii]];
+                    let dst = solution[(iColors[ii] + 1) % solution.length];
+                    let color = "brown";
+                    if (ii === 1) color = "purple";
+                    this.drawEdge(
+                        [src, dst],
+                        color,
+                        Math.max(1, 10 * this.scale)
+                    );
+                }
             }
         };
     };
