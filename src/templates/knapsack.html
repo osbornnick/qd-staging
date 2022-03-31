@@ -1,59 +1,55 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>QD testing</title>
-    </head>
 
-    <body>
-        <div class="flex-container topbar">
-            <div class="space-around">Bonus code: <b id="bonuscode"></b></div>
-            <div class="space-around">
-                Current bonus: <b id="bonuscents"></b>
-            </div>
-            <div class="space-around">
-                A higher total value is worth a higher bonus. You can enter your
-                bonus code at any time regardless of score!
-            </div>
+<head>
+    <meta charset="UTF-8" />
+    <title>QD testing</title>
+</head>
+
+<body>
+    <div class="flex-container topbar">
+        <div class="space-around">Bonus code: <b id="bonuscode"></b></div>
+        <div class="space-around">
+            Current bonus: <b id="bonuscents"></b>
         </div>
-        <div id="gameinstructions" class="space-around"></div>
-        <div
-            id="onscreen"
-            class="flex-container"
-            style="justify-content: space-around"
-        >
-            <div>
-                <div class="space-around">
-                    <div>Current score: <b id="currentscore"></b></div>
-                    <div>Best overall score: <b id="bestscore"></b></div>
-                </div>
-                <div id="behaviorcontent" style="display: none">
-                    <p id="behaviorinstructions" class="space-around"></p>
-                    <div class="behaviorgrid">
-                        <div id="behavior2title">&rarr;</div>
-                        <div
-                            id="behaviorCanvasParent"
-                            style="text-align: center"
-                        ></div>
-                        <div id="behavior1title">&rarr;</div>
-                        <!--x axis -->
-                    </div>
-                </div>
+        <div class="space-around">
+            A higher total value is worth a higher bonus. You can enter your
+            bonus code at any time regardless of score!
+        </div>
+    </div>
+    <div id="gameinstructions" class="space-around"></div>
+    <div id="onscreen" class="flex-container" style="justify-content: space-around">
+        <div>
+            <div class="space-around">
+                <div>Current score: <b id="currentscore"></b></div>
+                <div>Best overall score: <b id="bestscore"></b></div>
             </div>
-            <div>
-                <div id="taskCanvasParent"></div>
-                <div class="flex-container space-between">
-                    <button id="bestSolutionButton">
-                        Restore best solution
-                    </button>
-                    <button id="lastSolutionButton">
-                        Restore last solution
-                    </button>
-                    <button id="randomSolutionButton">Random solution</button>
-                    <button id="mutateSolutionButton">Random change</button>
+            <div id="behaviorcontent" style="display: none">
+                <p id="behaviorinstructions" class="space-around"></p>
+                <div class="behaviorgrid">
+                    <div id="behavior2title">&rarr;</div>
+                    <div id="behaviorCanvasParent" style="text-align: center"></div>
+                    <div id="behavior1title">&rarr;</div>
+                    <!--x axis -->
                 </div>
             </div>
         </div>
-        <!-- <button id="solvetoggle" style="display: none">Toggle solver</button> -->
-    </body>
+        <div>
+            <div id="taskCanvasParent"></div>
+            <div class="flex-container space-between">
+                <button id="bestSolutionButton">
+                    Restore best solution
+                </button>
+                <button id="lastSolutionButton">
+                    Restore last solution
+                </button>
+                <button id="randomSolutionButton">Random solution</button>
+                <button id="mutateSolutionButton">Random change</button>
+                <button id="clearSelectionButton">Clear selection</button>
+            </div>
+        </div>
+    </div>
+    <!-- <button id="solvetoggle" style="display: none">Toggle solver</button> -->
+</body>
+
 </html>
