@@ -30,7 +30,6 @@ export default class GenManager implements Manager {
         this.runID = this.generateToken();
         this.codeID = this.runID.slice(1, 3);
         setInterval(this.logTick, 60000);
-
     }
 
     protected initTask = (): TaskController => {
@@ -94,7 +93,14 @@ export default class GenManager implements Manager {
             ?.addEventListener("click", () => this.toggleSolving());
     };
 
-    sendLog = (type: String, info: {}, retries: number = 3) => {
+    sendLog = async (
+        type: String,
+        info: {},
+        retries: number = 2,
+        delay: number = 0
+    ) => {
+        if (delay > 0)
+            await new Promise((resolve) => setTimeout(resolve, delay));
         ++this.runIndex;
         let data = {
             time: Date.now(), // comes from client
@@ -105,7 +111,6 @@ export default class GenManager implements Manager {
             type: type,
             info,
         };
-        // delay send log for a second
         fetch("/api/log", {
             method: "POST",
             headers: {
@@ -114,7 +119,7 @@ export default class GenManager implements Manager {
             body: JSON.stringify(data),
         }).catch((err) => {
             console.log(err);
-            if (retries > 0) this.sendLog(type, info, retries--);
+            if (retries > 0) this.sendLog(type, info, --retries, 1000);
         });
     };
 
