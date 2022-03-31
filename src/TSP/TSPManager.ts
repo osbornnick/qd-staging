@@ -105,6 +105,12 @@ export default class TSPManager extends GenManager implements Manager {
         if (behavior2name !== null)
             behavior2name.innerText +=
                 " " + this.behaviorController.model.behavior2.description;
+
+        const aim = document.getElementById("aim");
+        if (aim !== null)
+            aim.innerText = this.taskController.model.isMinimize()
+                ? "Lower"
+                : "Higher";
     };
 
     updateUI = (score: number) => {

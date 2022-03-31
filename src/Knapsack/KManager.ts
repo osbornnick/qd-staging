@@ -83,11 +83,17 @@ export default class TSPManager extends GenManager implements Manager {
         if (behavior2name !== null)
             behavior2name.innerText +=
                 " " + this.behaviorController.model.behavior2.description;
+        const aim = document.getElementById("aim");
+        if (aim !== null)
+            aim.innerText = this.taskController.model.isMinimize()
+                ? "Lower"
+                : "Higher";
     };
 
     updateUI = (score: number) => {
+        // scale to 700 (magic number w.r.t the current problem)
         let bonusCents = clamp(
-            Math.round(100 * scale(this.bestScore, 0, 500)),
+            Math.round(100 * scale(this.bestScore, 0, 700)),
             0,
             100
         );

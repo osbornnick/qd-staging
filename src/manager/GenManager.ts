@@ -94,21 +94,23 @@ export default class GenManager implements Manager {
     };
 
     sendLog = async (
-        type: String,
+        type: string,
         info: {},
+        token: string = "",
         retries: number = 2,
         delay: number = 0
     ) => {
         if (delay > 0)
             await new Promise((resolve) => setTimeout(resolve, delay));
+        if (token === "") token = this.generateToken();
         ++this.runIndex;
         let data = {
             time: Date.now(), // comes from client
             run: this.runID, // indicate a starting of the game (refresh gives new one)
             run_index: this.runIndex,
             user: this.userID,
-            token: this.generateToken(),
-            type: type,
+            token,
+            type,
             info,
         };
         fetch("/api/log", {
@@ -119,7 +121,7 @@ export default class GenManager implements Manager {
             body: JSON.stringify(data),
         }).catch((err) => {
             console.log(err);
-            if (retries > 0) this.sendLog(type, info, --retries, 1000);
+            if (retries > 0) this.sendLog(type, info, token, --retries, 1000);
         });
     };
 
