@@ -12,7 +12,7 @@ export default class TSPView implements TaskView {
     scale: number;
     getProblem: Function;
     getSolution: Function;
-    CITY_RADIUS: number = 15;
+    CITY_RADIUS: number = 20;
     cityHighlited: number | null = null;
     citiesSelected: number[] = [];
     indexColors: Function | null;
@@ -69,7 +69,6 @@ export default class TSPView implements TaskView {
             }
             if (this.indexColors) {
                 const iColors = this.indexColors();
-                console.log(iColors);
                 for (let ii = 0; ii < iColors.length; ii++) {
                     let src = solution[iColors[ii]];
                     let dst = solution[(iColors[ii] + 1) % solution.length];

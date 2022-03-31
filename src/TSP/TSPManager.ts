@@ -50,12 +50,12 @@ export default class TSPManager extends GenManager implements Manager {
             () => this.currentScore,
             this.taskController.model.isMinimize
         );
-        behaviorController.model.behavior1 = new ShortestEdgeBehavior();
-        behaviorController.model.behavior2 = new LongestEdgeBehavior();
         const bcm = behaviorController.model;
+        bcm.behavior1 = new ShortestEdgeBehavior();
+        bcm.behavior2 = new LongestEdgeBehavior();
         this.taskController.view.indexColors = this.generateColorFn(
-            behaviorController.model.behavior1.behaviorDefining,
-            behaviorController.model.behavior2.behaviorDefining
+            bcm.behavior1.behaviorDefining,
+            bcm.behavior2.behaviorDefining
         );
 
         document
@@ -97,14 +97,20 @@ export default class TSPManager extends GenManager implements Manager {
                 this.behaviorController.model.instructions;
 
         let behavior1name = document.getElementById("behavior1title");
-        if (behavior1name !== null)
+        if (behavior1name !== null) {
             behavior1name.innerText +=
                 " " + this.behaviorController.model.behavior1.description;
+            // TODO: CHANGE WHERE THIS IS DEFINED
+            behavior1name.style.color = "brown";
+        }
 
         let behavior2name = document.getElementById("behavior2title");
-        if (behavior2name !== null)
+        if (behavior2name !== null) {
             behavior2name.innerText +=
                 " " + this.behaviorController.model.behavior2.description;
+            // TODO: CHANGE WHERE THIS IS DEIFNED
+            behavior2name.style.color = "purple";
+        }
 
         const aim = document.getElementById("aim");
         if (aim !== null)
