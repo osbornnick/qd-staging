@@ -1,11 +1,11 @@
 import BehaviorController from "../controller/BehaviorController";
 import TaskController from "../controller/TaskController";
-import GenBehaviorController from "../BehaviorImpl/GenBehaviorController";
-import TSPTaskController from "./TSPTaskController";
+import KTaskController from "./KTaskController";
 import Manager from "../manager/Manager";
-import { clamp } from "../util/util";
-import ShortestEdgeBehavior from "./ShortestEdgeBehavior";
-import LongestEdgeBehavior from "./LongestEdgeBehavior";
+import { clamp, scale } from "../util/util";
+import GenBehaviorController from "../BehaviorImpl/GenBehaviorController";
+import { SmallestWeightBehavior } from "./SmallestWeightBehavior";
+import { LargestWeightBehavior } from "./LargestWeightBehavior";
 import GenManager from "../manager/GenManager";
 
 export default class TSPManager extends GenManager implements Manager {
@@ -26,7 +26,7 @@ export default class TSPManager extends GenManager implements Manager {
         let taskOnCanvas = this.makeCanvas(480);
         let taskOffCanvas = this.makeCanvas(480);
 
-        let taskController = new TSPTaskController(
+        let taskController = new KTaskController(
             taskOnCanvas,
             taskOffCanvas,
             window.requestAnimationFrame,
@@ -50,35 +50,12 @@ export default class TSPManager extends GenManager implements Manager {
             () => this.currentScore,
             this.taskController.model.isMinimize
         );
-        behaviorController.model.behavior1 = new ShortestEdgeBehavior();
-        behaviorController.model.behavior2 = new LongestEdgeBehavior();
-        const bcm = behaviorController.model;
-        this.taskController.view.indexColors = this.generateColorFn(
-            behaviorController.model.behavior1.behaviorDefining,
-            behaviorController.model.behavior2.behaviorDefining
-        );
-
+        behaviorController.model.behavior1 = new SmallestWeightBehavior();
+        behaviorController.model.behavior2 = new LargestWeightBehavior();
         document
             .getElementById("behaviorCanvasParent")
             ?.appendChild(behaviorOnCanvas);
         return behaviorController;
-    };
-
-    // lets implement this in the taskView, just passing the behavior def functions
-    private generateColorFn = (
-        behaviorDefining1: Function,
-        behaviorDefining2: Function
-    ): Function => {
-        return () => [
-            behaviorDefining1(
-                this.taskController.model.getProblem(),
-                this.currentSolution
-            ),
-            behaviorDefining2(
-                this.taskController.model.getProblem(),
-                this.currentSolution
-            ),
-        ];
     };
 
     initUI = () => {
@@ -91,7 +68,7 @@ export default class TSPManager extends GenManager implements Manager {
             "behaviorinstructions"
         );
         this.behaviorController.model.instructions =
-            "The grid (below) will keep track of the routes you've found based on the length of their longest and shortests legs. Your current route is a blue dot. Grids cells that you have found a route in are shaded blue. Filling in the grid may help find different and shorter routes!<br> <b>Click a grid cell</b> to copy the best route from that cell. <br><b>Click and drag</b> between two grid cells to combine their best routes.";
+            "The grid (below) will keep track of solutions you've found. Your current route is a white-outlined dot. Grid cells that you have found a solution in are shaded in based on how good that solution is. Filling in the grid may help find different and better solutions! <br> <b>Click a grid cell</b> to copy the best solution from that cell. <br><b>Click and drag</b> between two grid cells to combine their best solutions.";
         if (behaviorInstructionElement !== null)
             behaviorInstructionElement.innerHTML =
                 this.behaviorController.model.instructions;
@@ -109,7 +86,7 @@ export default class TSPManager extends GenManager implements Manager {
 
     updateUI = (score: number) => {
         let bonusCents = clamp(
-            Math.round(100 * Math.pow((250000 - this.bestScore) / 250000, 2)),
+            Math.round(100 * scale(this.bestScore, 0, 500)),
             0,
             100
         );

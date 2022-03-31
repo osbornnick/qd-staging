@@ -16,15 +16,17 @@
                 bonus code at any time regardless of route length!
             </div>
         </div>
+        <div id="gameinstructions" class="space-around"></div>
         <div
             id="onscreen"
             class="flex-container"
             style="justify-content: space-around"
         >
             <div>
-                <div id="gameinstructions" class="space-around"></div>
-                <div>Current score: <b id="currentscore"></b></div>
-                <div>Bext overall score: <b id="bestscore"></b></div>
+                <div class="space-around">
+                    <div>Current score: <b id="currentscore"></b></div>
+                    <div>Best overall score: <b id="bestscore"></b></div>
+                </div>
                 <div id="behaviorcontent" style="display: none">
                     <p id="behaviorinstructions" class="space-around"></p>
                     <div class="behaviorgrid">
@@ -52,6 +54,6 @@
                 </div>
             </div>
         </div>
-        <button id="solvetoggle">Toggle solver</button>
+        <button id="solvetoggle" style="display: none">Toggle solver</button>
     </body>
 </html>

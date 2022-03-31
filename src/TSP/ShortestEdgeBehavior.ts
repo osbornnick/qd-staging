@@ -30,9 +30,10 @@ export default class ShortestEdgeBehavior implements Behavior {
             let dist = distance(src, dst);
             if (dist < minLength) {
                 minLength = dist;
-                rtn = solution[ii];
+                rtn = ii;
             }
         }
+
         return rtn;
     }
 

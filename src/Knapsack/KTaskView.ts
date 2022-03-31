@@ -14,10 +14,10 @@ export class KTaskView implements TaskView {
     coinHighlited: number | null = null;
     coinSelected: number | null = null;
     coinCanvasWidth: number;
-    capacityCanvasWidth: number = 8;
+    capacityCanvasWidth: number = 20;
     maxCoinWidth: number;
     maxCoinHeight: number;
-    colorFn: Function | null = null;
+    indexColors: Function | null = null;
 
     minCoinWeight: number = 0;
     maxCoinWeight: number = 0;
@@ -44,7 +44,7 @@ export class KTaskView implements TaskView {
         this.getSolution = getSolution;
         this.scale = 1;
 
-        // assuming coins in 5x5 grid (25 coins)
+        // assuming coins in 4x5 grid (20 coins)
         this.maxCoinWidth = this.coinCanvasWidth / 5;
         this.maxCoinHeight = this.coinCanvasWidth / 5;
     }
@@ -100,7 +100,7 @@ export class KTaskView implements TaskView {
         let coinSelected = -1;
         if (this.coinSelected != null) coinSelected = this.coinSelected;
         this.coinSelected = null;
-        this.coinHighlited = null;
+        // this.coinHighlited = null;
         this.draw();
         return coinSelected;
     };
@@ -174,12 +174,22 @@ export class KTaskView implements TaskView {
         let backgroundCol = "gray";
         let weightColor = "green";
         let lineWidth = this.capacityCanvasWidth;
-        let scaleX = this.canvasWidth - lineWidth / 2;
+        // let scaleX = this.canvasWidth - lineWidth / 2;
+        let scaleX = lineWidth / 2;
         this.context.lineWidth = lineWidth;
 
         let weight = 0;
         for (let i = 0; i < sol.length; i++) {
             if (sol[i] === 1) weight += coins[i][0];
+        }
+        if (weight > capacity) {
+            this.context.beginPath();
+            this.context.moveTo(scaleX, this.canvasHeight);
+            this.context.strokeStyle = "red";
+            this.context.lineTo(scaleX, 0);
+            this.context.stroke();
+            this.context.closePath();
+            return;
         }
         let scaled = scale(weight, 0, capacity);
         let weightHeight = scaled * this.canvasHeight;
@@ -217,6 +227,7 @@ export class KTaskView implements TaskView {
                 this.context.stroke();
                 this.context.closePath();
             } else {
+                // if coin weight possible in solution
                 if (coins[this.coinHighlited][0] + weight <= capacity) {
                     this.context.beginPath();
                     this.context.moveTo(scaleX, weightY);
@@ -260,12 +271,14 @@ export class KTaskView implements TaskView {
         let colormap = interpolate(["#b87333", "#C0C0C0", "#FFD700"]);
         return colormap(scaled);
     };
+
     // fn that calculates the posn of the coin on canvas
     coinToCanvas = (i: number): number[] => {
         let col = i % 5;
         let row = Math.floor(i / 5);
         return [
-            col * this.maxCoinHeight + this.maxCoinHeight / 2,
+            this.capacityCanvasWidth +
+                (col * this.maxCoinHeight + this.maxCoinHeight / 2),
             row * this.maxCoinWidth + this.maxCoinWidth / 2,
         ];
     };

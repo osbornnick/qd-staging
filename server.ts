@@ -10,7 +10,8 @@ let app = express();
 app.use(express.json());
 app.use(express.static("dist"));
 
-let blockRandom: number[] = [];
+let blockRandomGame: number[] = [];
+let blockRandomBehavior: number[] = [];
 
 // from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 function shuffleArray(array: number[]) {
@@ -29,11 +30,16 @@ app.use((req, res, next) => {
 
 app.get("/api/id", (req, res) => {
     let id = crypto.randomBytes(9).toString("hex");
-    if (blockRandom.length == 0) {
-        blockRandom = [0, 1];
-        shuffleArray(blockRandom);
+    if (blockRandomGame.length == 0) {
+        blockRandomGame = [0, 1];
+        shuffleArray(blockRandomGame);
     }
-    id += blockRandom.pop();
+    if (blockRandomBehavior.length == 0) {
+        blockRandomBehavior = [0, 1];
+        shuffleArray(blockRandomBehavior);
+    }
+    id += blockRandomGame.pop();
+    id += blockRandomBehavior.pop();
     res.json({ id });
 });
 
@@ -55,9 +61,8 @@ app.post("/api/log", (req, res) => {
     );
 });
 
-const PORT = process.env.port || 4000;
+const PORT = process.env.PORT || 4000;
 let server;
-
 if (process.env.NODE_ENV === "prod") {
     if (typeof process.env.SSLKEY === "undefined") {
         console.log("SSLKEY env variable must be defined to run with https");

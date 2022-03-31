@@ -1,15 +1,12 @@
+import GenBehaviorController from "../BehaviorImpl/GenBehaviorController";
 import BehaviorController from "../controller/BehaviorController";
 import TaskController from "../controller/TaskController";
-import KTaskController from "./KTaskController";
-import Manager from "../manager/Manager";
 import Solution from "../interfaces/Solution";
 import { clamp } from "../util/util";
-import GenBehaviorController from "../BehaviorImpl/GenBehaviorController";
-import { SmallestWeightBehavior } from "./SmallestWeightBehavior";
-import { LargestWeightBehavior } from "./LargestWeightBehavior";
+import Manager from "./Manager";
+import Behavior from "../interfaces/Behavior";
 
-export default class TSPManager {
-    // implements Manager
+export default class GenManager implements Manager {
     userID: String = "default";
     runID: String = "default";
     codeID: String = "default";
@@ -19,48 +16,33 @@ export default class TSPManager {
     currentSolution: Solution = [];
     currentScore: number = 0;
     bestScore: number = -1; // MAGIC NUMBER
-    taskController: TaskController;
-    behaviorController: BehaviorController;
+    taskController: TaskController = <TaskController>{};
+    behaviorController: BehaviorController = <BehaviorController>{};
     runIndex: number = 0;
     solver: any;
 
     constructor() {
         this.initUserID();
         this.behaviorVisible = true;
-        this.taskController = this.initTask();
-        this.behaviorController = this.initBehavior();
 
         this.registerButtonHandlers();
         // init
         this.runID = this.generateToken();
         this.codeID = this.runID.slice(1, 3);
-        this.sendLog("start", { behavior_visible: this.behaviorVisible });
-        this.sendLog("problem", {
-            problem: this.taskController.model.getProblem(),
-        });
-        this.requestRandomSolution();
-        this.initUI();
         setInterval(this.logTick, 60000);
 
-        this.solver = this.makeSolver();
     }
 
-    private initTask = (): TaskController => {
+    protected initTask = (): TaskController => {
         let taskOnCanvas = this.makeCanvas(480);
         let taskOffCanvas = this.makeCanvas(480);
 
-        let taskController = new KTaskController(
-            taskOnCanvas,
-            taskOffCanvas,
-            window.requestAnimationFrame,
-            this.onNewSolution,
-            () => this.currentSolution.slice()
-        );
+        let taskController = <TaskController>{};
         document.getElementById("taskCanvasParent")?.appendChild(taskOnCanvas);
         return taskController;
     };
 
-    private initBehavior = (): BehaviorController => {
+    protected initBehavior = (): BehaviorController => {
         let behaviorOnCanvas = this.makeCanvas(250);
         let behaviorOffCanvas = this.makeCanvas(250);
 
@@ -73,27 +55,27 @@ export default class TSPManager {
             () => this.currentScore,
             this.taskController.model.isMinimize
         );
-        behaviorController.model.behavior1 = new SmallestWeightBehavior();
-        behaviorController.model.behavior2 = new LargestWeightBehavior();
+        behaviorController.model.behavior1 = <Behavior>{};
+        behaviorController.model.behavior2 = <Behavior>{};
         document
             .getElementById("behaviorCanvasParent")
             ?.appendChild(behaviorOnCanvas);
         return behaviorController;
     };
 
-    private initUserID = async () => {
+    protected initUserID = async () => {
         const urlParams = new URLSearchParams(window.location.search);
         let id = urlParams.get("uid");
         if (id !== null) this.userID = id;
         else {
             console.log("URL PARAMS ERROR, NO USER ID (WAHT DO?)");
         }
-        console.log("User id: ", this.userID);
+        // console.log("User id: ", this.userID);
         if (this.userID.charAt(this.userID.length - 1) == "0")
             this.showBehavior();
     };
 
-    private registerButtonHandlers = () => {
+    protected registerButtonHandlers = () => {
         document
             .getElementById("bestSolutionButton")
             ?.addEventListener("click", () => this.requestBestSolution());
@@ -112,7 +94,7 @@ export default class TSPManager {
             ?.addEventListener("click", () => this.toggleSolving());
     };
 
-    sendLog = (type: String, info: {}) => {
+    sendLog = (type: String, info: {}, retries: number = 3) => {
         ++this.runIndex;
         let data = {
             time: Date.now(), // comes from client
@@ -123,12 +105,16 @@ export default class TSPManager {
             type: type,
             info,
         };
+        // delay send log for a second
         fetch("/api/log", {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
             },
             body: JSON.stringify(data),
+        }).catch((err) => {
+            console.log(err);
+            if (retries > 0) this.sendLog(type, info, retries--);
         });
     };
 
@@ -255,7 +241,7 @@ export default class TSPManager {
             "behaviorinstructions"
         );
         this.behaviorController.model.instructions =
-            "The grid (below) will keep track of solutions you've found. Your current route is a white-outlined dot. Grid cells that you have found a solution in are shaded in based on how good that solution is. Filling in the grid may help find different and better solutions! <br> <b>Click a grid cell</b> to copy the best solution from that cell. <br><b>Click and drag</b> between two grid cells to combine their best solutions.";
+            "behavior instructions go here";
         if (behaviorInstructionElement !== null)
             behaviorInstructionElement.innerHTML =
                 this.behaviorController.model.instructions;
@@ -301,8 +287,10 @@ export default class TSPManager {
     };
 
     showBehavior = () => {
-        let behaviorElement = document.getElementById("behaviorcontent");
+        const behaviorElement = document.getElementById("behaviorcontent");
         if (behaviorElement !== null) behaviorElement.style.display = "block";
+        const solverButton = document.getElementById("solvetoggle");
+        if (solverButton !== null) solverButton.style.display = "block";
     };
 
     toggleSolving = () => {
@@ -359,7 +347,7 @@ export default class TSPManager {
     };
 
     randomMapChoice = (map: Map<String, any>) => {
-        let keys = Array.from(map.keys());
+        const keys = Array.from(map.keys());
         return keys[Math.floor(Math.random() * keys.length)];
     };
 }

@@ -12,38 +12,40 @@ export default class KTaskModel implements Task {
     // each i indice in problem represents a coin, with [i][0] being its weight and [i][1] its value
     // a solution is an array of 1s and 0s, where the ith value represents inclusion or exclusion of a coin
     problem: Problem = { coins: [[]], capacity: 0 }; // coins as x,y,area?
+    bestPossibleScore: number = 0;
 
     constructor() {
         this.problem = {
             coins: [
-                [10, 48],
-                [30, 30],
-                [12, 42],
-                [22, 36],
-                [12, 22],
-                [20, 43],
-                [9, 18],
-                [18, 36],
-                [18, 36],
-                [20, 29],
-                [25, 30],
-                [25, 30],
-                [18, 25],
-                [7, 19],
-                [16, 41],
-                [16, 41],
-                [24, 34],
-                [24, 34],
-                [21, 32],
-                [21, 27],
-                [21, 27],
-                [32, 24],
-                [32, 24],
-                [9, 18],
-                [9, 18],
+                [83, 103],
+                [36, 66],
+                [53, 73],
+                [9, 29],
+                [15, 35],
+                [26, 46],
+                [3, 23],
+                [45, 65],
+                [24, 54],
+                [72, 102],
+                [56, 76],
+                [8, 28],
+                [96, 126],
+                [91, 111],
+                [72, 102],
+                [93, 113],
+                [83, 103],
+                [39, 59],
+                [72, 102],
+                [31, 51],
+                [23, 43],
+                [40, 60],
+                [41, 61],
+                [93, 113],
+                [94, 114],
             ],
-            capacity: 100,
+            capacity: 129,
         };
+        this.bestPossibleScore = 0;
     }
 
     getName = (): string => {
@@ -53,7 +55,7 @@ export default class KTaskModel implements Task {
         return "largest coin value";
     }
     getInstructions(): string {
-        return "Choose coins that fit into the knapsack that maximizes their collective value!";
+        return "Choose coins that fit into the knapsack that maximizes their collective value! Each coin is colored and sized based off its value and weight, respectively. Bigger coins weigh more, and more valuable coins are more golden (bronze coins are the least valuable, while silver is middling). <br /> The gray bar on the left displays the filled (green) capacity of the knapsack, and the remaining (gray) space. <br /> Hover over a coin to see how much weight it will add to the knapsack, or if it will fit at all.";
     }
     isMinimize = (): boolean => {
         return false;
@@ -110,10 +112,14 @@ export default class KTaskModel implements Task {
             return newSol;
         }
         if (newSol[ci] === 0) newSol[ci] = 1;
-        if (this.isValidSolution(newSol)) return newSol;
-        return solution;
+        // if (this.isValidSolution(newSol)) return newSol;
+        // return solution;
+        return newSol;
     };
 
+    // how does crossover work with invalid solutions
+
+    //  pick a number between 1 and 24, slice each solution at that point, take first half and second
     crossoverSolution = (sol1: Solution, sol2: Solution): Solution => {
         let newSol = [];
         for (let i = 0; i < sol1.length; i++) newSol[i] = 0;
@@ -153,11 +159,12 @@ export default class KTaskModel implements Task {
     setRandomProblem(): void {
         throw new Error("Method not implemented.");
     }
-    scoreSolution(solution: any): number {
+    scoreSolution = (solution: any): number => {
+        if (!this.isValidSolution(solution)) return 0;
         let score = 0;
         for (let i = 0; i < solution.length; i++) {
             if (solution[i] == 1) score += this.problem.coins[i][1];
         }
         return score;
-    }
+    };
 }

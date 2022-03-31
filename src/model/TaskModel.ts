@@ -3,6 +3,7 @@ import Solution from "../interfaces/Solution";
 
 export default interface Task {
     problem: Problem;
+    bestPossibleScore: number;
 
     getName(): string;
     getObjectiveName(): string;

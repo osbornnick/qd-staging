@@ -5,6 +5,7 @@ import { distance } from "../util/util";
 
 export default class TSPModel implements TaskModel {
     problem: Problem;
+    bestPossibleScore: number = 0;
 
     constructor() {
         this.setProblem([

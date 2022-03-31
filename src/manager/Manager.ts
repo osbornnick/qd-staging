@@ -10,8 +10,8 @@ export default interface Manager {
     currentSolution: Solution;
     bestScore: number | null;
 
-    taskController: TaskController;
-    behaviorController: BehaviorController;
+    taskController: TaskController | null;
+    behaviorController: BehaviorController | null;
 
     sendLog(type: String, info: {}): void;
     logTick(): void;

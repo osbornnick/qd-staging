@@ -2,6 +2,7 @@ import Solution from "../interfaces/Solution";
 import Problem from "../interfaces/Problem";
 import TaskView from "../view/TaskView";
 import { distanceSqr } from "../util/util";
+import { generateKey } from "crypto";
 
 export default class TSPView implements TaskView {
     context: CanvasRenderingContext2D;
@@ -11,10 +12,10 @@ export default class TSPView implements TaskView {
     scale: number;
     getProblem: Function;
     getSolution: Function;
-    CITY_RADIUS: number = 20;
+    CITY_RADIUS: number = 15;
     cityHighlited: number | null = null;
     citiesSelected: number[] = [];
-    colorFn: Function | null;
+    indexColors: Function | null;
 
     constructor(
         context: CanvasRenderingContext2D,
@@ -23,7 +24,7 @@ export default class TSPView implements TaskView {
         render: Function,
         height: number,
         width: number,
-        colorFn?: Function
+        indexColors?: Function
     ) {
         this.getProblem = getProblem;
         this.getSolution = getSolution;
@@ -31,9 +32,9 @@ export default class TSPView implements TaskView {
         this.canvasHeight = height;
         this.canvasWidth = width;
         this.render = render;
-        this.scale = 1;
-        if (typeof colorFn !== "undefined") this.colorFn = colorFn;
-        else this.colorFn = null;
+        this.scale = 0.5;
+        if (typeof indexColors !== "undefined") this.indexColors = indexColors;
+        else this.indexColors = null;
         this.draw();
     }
 
@@ -45,13 +46,11 @@ export default class TSPView implements TaskView {
     drawHelper = (solution: Solution, problem: Problem) => {
         return () => {
             this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+
             for (let ii = 0; ii < solution.length; ++ii) {
                 let src = solution[ii];
                 let dst = solution[(ii + 1) % solution.length];
                 let color = "#999999";
-                if (this.colorFn) {
-                    color = this.colorFn(src);
-                }
                 this.drawEdge([src, dst], color, Math.max(1, 10 * this.scale));
             }
             if (this.citiesSelected.length > 0) {
@@ -68,11 +67,25 @@ export default class TSPView implements TaskView {
             for (let ii = 0; ii < problem.length; ++ii) {
                 this.drawCity(ii, problem[ii]);
             }
+            if (this.indexColors) {
+                const iColors = this.indexColors();
+                console.log(iColors);
+                for (let ii = 0; ii < iColors.length; ii++) {
+                    let src = solution[iColors[ii]];
+                    let dst = solution[(iColors[ii] + 1) % solution.length];
+                    let color = "brown";
+                    if (ii === 1) color = "purple";
+                    this.drawEdge(
+                        [src, dst],
+                        color,
+                        Math.max(1, 10 * this.scale)
+                    );
+                }
+            }
         };
     };
 
     // new solution segment! replace section of old solution with return value in controller please
-    // this breaks the interface. what other ways can we do it? I don't want to pass this the updateSolution method on the model
     handleMouseUp: Solution | null = (event: MouseEvent) => {
         let returnMe = null;
         if (this.citiesSelected.length !== 0) {
