@@ -47,7 +47,7 @@ app.post("/api/log", (req, res) => {
         (err) => {
             if (err) {
                 console.error(err);
-                return;
+                res.sendStatus(500);
             } else {
                 res.sendStatus(200);
             }
