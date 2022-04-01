@@ -15,6 +15,14 @@ body {
     display: flex;
 }
 
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.space-around {
+    justify-content: space-around;
+}
+
 .topbar {
     background-color: bisque;
     border-radius: 1rem;

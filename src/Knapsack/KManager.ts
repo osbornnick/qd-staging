@@ -34,6 +34,7 @@ export default class TSPManager extends GenManager implements Manager {
             () => this.currentSolution.slice()
         );
         document.getElementById("taskCanvasParent")?.appendChild(taskOnCanvas);
+        this.registerAdditionalButtonHandlers();
         return taskController;
     };
 
@@ -82,11 +83,17 @@ export default class TSPManager extends GenManager implements Manager {
         if (behavior2name !== null)
             behavior2name.innerText +=
                 " " + this.behaviorController.model.behavior2.description;
+        const aim = document.getElementById("aim");
+        if (aim !== null)
+            aim.innerText = this.taskController.model.isMinimize()
+                ? "Lower"
+                : "Higher";
     };
 
     updateUI = (score: number) => {
+        // scale to 700 (magic number w.r.t the current problem)
         let bonusCents = clamp(
-            Math.round(100 * scale(this.bestScore, 0, 500)),
+            Math.round(100 * scale(this.bestScore, 0, 700)),
             0,
             100
         );
@@ -111,5 +118,15 @@ export default class TSPManager extends GenManager implements Manager {
         let bestScoreElement = document.getElementById("bestscore");
         if (bestScoreElement !== null)
             bestScoreElement.innerText = this.bestScore.toFixed(0);
+    };
+
+    registerAdditionalButtonHandlers = () => {
+        let clearSelectionElement = document.getElementById(
+            "clearSelectionButton"
+        );
+        if (clearSelectionElement !== null)
+            clearSelectionElement.addEventListener("click", () => {
+                this.onNewSolution("clear selection", [], true);
+            });
     };
 }
