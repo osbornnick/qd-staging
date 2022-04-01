@@ -3,7 +3,11 @@ fetch("/api/id")
     .then(({ id }) => {
         let linkElement = document.getElementById("linktogame");
         let game = "tsp";
-        if (id.charAt(id.length - 2) == 1) game = "knapsack";
+        const bin = id.charAt(id.length - 1);
+        if (bin > 1) game = "knapsack";
+        if (bin > 3) game = "game3";
+        if (bin % 2 == 0) id += "1"; // don't show behavior
+        else id += "0"; // show behavior
         if (linkElement?.getAttribute("href") == "#")
             document
                 .getElementById("linktogame")

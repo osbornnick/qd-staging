@@ -10,8 +10,8 @@ let app = express();
 app.use(express.json());
 app.use(express.static("dist"));
 
-let blockRandomGame: number[] = [];
-let blockRandomBehavior: number[] = [];
+// (2n) different values, visible game1, invisible game1, visible game2, invisible game2
+let blockRandom: number[] = [];
 
 // from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 function shuffleArray(array: number[]) {
@@ -23,23 +23,18 @@ function shuffleArray(array: number[]) {
     }
 }
 
-app.use((req, res, next) => {
-    req.ip;
-    next();
-});
+// app.use((req, res, next) => {
+//     req.ip;
+//     next();
+// });
 
 app.get("/api/id", (req, res) => {
     let id = crypto.randomBytes(9).toString("hex");
-    if (blockRandomGame.length == 0) {
-        blockRandomGame = [0, 1];
-        shuffleArray(blockRandomGame);
+    if (blockRandom.length == 0) {
+        blockRandom = [0, 1, 2, 3];
+        shuffleArray(blockRandom);
     }
-    if (blockRandomBehavior.length == 0) {
-        blockRandomBehavior = [0, 1];
-        shuffleArray(blockRandomBehavior);
-    }
-    id += blockRandomGame.pop();
-    id += blockRandomBehavior.pop();
+    id += blockRandom.pop();
     res.json({ id });
 });
 
