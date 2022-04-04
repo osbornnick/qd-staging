@@ -23,7 +23,7 @@ export default class GenManager implements Manager {
 
     constructor() {
         this.initUserID();
-        this.behaviorVisible = true;
+        this.behaviorVisible = false;
 
         this.registerButtonHandlers();
         // init
@@ -70,8 +70,10 @@ export default class GenManager implements Manager {
             console.log("URL PARAMS ERROR, NO USER ID (WAHT DO?)");
         }
         // console.log("User id: ", this.userID);
-        if (this.userID.charAt(this.userID.length - 1) == "1")
+        if (this.userID.charAt(this.userID.length - 1) == "1") {
             this.showBehavior();
+            this.behaviorVisible = false;
+        }
     };
 
     protected registerButtonHandlers = () => {
@@ -140,14 +142,14 @@ export default class GenManager implements Manager {
         );
     };
     requestLastSolution = () => {
-        this.onNewSolution("request last", this.previousSolution.slice());
+        this.onNewSolution("undo", this.previousSolution.slice());
     };
     requestBestSolution = () => {
-        this.onNewSolution("request best", this.bestSolution.slice());
+        this.onNewSolution("best", this.bestSolution.slice());
     };
     requestMutateSolution = () => {
         this.onNewSolution(
-            "mutate solution",
+            "mutate",
             this.taskController.model.mutateSolution(this.currentSolution)
         );
     };

@@ -64,7 +64,7 @@ export default class KTaskController
         let newSol = currentSol.slice();
         newSol[coinSelected] = newVal;
         // if (this.model.isValidSolution(newSol))
-        this.onNewSolution("user input", newSol);
+        this.onNewSolution("manual", newSol);
     };
     registerButtonHandlers(): void {
         throw new Error("Method not implemented.");

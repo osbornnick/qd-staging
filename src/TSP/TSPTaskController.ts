@@ -61,7 +61,7 @@ export default class TSPTaskController
                 this.getSolution(),
                 newSol
             );
-            this.onNewSolution("user input", combined.slice());
+            this.onNewSolution("manual", combined.slice());
         }
     };
     registerButtonHandlers(): void {
