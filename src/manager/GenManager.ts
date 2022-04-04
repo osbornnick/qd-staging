@@ -70,7 +70,7 @@ export default class GenManager implements Manager {
             console.log("URL PARAMS ERROR, NO USER ID (WAHT DO?)");
         }
         // console.log("User id: ", this.userID);
-        if (this.userID.charAt(this.userID.length - 1) == "0")
+        if (this.userID.charAt(this.userID.length - 1) == "1")
             this.showBehavior();
     };
 
