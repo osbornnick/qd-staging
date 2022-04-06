@@ -164,7 +164,12 @@ export default class GenManager implements Manager {
         solution: any,
         shouldLog: boolean = true
     ) => {
-        this.previousSolution = this.currentSolution.slice();
+        if (this.currentSolution.length == 0) {
+            console.log(this.currentSolution);
+            this.previousSolution = solution.slice();
+        } else {
+            this.previousSolution = this.currentSolution.slice();
+        }
         this.currentSolution = solution.slice();
         // send solution to task model for scoring
         let score = this.taskController.model.scoreSolution(solution);

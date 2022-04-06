@@ -126,7 +126,7 @@ export default class TSPManager extends GenManager implements Manager {
         );
         if (clearSelectionElement !== null)
             clearSelectionElement.addEventListener("click", () => {
-                this.onNewSolution("clear selection", [], true);
+                this.onNewSolution("manual", [], true);
             });
     };
 }
