@@ -53,6 +53,7 @@ export default class TSPManager extends GenManager implements Manager {
         );
         behaviorController.model.behavior1 = new SmallestWeightBehavior();
         behaviorController.model.behavior2 = new LargestWeightBehavior();
+        behaviorController.model.numBins = 9;
         document
             .getElementById("behaviorCanvasParent")
             ?.appendChild(behaviorOnCanvas);
