@@ -11,7 +11,7 @@ export default class GenManager implements Manager {
     runID: String = "default";
     codeID: String = "default";
     behaviorVisible: boolean;
-    bestSolution: any;
+    bestSolution: Solution;
     previousSolution: Solution;
     currentSolution: Solution = [];
     currentScore: number = 0;
@@ -131,10 +131,6 @@ export default class GenManager implements Manager {
         this.sendLog("tick", {});
     };
 
-    chooseGame(): void {
-        this.initUI();
-        throw new Error("Method not implemented.");
-    }
     requestRandomSolution = () => {
         this.onNewSolution(
             "random",
@@ -249,7 +245,7 @@ export default class GenManager implements Manager {
         let instructionElement = document.getElementById("gameinstructions");
         if (instructionElement !== null)
             instructionElement.innerHTML =
-                this.taskController.model.getInstructions();
+                this.taskController.model.instructions;
 
         let behaviorInstructionElement = document.getElementById(
             "behaviorinstructions"

@@ -15,7 +15,6 @@ export default interface Manager {
 
     sendLog(type: String, info: {}): void;
     logTick(): void;
-    chooseGame(): void;
     requestLastSolution(): void;
     requestBestSolution(): void;
 

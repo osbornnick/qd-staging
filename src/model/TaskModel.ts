@@ -4,10 +4,10 @@ import Solution from "../interfaces/Solution";
 export default interface Task {
     problem: Problem;
     bestPossibleScore: number;
+    instructions: string;
 
     getName(): string;
     getObjectiveName(): string;
-    getInstructions(): string;
     isMinimize(): boolean;
     getRandomSolution(): Solution;
     mutateSolution(solution: Solution): Solution;
