@@ -2,7 +2,6 @@ import Solution from "../interfaces/Solution";
 import Problem from "../interfaces/Problem";
 import TaskView from "../view/TaskView";
 import { distanceSqr } from "../util/util";
-import { generateKey } from "crypto";
 
 export default class TSPView implements TaskView {
     context: CanvasRenderingContext2D;
