@@ -17,6 +17,7 @@ export default class GenBehaviorView implements BehaviorView {
     canvasHeight: number;
     scale: number;
     BEHAVIOR_RADIUS_CANVAS: number = 5;
+    solutionsVisible: boolean = false;
 
     binHighlighted: null | number[] = null;
     binSelected: null | number[][] = null;
@@ -25,6 +26,7 @@ export default class GenBehaviorView implements BehaviorView {
         context: CanvasRenderingContext2D,
         render: Function,
         modelGetters: {
+            // getShownSolutions?
             getNumBins: Function;
             getBinElites: Function;
             getSolutionBehavior: Function;
@@ -325,4 +327,8 @@ export default class GenBehaviorView implements BehaviorView {
         colormap = interpolate(cols);
         return colormap(scaled);
     };
+
+    showSolutions() {
+        this.solutionsVisible = true;
+    }
 }

@@ -4,6 +4,7 @@ import Controller from "../controller/Controller";
 import BehaviorView from "../view/BehaviorView";
 import GenBehaviorModel from "./GenBehaviorModel";
 import GenBehaviorView from "./GenBehaviorView";
+import Solution from "../interfaces/Solution";
 
 export default class GenBehaviorController
     extends Controller
@@ -13,6 +14,7 @@ export default class GenBehaviorController
     view: BehaviorView;
     onNewSolution: Function;
     requestCrossover: Function;
+    visibleSolutions: Solution[] = [];
 
     constructor(
         onScreenCanvas: HTMLCanvasElement,
@@ -83,5 +85,15 @@ export default class GenBehaviorController
     };
     registerButtonHandlers(): void {
         throw new Error("Method not implemented.");
+    }
+
+    showSolutions(): void {}
+
+    setVisibleSolutions(sols: any[]): void {
+        this.visibleSolutions = sols;
+    }
+
+    getVisibleSolutions(): Solution[] {
+        return this.visibleSolutions;
     }
 }

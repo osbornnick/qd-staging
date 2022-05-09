@@ -6,6 +6,7 @@ import { distance } from "../util/util";
 export default class TSPModel implements TaskModel {
     problem: Problem;
     bestPossibleScore: number = 0;
+    instructions: string;
 
     constructor() {
         this.setProblem([
@@ -50,6 +51,8 @@ export default class TSPModel implements TaskModel {
             [0.97, 0.57],
             [1.0, 0.37],
         ]);
+        this.instructions =
+            "You are given a map of multiple cities. Your goal is to find the shortest route that connects them all. The dots on the map represent cities and the lines represent legs of the route. <br> <b>Click and drag</b> between multiple cities to update the legs of the route.";
     }
     getName(): string {
         return "Traveling Salesman Problem";
@@ -58,7 +61,7 @@ export default class TSPModel implements TaskModel {
         return "route length";
     }
     getInstructions(): string {
-        return "You are given a map of multiple cities. Your goal is to find the shortest route that connects them all. The dots on the map represent cities and the lines represent legs of the route. <br> <b>Click and drag</b> between multiple cities to update the legs of the route.";
+        return this.instructions;
     }
     isMinimize(): boolean {
         return true;
