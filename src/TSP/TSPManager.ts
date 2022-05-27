@@ -7,12 +7,14 @@ import { clamp } from "../util/util";
 import ShortestEdgeBehavior from "./ShortestEdgeBehavior";
 import LongestEdgeBehavior from "./LongestEdgeBehavior";
 import GenManager from "../manager/GenManager";
+import solutions from "./solutions.json";
 
 export default class TSPManager extends GenManager implements Manager {
     constructor() {
         super();
         this.taskController = this.initTask();
         this.behaviorController = this.initBehavior();
+        if (this.solutionsVisible) this.showSolutions();
         this.sendLog("start", { behavior_visible: this.behaviorVisible });
         this.sendLog("problem", {
             problem: this.taskController.model.getProblem(),
@@ -146,5 +148,11 @@ export default class TSPManager extends GenManager implements Manager {
         let bestScoreElement = document.getElementById("bestscore");
         if (bestScoreElement !== null)
             bestScoreElement.innerText = this.bestScore.toFixed(0);
+    };
+
+    showSolutions = () => {
+        if (this.behaviorVisible) {
+        } else {
+        }
     };
 }
