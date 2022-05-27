@@ -7,7 +7,7 @@ import { clamp } from "../util/util";
 import ShortestEdgeBehavior from "./ShortestEdgeBehavior";
 import LongestEdgeBehavior from "./LongestEdgeBehavior";
 import GenManager from "../manager/GenManager";
-import solutions from "./solutions.json";
+// import solutions from "./solutions.json";
 
 export default class TSPManager extends GenManager implements Manager {
     constructor() {
@@ -153,6 +153,8 @@ export default class TSPManager extends GenManager implements Manager {
     showSolutions = () => {
         if (this.behaviorVisible) {
         } else {
+            // add a dropdown menu where behavior could be, that loads solutions selected in dropdown
+            
         }
     };
 }
