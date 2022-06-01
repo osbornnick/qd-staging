@@ -152,9 +152,10 @@ export default class TSPManager extends GenManager implements Manager {
 
     showSolutions = () => {
         if (this.behaviorVisible) {
+            // tell view to show solutions and make them interactable
         } else {
             // add a dropdown menu where behavior could be, that loads solutions selected in dropdown
-            
+            // solution loaded: onNewSolution ?
         }
     };
 }
