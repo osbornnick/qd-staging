@@ -10,8 +10,7 @@ let app = express();
 app.use(express.json());
 app.use(express.static("dist"));
 
-// (3n) different values: visible game1, invisible game1, canload game1, visible game2, invisible game2, canload game2
-const CONDITIONS = 6;
+const CONDITIONS = 8;
 let blockRandom: number[] = [];
 
 // from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -32,7 +31,7 @@ function shuffleArray(array: number[]) {
 app.get("/api/id", (req, res) => {
     let id = crypto.randomBytes(9).toString("hex");
     if (blockRandom.length == 0) {
-        blockRandom = [0, 1, 2, 3, 4, 5];
+        blockRandom = Array.from(Array(CONDITIONS).keys());
         shuffleArray(blockRandom);
     }
     id += blockRandom.pop();
