@@ -1,55 +1,65 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>QD testing</title>
+    </head>
 
-<head>
-    <meta charset="UTF-8" />
-    <title>QD testing</title>
-</head>
-
-<body>
-    <div class="flex-container topbar">
-        <div class="space-around">Bonus code: <b id="bonuscode"></b></div>
-        <div class="space-around">
-            Current bonus: <b id="bonuscents"></b>
-        </div>
-        <div class="space-around">
-            A shorter route is worth a higher bonus. You can enter your
-            bonus code at any time regardless of route length!
-        </div>
-    </div>
-    <div id="gameinstructions" class="space-around"></div>
-    <div id="onscreen" class="flex-container" style="justify-content: space-around">
-        <div>
+    <body>
+        <div class="flex-container topbar">
+            <div class="space-around">Bonus code: <b id="bonuscode"></b></div>
             <div class="space-around">
-                <div>Current score: <b id="currentscore"></b></div>
-                <div>Best overall score: <b id="bestscore"></b></div>
-                <div><b id="aim"></b> is better.</div>
+                Current bonus: <b id="bonuscents"></b>
             </div>
-            <div id="behaviorcontent" style="display: none">
-                <div id="behaviorinstructions" class="space-around"></div>
-                <div class="behaviorgrid">
-                    <div id="behavior2title">&rarr;</div>
-                    <div id="behaviorCanvasParent" style="text-align: center"></div>
-                    <div id="behavior1title">&rarr;</div>
-                    <!--x axis -->
+            <div class="space-around">
+                A shorter route is worth a higher bonus. You can enter your
+                bonus code at any time regardless of route length!
+            </div>
+        </div>
+        <div id="gameinstructions" class="space-around"></div>
+        <div
+            id="onscreen"
+            class="flex-container"
+            style="justify-content: space-around"
+        >
+            <div>
+                <div class="space-around">
+                    <div>Current score: <b id="currentscore"></b></div>
+                    <div>Best overall score: <b id="bestscore"></b></div>
+                    <div><b id="aim"></b> is better.</div>
+                </div>
+                <div id="solutioncontent" style="display: none">
+                    <label for="solutions">Load a solution:</label>
+                    <select name="solutions" id="solutionselect"></select>
+                    <button id="loadSolutionButton">Load</button>
+                </div>
+                <div id="behaviorcontent" style="display: none">
+                    <div id="behaviorinstructions" class="space-around"></div>
+                    <div class="behaviorgrid">
+                        <div id="behavior2title">&rarr;</div>
+                        <div
+                            id="behaviorCanvasParent"
+                            style="text-align: center"
+                        ></div>
+                        <div id="behavior1title">&rarr;</div>
+                        <!--x axis -->
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div id="taskCanvasParent"></div>
+                <div class="flex-container space-around flex-wrap">
+                    <button id="bestSolutionButton">
+                        Restore best solution
+                    </button>
+                    <button id="lastSolutionButton">
+                        Restore last solution
+                    </button>
+                    <button id="randomSolutionButton">Random solution</button>
+                    <button id="mutateSolutionButton">Random change</button>
                 </div>
             </div>
         </div>
-        <div>
-            <div id="taskCanvasParent"></div>
-            <div class="flex-container space-around flex-wrap">
-                <button id="bestSolutionButton">
-                    Restore best solution
-                </button>
-                <button id="lastSolutionButton">
-                    Restore last solution
-                </button>
-                <button id="randomSolutionButton">Random solution</button>
-                <button id="mutateSolutionButton">Random change</button>
-            </div>
-        </div>
-    </div>
-    <!-- <button id="solvetoggle" style="display: none">Toggle solver</button> -->
-</body>
-
+        <!-- <button id="solvetoggle" style="display: none">Toggle solver</button> -->
+    </body>
 </html>

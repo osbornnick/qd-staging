@@ -7,7 +7,7 @@ import { clamp } from "../util/util";
 import ShortestEdgeBehavior from "./ShortestEdgeBehavior";
 import LongestEdgeBehavior from "./LongestEdgeBehavior";
 import GenManager from "../manager/GenManager";
-// import solutions from "./solutions.json";
+import solutions from "./solutions.json";
 
 export default class TSPManager extends GenManager implements Manager {
     constructor() {
@@ -151,11 +151,32 @@ export default class TSPManager extends GenManager implements Manager {
     };
 
     showSolutions = () => {
+        console.log("showing solutions");
+        let solDict = solutions as Dictionary;
         if (this.behaviorVisible) {
-            // tell view to show solutions and make them interactable
+            // draw solution info on behavior
         } else {
-            // add a dropdown menu where behavior could be, that loads solutions selected in dropdown
-            // solution loaded: onNewSolution ?
+            let solutionContent = document.getElementById("solutioncontent");
+            if (solutionContent !== null)
+                solutionContent.style.display = "block";
+            let selector = document.getElementById(
+                "solutionselect"
+            ) as HTMLSelectElement;
+            for (let solution in solDict) {
+                let newoption = document.createElement("option");
+                newoption.text = solution;
+                selector.add(newoption);
+            }
+            document
+                .getElementById("loadSolutionButton")
+                ?.addEventListener("click", (evt) => {
+                    let selected = selector.value;
+                    this.onNewSolution("load", solDict[selected], true);
+                });
         }
     };
+}
+
+interface Dictionary {
+    [key: string]: Array<number>;
 }

@@ -168,7 +168,6 @@ export default class GenManager implements Manager {
         shouldLog: boolean = true
     ) => {
         if (this.currentSolution.length == 0) {
-            console.log(this.currentSolution);
             this.previousSolution = solution.slice();
         } else {
             this.previousSolution = this.currentSolution.slice();

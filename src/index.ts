@@ -8,7 +8,7 @@ fetch("/api/id")
 
         if (bin % 2 == 1) id += "0"; // don't show behavior
         else id += "1"; // show behavior
-        if (bin == 0 || bin == 1 || bin == 4 || bin == 4)
+        if (bin == 0 || bin == 1 || bin == 4 || bin == 5)
             id += "1"; // show solutions
         else id += "0";
         if (linkElement?.getAttribute("href") == "#")
