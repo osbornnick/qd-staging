@@ -18,6 +18,7 @@ export default class GenBehaviorView implements BehaviorView {
     scale: number;
     BEHAVIOR_RADIUS_CANVAS: number = 5;
     solutionsVisible: boolean = false;
+    visibleSolutionBehaviors = [];
 
     binHighlighted: null | number[] = null;
     binSelected: null | number[][] = null;
@@ -26,7 +27,6 @@ export default class GenBehaviorView implements BehaviorView {
         context: CanvasRenderingContext2D,
         render: Function,
         modelGetters: {
-            // getShownSolutions?
             getNumBins: Function;
             getBinElites: Function;
             getSolutionBehavior: Function;
@@ -81,7 +81,12 @@ export default class GenBehaviorView implements BehaviorView {
             this.drawSelectedBins(numBins);
             this.drawHighlightedBin(numBins, binElites);
 
-            this.drawBehaviorPoint(solutionBehavior, scoreRange, currentScore);
+            this.drawCurrentBehavior(
+                solutionBehavior,
+                scoreRange,
+                currentScore
+            );
+            this.drawVisibleBehaviors();
         };
     };
 
@@ -108,11 +113,17 @@ export default class GenBehaviorView implements BehaviorView {
         }
     };
 
-    drawBehaviorPoint = (
+    drawCurrentBehavior = (
         solutionBehavior: number[],
         scoreRange: number[],
         currentScore: number
     ) => {
+        this.context.fillStyle = this.computeColor(scoreRange, currentScore);
+        this.context.strokeStyle = "white";
+        this.drawBehaviorPoint(solutionBehavior);
+    };
+
+    drawBehaviorPoint = (solutionBehavior: number[]) => {
         let ptbc = this.behaviorToCanvas(solutionBehavior);
         this.context.beginPath();
         this.context.arc(
@@ -122,11 +133,19 @@ export default class GenBehaviorView implements BehaviorView {
             0,
             2 * Math.PI
         );
-        this.context.fillStyle = this.computeColor(scoreRange, currentScore);
-        this.context.fill();
-        this.context.strokeStyle = "white";
         this.context.lineWidth = 2;
+        this.context.fill();
         this.context.stroke();
+    };
+
+    drawVisibleBehaviors = () => {
+        if (this.solutionsVisible) {
+            this.context.fillStyle = "blue";
+            this.context.strokeStyle = "blue";
+            for (let b of this.visibleSolutionBehaviors) {
+                this.drawBehaviorPoint(b);
+            }
+        }
     };
 
     drawBins = (

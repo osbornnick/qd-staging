@@ -5,6 +5,7 @@ export default interface BehaviorView {
     canvasHeight: number;
     scale: number;
     solutionsVisible: boolean;
+    visibleSolutionBehaviors: any;
 
     draw(): void;
     handleMouseUp(event: MouseEvent): any;

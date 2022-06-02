@@ -9,6 +9,5 @@ export default interface BehaviorController {
     registerMouseHandlers(): void;
     registerButtonHandlers(): void;
     showSolutions(): void;
-    setVisibleSolutions(sols: Solution[]): void;
-    getVisibleSolutions(): Solution[];
+    setVisibleSolutions(behaviors: any[]): void;
 }
