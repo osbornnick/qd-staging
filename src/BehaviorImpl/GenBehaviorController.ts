@@ -90,6 +90,6 @@ export default class GenBehaviorController
     }
 
     setVisibleSolutions(behaviors: any[]): void {
-        this.view.visibleSolutionBehaviors = behaviors;
+        this.view.setVisibleBehaviors(behaviors);
     }
 }

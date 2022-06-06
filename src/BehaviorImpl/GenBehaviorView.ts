@@ -1,6 +1,7 @@
 import Solution from "../interfaces/Solution";
 import BehaviorView from "../view/BehaviorView";
 import interpolate from "color-interpolate";
+import { distance } from "../util/util";
 
 export default class GenBehaviorView implements BehaviorView {
     context: CanvasRenderingContext2D;
@@ -19,6 +20,7 @@ export default class GenBehaviorView implements BehaviorView {
     BEHAVIOR_RADIUS_CANVAS: number = 5;
     solutionsVisible: boolean = false;
     visibleSolutionBehaviors = [];
+    visibleSolutionPoints: number[][] = [];
 
     binHighlighted: null | number[] = null;
     binSelected: null | number[][] = null;
@@ -290,6 +292,12 @@ export default class GenBehaviorView implements BehaviorView {
                 }
             }
         }
+
+        for (let point of this.visibleSolutionPoints) {
+            if (distance(point, mcpt) < this.BEHAVIOR_RADIUS_CANVAS)
+                console.log("near point " + point);
+        }
+
         if (this.binHighlighted !== mouseBin) {
             this.binHighlighted = mouseBin;
             if (this.binHighlighted !== null && this.binSelected !== null) {
@@ -349,5 +357,14 @@ export default class GenBehaviorView implements BehaviorView {
 
     showSolutions() {
         this.solutionsVisible = true;
+    }
+
+    setVisibleBehaviors(b: any) {
+        this.visibleSolutionBehaviors = b;
+        this.visibleSolutionPoints = [];
+        for (let solutionBehavior of b) {
+            let ptbc = this.behaviorToCanvas(solutionBehavior);
+            this.visibleSolutionPoints.push(ptbc);
+        }
     }
 }

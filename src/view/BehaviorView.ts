@@ -13,4 +13,5 @@ export default interface BehaviorView {
     handleMouseLeave(event: MouseEvent): void;
     handleMouseMove(event: MouseEvent): void;
     showSolutions(): void;
+    setVisibleBehaviors(b: any): void;
 }
