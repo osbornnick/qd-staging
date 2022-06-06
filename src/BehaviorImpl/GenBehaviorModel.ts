@@ -90,10 +90,10 @@ export default class GenBehaviorModel implements BehaviorModel {
         if (this.taskIsMinimize()) return [maxScore, minScore];
         return [minScore, maxScore];
     };
-        
 
     // return better score
     compareScores = (score1: number, score2: number): number => {
+        if (score1 === score2) return -1;
         let larger, smaller;
         if (score1 > score2) {
             larger = score1;

@@ -13,6 +13,7 @@ export default class GenBehaviorController
     view: BehaviorView;
     onNewSolution: Function;
     requestCrossover: Function;
+    visibleSolutions: null | number[][] = null;
 
     constructor(
         onScreenCanvas: HTMLCanvasElement,
@@ -66,7 +67,13 @@ export default class GenBehaviorController
     handleMouseUp = (evt: MouseEvent) => {
         let crossObj = this.view.handleMouseUp(evt);
         if (crossObj == null) return;
-        if (crossObj.crossover) {
+        if (crossObj.solution) {
+            if (this.visibleSolutions)
+                this.onNewSolution(
+                    "loaded solution",
+                    this.visibleSolutions[crossObj.solutionSelected]
+                );
+        } else if (crossObj.crossover) {
             let sol1 = this.model.binElites.get(
                 crossObj.binKey1.toString()
             ).solution;
@@ -89,7 +96,8 @@ export default class GenBehaviorController
         this.view.showSolutions();
     }
 
-    setVisibleSolutions(behaviors: any[]): void {
+    setVisibleSolutions(sols: any[], behaviors: any[]): void {
+        this.visibleSolutions = sols;
         this.view.setVisibleBehaviors(behaviors);
     }
 }

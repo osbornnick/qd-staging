@@ -151,7 +151,6 @@ export default class TSPManager extends GenManager implements Manager {
     };
 
     showSolutions = () => {
-        console.log("showing solutions");
         let solDict = solutions as Dictionary;
         if (this.behaviorVisible) {
             let sols = Object.keys(solDict).map((name) => solDict[name]);
@@ -162,7 +161,7 @@ export default class TSPManager extends GenManager implements Manager {
                     this.taskController.model.scoreSolution(s)
                 )
             );
-            this.behaviorController.setVisibleSolutions(behaviors);
+            this.behaviorController.setVisibleSolutions(sols, behaviors);
             this.behaviorController.showSolutions();
         } else {
             let solutionContent = document.getElementById("solutioncontent");

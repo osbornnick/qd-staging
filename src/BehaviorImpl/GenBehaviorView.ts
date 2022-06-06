@@ -24,6 +24,8 @@ export default class GenBehaviorView implements BehaviorView {
 
     binHighlighted: null | number[] = null;
     binSelected: null | number[][] = null;
+    solutionHighlighted: null | number = null;
+    solutionSelected: null | number = null;
 
     constructor(
         context: CanvasRenderingContext2D,
@@ -140,13 +142,37 @@ export default class GenBehaviorView implements BehaviorView {
         this.context.stroke();
     };
 
+    drawHighlightedBehaviorPoint(solutionBehavior: number[]) {
+        console.log("drawing  highlighted");
+        this.context.fillStyle = "blue";
+        this.context.strokeStyle = "#999900";
+        this.drawBehaviorPoint(solutionBehavior);
+    }
+    drawSelectedBehaviorPoint(solutionBehavior: number[]) {
+        this.context.fillStyle = "blue";
+        this.context.strokeStyle = "white";
+        this.drawBehaviorPoint(solutionBehavior);
+    }
+
     drawVisibleBehaviors = () => {
         if (this.solutionsVisible) {
             this.context.fillStyle = "blue";
             this.context.strokeStyle = "blue";
-            for (let b of this.visibleSolutionBehaviors) {
-                this.drawBehaviorPoint(b);
-            }
+            this.visibleSolutionBehaviors.forEach((b, i) => {
+                if (
+                    this.solutionHighlighted === i ||
+                    this.solutionSelected === i
+                ) {
+                    if (this.solutionHighlighted === i)
+                        this.drawHighlightedBehaviorPoint(b);
+                    if (this.solutionSelected === i)
+                        this.drawSelectedBehaviorPoint(b);
+                } else {
+                    this.context.fillStyle = "blue";
+                    this.context.strokeStyle = "blue";
+                    this.drawBehaviorPoint(b);
+                }
+            });
         }
     };
 
@@ -222,6 +248,14 @@ export default class GenBehaviorView implements BehaviorView {
 
     handleMouseUp = (event: MouseEvent) => {
         let returnMe = null;
+        if (this.solutionSelected !== null) {
+            returnMe = {
+                solution: true,
+                crossover: false,
+                solutionSelected: this.solutionSelected,
+            }
+            this.solutionSelected = null;
+        }
         if (this.binSelected !== null) {
             if (this.binSelected[0] !== null && this.binSelected[1] !== null) {
                 if (
@@ -229,11 +263,13 @@ export default class GenBehaviorView implements BehaviorView {
                     this.binSelected[1].toString()
                 ) {
                     returnMe = {
+                        solution: false,
                         crossover: false,
                         binKey: this.binSelected[0].slice(),
                     }; // for controller to pass new solution (it gets from model)
                 } else {
                     returnMe = {
+                        solution: false,
                         crossover: true,
                         binKey1: this.binSelected[0].slice(),
                         binKey2: this.binSelected[1].slice(),
@@ -249,7 +285,9 @@ export default class GenBehaviorView implements BehaviorView {
     };
 
     handleMouseDown = (event: MouseEvent) => {
-        if (this.binHighlighted !== null) {
+        if (this.solutionHighlighted !== null) {
+            this.solutionSelected = this.solutionHighlighted;
+        } else if (this.binHighlighted !== null) {
             if (
                 this.modelGetters
                     .getBinElites()
@@ -266,12 +304,15 @@ export default class GenBehaviorView implements BehaviorView {
     handleMouseLeave = (event: MouseEvent) => {
         this.binSelected = null;
         this.binHighlighted = null;
+        this.solutionHighlighted = null;
+        this.solutionSelected = null;
         this.draw();
     };
 
     handleMouseMove = (event: MouseEvent) => {
         let mcpt = [event.offsetX, event.offsetY];
         let mouseBin = null;
+        this.solutionHighlighted = null;
 
         let numBins = this.modelGetters.getNumBins();
         for (var ii = 0; ii < numBins; ++ii) {
@@ -293,9 +334,16 @@ export default class GenBehaviorView implements BehaviorView {
             }
         }
 
-        for (let point of this.visibleSolutionPoints) {
+        this.visibleSolutionPoints.forEach((point, i) => {
             if (distance(point, mcpt) < this.BEHAVIOR_RADIUS_CANVAS)
-                console.log("near point " + point);
+                this.solutionHighlighted = i;
+        });
+
+        if (this.solutionHighlighted !== null) {
+            this.binSelected = null;
+            this.binHighlighted = null;
+            this.draw();
+            return;
         }
 
         if (this.binHighlighted !== mouseBin) {
