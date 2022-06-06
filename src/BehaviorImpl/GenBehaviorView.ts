@@ -85,12 +85,12 @@ export default class GenBehaviorView implements BehaviorView {
             this.drawSelectedBins(numBins);
             this.drawHighlightedBin(numBins, binElites);
 
+            this.drawVisibleBehaviors();
             this.drawCurrentBehavior(
                 solutionBehavior,
                 scoreRange,
                 currentScore
             );
-            this.drawVisibleBehaviors();
         };
     };
 
@@ -143,7 +143,6 @@ export default class GenBehaviorView implements BehaviorView {
     };
 
     drawHighlightedBehaviorPoint(solutionBehavior: number[]) {
-        console.log("drawing  highlighted");
         this.context.fillStyle = "blue";
         this.context.strokeStyle = "#999900";
         this.drawBehaviorPoint(solutionBehavior);
@@ -253,7 +252,7 @@ export default class GenBehaviorView implements BehaviorView {
                 solution: true,
                 crossover: false,
                 solutionSelected: this.solutionSelected,
-            }
+            };
             this.solutionSelected = null;
         }
         if (this.binSelected !== null) {

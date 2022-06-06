@@ -30,11 +30,13 @@ export default class GenBehaviorModel implements BehaviorModel {
     evaluateSolution = (
         problem: Problem,
         solution: Solution,
-        solutionScore: number
+        solutionScore: number,
+        shouldSave = true
     ): number[] => {
         let b1 = this.behavior1.calculateBehavior(problem, solution);
         let b2 = this.behavior2.calculateBehavior(problem, solution);
         let evaluation = [b1, b2];
+        if (!shouldSave) return evaluation;
         let behaviorBin = [
             Math.min(
                 Math.floor(evaluation[0] * this.numBins),

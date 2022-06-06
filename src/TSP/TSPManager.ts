@@ -158,7 +158,8 @@ export default class TSPManager extends GenManager implements Manager {
                 this.behaviorController.model.evaluateSolution(
                     this.taskController.model.getProblem(),
                     s,
-                    this.taskController.model.scoreSolution(s)
+                    this.taskController.model.scoreSolution(s),
+                    false
                 )
             );
             this.behaviorController.setVisibleSolutions(sols, behaviors);
