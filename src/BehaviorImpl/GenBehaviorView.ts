@@ -143,20 +143,18 @@ export default class GenBehaviorView implements BehaviorView {
     };
 
     drawHighlightedBehaviorPoint(solutionBehavior: number[]) {
-        this.context.fillStyle = "blue";
+        this.context.fillStyle = "yellow";
         this.context.strokeStyle = "#999900";
         this.drawBehaviorPoint(solutionBehavior);
     }
     drawSelectedBehaviorPoint(solutionBehavior: number[]) {
-        this.context.fillStyle = "blue";
+        this.context.fillStyle = "yellow";
         this.context.strokeStyle = "white";
         this.drawBehaviorPoint(solutionBehavior);
     }
 
     drawVisibleBehaviors = () => {
         if (this.solutionsVisible) {
-            this.context.fillStyle = "blue";
-            this.context.strokeStyle = "blue";
             this.visibleSolutionBehaviors.forEach((b, i) => {
                 if (
                     this.solutionHighlighted === i ||
@@ -167,8 +165,8 @@ export default class GenBehaviorView implements BehaviorView {
                     if (this.solutionSelected === i)
                         this.drawSelectedBehaviorPoint(b);
                 } else {
-                    this.context.fillStyle = "blue";
-                    this.context.strokeStyle = "blue";
+                    this.context.fillStyle = "yellow";
+                    this.context.strokeStyle = "yellow";
                     this.drawBehaviorPoint(b);
                 }
             });
