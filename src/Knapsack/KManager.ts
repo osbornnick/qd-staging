@@ -7,12 +7,14 @@ import GenBehaviorController from "../BehaviorImpl/GenBehaviorController";
 import { SmallestWeightBehavior } from "./SmallestWeightBehavior";
 import { LargestWeightBehavior } from "./LargestWeightBehavior";
 import GenManager from "../manager/GenManager";
+import solutions from "./solutions.json";
 
 export default class TSPManager extends GenManager implements Manager {
     constructor() {
         super();
         this.taskController = this.initTask();
         this.behaviorController = this.initBehavior();
+        if (this.solutionsVisible) this.showSolutions();
         this.sendLog("start", { behavior_visible: this.behaviorVisible });
         this.sendLog("problem", {
             problem: this.taskController.model.getProblem(),
@@ -130,4 +132,40 @@ export default class TSPManager extends GenManager implements Manager {
                 this.onNewSolution("manual", [], true);
             });
     };
+
+    showSolutions = () => {
+        let solDict = solutions as Dictionary;
+        if (this.behaviorVisible) {
+            let sols = Object.keys(solDict).map((name) => solDict[name]);
+            let behaviors = sols.map((s) =>
+                this.behaviorController.model.evaluateSolution(
+                    this.taskController.model.getProblem(),
+                    s,
+                    this.taskController.model.scoreSolution(s),
+                    false
+                )
+            );
+            this.behaviorController.setVisibleSolutions(sols, behaviors);
+            this.behaviorController.showSolutions();
+        } else {
+            let solutionContent = document.getElementById("solutioncontent");
+            if (solutionContent !== null)
+                solutionContent.style.display = "block";
+
+            let buttons = [];
+            for (let solution in solDict) {
+                let newButton = document.createElement("button");
+                buttons.push(newButton);
+                newButton.textContent = solution;
+                newButton.addEventListener("click", (evt) => {
+                    this.onNewSolution("load", solDict[solution], true);
+                });
+                solutionContent?.appendChild(newButton);
+            }
+        }
+    };
+}
+
+interface Dictionary {
+    [key: string]: Array<number>;
 }

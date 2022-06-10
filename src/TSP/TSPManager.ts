@@ -168,20 +168,17 @@ export default class TSPManager extends GenManager implements Manager {
             let solutionContent = document.getElementById("solutioncontent");
             if (solutionContent !== null)
                 solutionContent.style.display = "block";
-            let selector = document.getElementById(
-                "solutionselect"
-            ) as HTMLSelectElement;
+
+            let buttons = [];
             for (let solution in solDict) {
-                let newoption = document.createElement("option");
-                newoption.text = solution;
-                selector.add(newoption);
-            }
-            document
-                .getElementById("loadSolutionButton")
-                ?.addEventListener("click", (evt) => {
-                    let selected = selector.value;
-                    this.onNewSolution("load", solDict[selected], true);
+                let newButton = document.createElement("button");
+                buttons.push(newButton);
+                newButton.textContent = solution;
+                newButton.addEventListener("click", (evt) => {
+                    this.onNewSolution("load", solDict[solution], true);
                 });
+                solutionContent?.appendChild(newButton);
+            }
         }
     };
 }
