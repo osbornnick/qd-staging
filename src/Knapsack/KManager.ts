@@ -56,10 +56,21 @@ export default class TSPManager extends GenManager implements Manager {
         behaviorController.model.behavior1 = new SmallestWeightBehavior();
         behaviorController.model.behavior2 = new LargestWeightBehavior();
         behaviorController.model.numBins = 9;
+        this.taskController.view.indexColors = this.generateColorFn(
+            behaviorController.model.behavior1.behaviorDefining,
+            behaviorController.model.behavior2.behaviorDefining
+        );
         document
             .getElementById("behaviorCanvasParent")
             ?.appendChild(behaviorOnCanvas);
         return behaviorController;
+    };
+
+    private generateColorFn = (bd1: Function, bd2: Function): Function => {
+        return () => [
+            bd1(this.taskController.model.getProblem(), this.currentSolution),
+            bd2(this.taskController.model.getProblem(), this.currentSolution),
+        ];
     };
 
     initUI = () => {
