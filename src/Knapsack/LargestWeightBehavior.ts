@@ -12,8 +12,18 @@ export class LargestWeightBehavior implements Behavior {
         return this.scaleBehavior(problem, max);
     }
 
-    behaviorDefining(problem: any, solution: any): number {
-        return 0;
+    behaviorDefining(problem: Problem, solution: Solution): number {
+        let max = 0;
+        let coin = -1;
+        problem.coins.forEach((c, i) => {
+            if (solution[i] === 1) {
+                if (c[0] > max) {
+                    max = c[0];
+                    coin = i;
+                }
+            }
+        });
+        return coin;
     }
 
     scaleBehavior = (problem: Problem, b: number) => {

@@ -78,14 +78,18 @@ export default class TSPManager extends GenManager implements Manager {
                 this.behaviorController.model.instructions;
 
         let behavior1name = document.getElementById("behavior1title");
-        if (behavior1name !== null)
+        if (behavior1name !== null) {
             behavior1name.innerText +=
                 " " + this.behaviorController.model.behavior1.description;
+            behavior1name.style.color = "brown";
+        }
 
         let behavior2name = document.getElementById("behavior2title");
-        if (behavior2name !== null)
+        if (behavior2name !== null) {
             behavior2name.innerText +=
                 " " + this.behaviorController.model.behavior2.description;
+            behavior2name.style.color = "purple";
+        }
         const aim = document.getElementById("aim");
         if (aim !== null)
             aim.innerText = this.taskController.model.isMinimize()
@@ -100,6 +104,9 @@ export default class TSPManager extends GenManager implements Manager {
             0,
             100
         );
+
+        bonusCents = bonusCents > 50 ? 50 : bonusCents;
+
         let bonusCode =
             (100 + 5 * bonusCents).toString(16) +
             "x" +

@@ -279,6 +279,9 @@ export default class GenManager implements Manager {
             0,
             100
         );
+
+        bonusCents = bonusCents > 50 ? 50 : bonusCents;
+
         let bonusCode =
             (100 + 5 * bonusCents).toString(16) +
             "x" +
