@@ -1,3 +1,4 @@
+import Solution from "../interfaces/Solution";
 import BehaviorModel from "../model/BehaviorModel";
 import BehaviorView from "../view/BehaviorView";
 
@@ -7,4 +8,6 @@ export default interface BehaviorController {
 
     registerMouseHandlers(): void;
     registerButtonHandlers(): void;
+    showSolutions(): void;
+    setVisibleSolutions(sols: any[], behaviors: any[]): void;
 }

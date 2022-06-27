@@ -1,4 +1,4 @@
-import Task from "../model/TaskModel";
+import TaskModel from "../model/TaskModel";
 
 export type Problem = {
     coins: number[][];
@@ -7,12 +7,13 @@ export type Problem = {
 
 export type Solution = number[];
 
-export default class KTaskModel implements Task {
+export default class KTaskModel implements TaskModel {
     // problem object
     // each i indice in problem represents a coin, with [i][0] being its weight and [i][1] its value
     // a solution is an array of 1s and 0s, where the ith value represents inclusion or exclusion of a coin
     problem: Problem = { coins: [[]], capacity: 0 }; // coins as x,y,area?
     bestPossibleScore: number = 0;
+    instructions: string;
 
     constructor() {
         this.problem = {
@@ -46,6 +47,8 @@ export default class KTaskModel implements Task {
             capacity: 129,
         };
         this.bestPossibleScore = 0;
+        this.instructions =
+            "Choose coins that fit into the knapsack that maximizes their collective value! Each coin is colored and sized based off its value and weight, respectively. Bigger coins weigh more, and more valuable coins are more golden (bronze coins are the least valuable, while silver is middling). <br /> The gray bar on the left displays the filled (green) capacity of the knapsack, and the remaining (gray) space. <br /> Hover over a coin to see how much weight it will add to the knapsack, or if it will fit at all.";
     }
 
     getName = (): string => {
@@ -55,7 +58,7 @@ export default class KTaskModel implements Task {
         return "largest coin value";
     }
     getInstructions(): string {
-        return "Choose coins that fit into the knapsack that maximizes their collective value! Each coin is colored and sized based off its value and weight, respectively. Bigger coins weigh more, and more valuable coins are more golden (bronze coins are the least valuable, while silver is middling). <br /> The gray bar on the left displays the filled (green) capacity of the knapsack, and the remaining (gray) space. <br /> Hover over a coin to see how much weight it will add to the knapsack, or if it will fit at all.";
+        return this.instructions;
     }
     isMinimize = (): boolean => {
         return false;

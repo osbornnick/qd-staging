@@ -11,6 +11,7 @@ export default class GenManager implements Manager {
     runID: String = "default";
     codeID: String = "default";
     behaviorVisible: boolean;
+    solutionsVisible: boolean;
     bestSolution: Solution;
     previousSolution: Solution;
     currentSolution: Solution = [];
@@ -22,8 +23,9 @@ export default class GenManager implements Manager {
     solver: any;
 
     constructor() {
-        this.initUserID();
         this.behaviorVisible = false;
+        this.solutionsVisible = false;
+        this.initUserID();
 
         this.registerButtonHandlers();
         // init
@@ -70,9 +72,14 @@ export default class GenManager implements Manager {
             console.log("URL PARAMS ERROR, NO USER ID (WAHT DO?)");
         }
         // console.log("User id: ", this.userID);
-        if (this.userID.charAt(this.userID.length - 1) == "1") {
+        if (this.userID.charAt(this.userID.length - 2) == "1") {
             this.showBehavior();
-            this.behaviorVisible = false;
+            this.behaviorVisible = true;
+        }
+
+        if (this.userID.charAt(this.userID.length - 1) == "1") {
+            this.showSolutions();
+            this.solutionsVisible = true;
         }
     };
 
@@ -161,7 +168,6 @@ export default class GenManager implements Manager {
         shouldLog: boolean = true
     ) => {
         if (this.currentSolution.length == 0) {
-            console.log(this.currentSolution);
             this.previousSolution = solution.slice();
         } else {
             this.previousSolution = this.currentSolution.slice();
@@ -273,6 +279,9 @@ export default class GenManager implements Manager {
             0,
             100
         );
+
+        bonusCents = bonusCents > 50 ? 50 : bonusCents;
+
         let bonusCode =
             (100 + 5 * bonusCents).toString(16) +
             "x" +
@@ -301,6 +310,10 @@ export default class GenManager implements Manager {
         if (behaviorElement !== null) behaviorElement.style.display = "block";
         const solverButton = document.getElementById("solvetoggle");
         if (solverButton !== null) solverButton.style.display = "block";
+    };
+
+    showSolutions = () => {
+        // tell behavior to show solutions;
     };
 
     toggleSolving = () => {

@@ -4,10 +4,13 @@ fetch("/api/id")
         let linkElement = document.getElementById("linktogame");
         let game = "tsp";
         const bin = id.charAt(id.length - 1);
-        if (bin > 1) game = "knapsack";
-        if (bin > 3) game = "game3";
-        if (bin % 2 == 0) id += "0"; // don't show behavior
+        if (bin < 4) game = "knapsack";
+
+        if (bin % 2 == 1) id += "0"; // don't show behavior
         else id += "1"; // show behavior
+        if (bin == 0 || bin == 1 || bin == 4 || bin == 5)
+            id += "1"; // show solutions
+        else id += "0";
         if (linkElement?.getAttribute("href") == "#")
             document
                 .getElementById("linktogame")

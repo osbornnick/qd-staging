@@ -13,8 +13,18 @@ export class SmallestWeightBehavior implements Behavior {
         return this.scaleBehavior(problem, min);
     }
 
-    behaviorDefining(problem: any, solution: any): number {
-        return 0;
+    behaviorDefining(problem: Problem, solution: Solution): number {
+        let min = 10000000000;
+        let coin = -1;
+        problem.coins.forEach((c, i) => {
+            if (solution[i] === 1) {
+                if (c[0] < min) {
+                    min = c[0];
+                    coin = i;
+                }
+            }
+        });
+        return coin;
     }
 
     scaleBehavior = (problem: Problem, b: number) => {

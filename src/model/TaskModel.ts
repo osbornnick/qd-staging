@@ -1,12 +1,13 @@
 import Problem from "../interfaces/Problem";
 import Solution from "../interfaces/Solution";
 
-export default interface Task {
+export default interface TaskModel {
     problem: Problem;
     bestPossibleScore: number;
     instructions: string;
 
     getName(): string;
+    getInstructions(): string;
     getObjectiveName(): string;
     isMinimize(): boolean;
     getRandomSolution(): Solution;

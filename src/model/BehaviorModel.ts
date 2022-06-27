@@ -15,7 +15,8 @@ export default interface BehaviorModel {
     evaluateSolution(
         problem: Problem,
         solution: Solution,
-        solutionScore: number
+        solutionScore: number,
+        shouldSave?: boolean
     ): number[];
     setBins(bins: number): void;
     setBehavior1(b: Behavior): void;

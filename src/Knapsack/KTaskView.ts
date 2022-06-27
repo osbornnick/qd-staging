@@ -30,7 +30,8 @@ export class KTaskView implements TaskView {
         getSolution: Function,
         render: Function,
         height: number,
-        width: number
+        width: number,
+        indexColors?: Function
     ) {
         this.context = context;
         this.render = render;
@@ -43,6 +44,9 @@ export class KTaskView implements TaskView {
         this.coinCanvasWidth = width - this.capacityCanvasWidth;
         this.getSolution = getSolution;
         this.scale = 1;
+
+        if (typeof indexColors !== "undefined") this.indexColors = indexColors;
+        else this.indexColors = null;
 
         // assuming coins in 4x5 grid (20 coins)
         this.maxCoinWidth = this.coinCanvasWidth / 5;
@@ -78,6 +82,41 @@ export class KTaskView implements TaskView {
                     highlight,
                     select
                 );
+                if (this.indexColors) {
+                    const iColors = this.indexColors();
+                    const smallest = iColors[0];
+                    const largest = iColors[1];
+                    let color: string;
+                    problem.coins.forEach((c, i) => {
+                        let shouldIndicate = false;
+                        if (i == smallest) {
+                            color = "brown";
+                            shouldIndicate = true;
+                        }
+                        if (i == largest) {
+                            color = "purple";
+                            shouldIndicate = true;
+                        }
+
+                        if (shouldIndicate) {
+                            const center = this.coinToCanvas(i);
+                            const radius =
+                                this.computeRadius(c[0]) - this.scale * 4;
+                            this.context.beginPath();
+                            this.context.arc(
+                                center[0],
+                                center[1],
+                                radius,
+                                0,
+                                2 * Math.PI
+                            );
+                            this.context.strokeStyle = color;
+                            this.context.lineWidth = this.scale * 4;
+                            this.context.stroke();
+                            this.context.closePath();
+                        }
+                    });
+                }
             });
             this.drawCapacityScale(solution, problem);
         };
